@@ -14,8 +14,6 @@ public class EnemySpawner : MonoBehaviour
     [Header("Hierarchy & References")]
     // A parent object for the spawned enemies to keep the Hierarchy clean.
     public Transform enemyContainer;
-    // Reference to the player's transform, so enemies know who to chase.
-    public Transform playerTransform;
 
     /// <summary>
     /// This function is called when the script instance is being loaded.
@@ -45,14 +43,6 @@ public class EnemySpawner : MonoBehaviour
             // and as a child of the enemyContainer transform.
             GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, enemyContainer);
 
-            // Try to get the EnemyController component from the newly spawned enemy.
-            EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
-
-            // If the EnemyController exists, tell it which target to follow.
-            if (enemyController != null)
-            {
-                enemyController.SetTarget(playerTransform);
-            }
         }
     }
 
