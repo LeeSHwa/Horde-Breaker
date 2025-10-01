@@ -21,18 +21,22 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // 1. Get keyboard input
-        // GetAxisRaw returns -1, 0, or 1 for immediate response
         float moveX = Input.GetAxisRaw("Horizontal"); // Horizontal input (left/right)
         float moveY = Input.GetAxisRaw("Vertical");   // Vertical input (up/down)
 
-        // 2. Store the input as a Vector2 and normalize it to ensure consistent speed diagonally
+        // 2. Store the input as a Vector2 and normalize it
         moveInput = new Vector2(moveX, moveY).normalized;
     }
 
     private void FixedUpdate()
     {
-        // 3. Move the player physically using Rigidbody2D
+        // 3. Move the player by setting the velocity
         // This should be done in FixedUpdate for physics consistency
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+
+        // --- THIS IS THE CHANGED LINE ---
+        rb.velocity = moveInput * moveSpeed;
+
+        // The old method is commented out below for comparison
+        // rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
 }
