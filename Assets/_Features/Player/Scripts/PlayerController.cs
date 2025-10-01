@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Movement speed
-    public float moveSpeed = 5f;
-
     // Rigidbody component for physics-based movement
     private Rigidbody2D rb;
 
     // Variable to store the direction of input
     private Vector2 moveInput;
 
+    private CharacterStats stats; // Reference to CharacterStats script
+
     void Start()
     {
         // Get the Rigidbody2D component attached to this GameObject
         rb = GetComponent<Rigidbody2D>();
+        stats = GetComponent<CharacterStats>(); // Get the CharacterStats component
     }
 
     // Update is called once per frame
@@ -33,6 +33,6 @@ public class PlayerController : MonoBehaviour
     {
         // 3. Move the player physically using Rigidbody2D
         // This should be done in FixedUpdate for physics consistency
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + moveInput * stats.moveSpeed * Time.fixedDeltaTime);
     }
 }
