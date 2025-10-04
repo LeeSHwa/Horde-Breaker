@@ -269,7 +269,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc5ebbe2c0423c48adc0287e2312ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTarget: {fileID: 0}
   minX: -30
   maxX: 30
   minY: -20
@@ -460,7 +459,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 434e55adf2db4c14b9b3c251fd505d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
 --- !u!50 &1381557029
 Rigidbody2D:
   serializedVersion: 5
