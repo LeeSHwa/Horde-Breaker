@@ -1,5 +1,6 @@
 using UnityEngine;
-
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CharacterStats))]
 public class PlayerController : MonoBehaviour
 {
     // Rigidbody component for physics-based movement
