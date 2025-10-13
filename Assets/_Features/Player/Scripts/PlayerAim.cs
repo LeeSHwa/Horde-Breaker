@@ -33,6 +33,6 @@ public class PlayerAim : MonoBehaviour
 
         // 5. Apply the angle to the object's Z-axis rotation.
         // Quaternion.Euler creates a rotation around the Z-axis by the amount of 'angle'.
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        //transform.rotation = Quaternion.Euler(0, 0, angle); // Delete for PlayerAnimator
     }
 }
