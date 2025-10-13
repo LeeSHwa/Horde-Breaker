@@ -36,8 +36,8 @@ public class EnemyMovement : MonoBehaviour
         }
 
         Vector2 direction = (player.position - transform.position).normalized; // Get the direction from enemy to player
-        //float faceAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // Calculate the angle to See the player
-        //rb.rotation = faceAngle; // Rotate the enemy to face the player
+        float faceAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // Calculate the angle to See the player
+        rb.rotation = faceAngle; // Rotate the enemy to face the player
         rb.linearVelocity = direction * stats.moveSpeed; // Move the enemy towards the player
     }
 }
