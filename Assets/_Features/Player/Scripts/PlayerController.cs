@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         // 3. Move the player physically using Rigidbody2D
         // This should be done in FixedUpdate for physics consistency
-        rb.MovePosition(rb.position + moveInput * stats.moveSpeed * Time.fixedDeltaTime);
+        //rb.MovePosition(rb.position + moveInput * stats.moveSpeed * Time.fixedDeltaTime); // chaged for Animation
+        rb.linearVelocity = moveInput * stats.moveSpeed;
     }
 }
