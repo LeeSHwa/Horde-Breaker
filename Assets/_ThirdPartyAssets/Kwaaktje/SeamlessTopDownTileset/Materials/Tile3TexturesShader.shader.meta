@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1b4416295849269459ed884bf32435b5
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 323103
+  packageName: 2D Topdown Seamless Forest Tileset
+  packageVersion: 1.0
+  assetPath: Assets/Kwaaktje/SeamlessTopDownTileset/Materials/Tile3TexturesShader.shader
+  uploadId: 763441

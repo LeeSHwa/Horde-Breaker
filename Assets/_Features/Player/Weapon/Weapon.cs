@@ -16,11 +16,11 @@ public abstract class Weapon : MonoBehaviour
     {
         if (Time.time >= lastAttackTime + attackCooldown)
         {
-            PerformAttack();
+            //PerformAttack();
             lastAttackTime = Time.time;
         }
     }
 
-    // The 'actual attack' logic. Every child weapon MUST implement this in its own way.
-    protected abstract void PerformAttack();
+    //// The 'actual attack' logic. Every child weapon MUST implement this in its own way.
+    //protected abstract void PerformAttack();
 }

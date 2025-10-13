@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+public class Gun : Weapon
 {
     // The bullet prefab to be fired
     public GameObject bulletPrefab;
@@ -14,17 +14,13 @@ public class Gun : MonoBehaviour
     // A variable to store the time of the next allowed shot
     private float nextFireTime = 0f;
 
-
-    void Update()
+    public override void TryAttack()
     {
-        // If the current game time has passed the next allowed fire time (for automatic firing)
+        // Check if enough time has passed since the last shot
         if (Time.time >= nextFireTime)
         {
-            // Update the next fire time (current time + fire rate)
-            nextFireTime = Time.time + fireRate;
-
-            // Call the shoot function
-            Shoot();
+            Shoot(); // Call the Shoot function to fire a bullet
+            nextFireTime = Time.time + fireRate; // Update the next allowed fire time
         }
     }
 
