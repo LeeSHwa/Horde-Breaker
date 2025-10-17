@@ -7,10 +7,13 @@ public class GameManager : MonoBehaviour
 
     [Header("Map Settings")]
     public Rect mapBounds = new Rect(-40f, -25f, 80f, 50f);
-
     public float spawnOffset = 2f; // Distance outside the map bounds to spawn enemies
-
     public Rect SpawnBounds { get; private set; }
+
+    [Header("Game State")]
+    public float gameTime = 0f;
+    public int currentStage = 1;
+
 
     void Awake()
     {
@@ -25,6 +28,25 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject); 
 
             CalculateSpawnBounds();
+        }
+    }
+
+    private void Start()
+    {
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateStageUI(currentStage);
+        }
+    }
+
+
+    void Update()
+    {
+        gameTime += Time.deltaTime;
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateTimeUI(gameTime);
         }
     }
 
