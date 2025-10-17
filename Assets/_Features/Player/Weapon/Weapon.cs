@@ -1,22 +1,22 @@
 using UnityEngine;
 
-// This is the base blueprint for all weapons. // ¸ğµç ¹«±â¸¦ À§ÇÑ ±âº» ¼³°èµµ.
+// This is the base blueprint for all weapons. // ëª¨ë“  ë¬´ê¸°ë¥¼ ìœ„í•œ ê¸°ë³¸ ì„¤ê³„ë„.
 public abstract class Weapon : MonoBehaviour
 {
-    [Header("Common Stats")] // °øÅë ´É·ÂÄ¡
-    [Tooltip("Damage dealt per hit.")] // °ø°İ ´ç µ¥¹ÌÁö.
+    [Header("Common Stats")] // ê³µí†µ ëŠ¥ë ¥ì¹˜
+    [Tooltip("Damage dealt per hit.")] // ê³µê²© ë‹¹ ë°ë¯¸ì§€.
     public float damage = 10f;
 
-    [Tooltip("Cooldown time between attacks in seconds.")] // °ø°İ »çÀÌÀÇ Äğ´Ù¿î ½Ã°£(ÃÊ).
+    [Tooltip("Cooldown time between attacks in seconds.")] // ê³µê²© ì‚¬ì´ì˜ ì¿¨ë‹¤ìš´ ì‹œê°„(ì´ˆ).
     public float attackCooldown = 0.5f;
 
-    [Tooltip("Force applied to enemies on hit.")] // ÇÇ°İµÈ Àû¿¡°Ô °¡ÇØÁö´Â Èû.
+    [Tooltip("Force applied to enemies on hit.")] // í”¼ê²©ëœ ì ì—ê²Œ ê°€í•´ì§€ëŠ” í˜.
     public float knockback = 5f;
 
-    protected float lastAttackTime; // The time of the last attack. // ¸¶Áö¸· °ø°İ ½Ã°£.
+    protected float lastAttackTime; // The time of the last attack. // ë§ˆì§€ë§‰ ê³µê²© ì‹œê°„.
 
-    // A virtual method that can be overridden by child classes. // ÀÚ½Ä Å¬·¡½º¿¡¼­ ¿À¹ö¶óÀÌµå ÇÒ ¼ö ÀÖ´Â °¡»ó ¸Ş¼Òµå.
-    // This method checks the cooldown and initiates the attack. // ÀÌ ¸Ş¼Òµå´Â Äğ´Ù¿îÀ» È®ÀÎÇÏ°í °ø°İÀ» ½ÃÀÛÇÔ.
+    // A virtual method that can be overridden by child classes. // ìì‹ í´ë˜ìŠ¤ì—ì„œ ì˜¤ë²„ë¼ì´ë“œ í•  ìˆ˜ ìˆëŠ” ê°€ìƒ ë©”ì†Œë“œ.
+    // This method checks the cooldown and initiates the attack. // ì´ ë©”ì†Œë“œëŠ” ì¿¨ë‹¤ìš´ì„ í™•ì¸í•˜ê³  ê³µê²©ì„ ì‹œì‘í•¨.
     public virtual void TryAttack()
     {
         if (Time.time >= lastAttackTime + attackCooldown)
@@ -26,8 +26,8 @@ public abstract class Weapon : MonoBehaviour
         }
     }
 
-    // An abstract method that MUST be implemented by child classes. // ÀÚ½Ä Å¬·¡½º¿¡¼­ ¹İµå½Ã ±¸ÇöÇØ¾ß ÇÏ´Â Ãß»ó ¸Ş¼Òµå.
-    // This defines the actual attack behavior (e.g., swinging, shooting). // ½ÇÁ¦ °ø°İ Çàµ¿(ÈÖµÎ¸£±â, ½î±â µî)À» Á¤ÀÇÇÔ.
+    // An abstract method that MUST be implemented by child classes. // ìì‹ í´ë˜ìŠ¤ì—ì„œ ë°˜ë“œì‹œ êµ¬í˜„í•´ì•¼ í•˜ëŠ” ì¶”ìƒ ë©”ì†Œë“œ.
+    // This defines the actual attack behavior (e.g., swinging, shooting). // ì‹¤ì œ ê³µê²© í–‰ë™(íœ˜ë‘ë¥´ê¸°, ì˜ê¸° ë“±)ì„ ì •ì˜í•¨.
     protected abstract void PerformAttack();
 }
 

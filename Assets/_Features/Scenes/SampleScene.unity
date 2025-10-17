@@ -128,12 +128,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 574470025679565611, guid: 790816146be5e1340ad0a7b637301f4c, type: 3}
-      propertyPath: maxHP
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 574470025679565611, guid: 790816146be5e1340ad0a7b637301f4c, type: 3}
-      propertyPath: moveSpeed
-      value: 20
+      propertyPath: attackDamage
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1006583172797007060, guid: 790816146be5e1340ad0a7b637301f4c, type: 3}
       propertyPath: m_Name
@@ -1241,7 +1237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3b32b03982793489f66dbb94dd49f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  weaponDamage: 10
   attackCooldown: 0.5
   knockback: 5
   bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
