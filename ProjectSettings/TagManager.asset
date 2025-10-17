@@ -42,5 +42,8 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Swing
+    uniqueID: 1279811217
+    locked: 0
   m_RenderingLayers:
   - Default

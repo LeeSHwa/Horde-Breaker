@@ -1,15 +1,17 @@
 using UnityEngine;
-using UnityEngine.UI; // Required for using UI components like Text and Slider.
+using TMPro;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     // Singleton instance to allow easy access from anywhere.
     public static UIManager Instance { get; private set; }
 
-    [Header("UI Elements")]
-    public Text timeText;      // Reference to the Text component for the timer.
-    public Slider healthSlider; // Reference to the Slider component for the health bar.
+    public TextMeshProUGUI timerText;
+    public TextMeshProUGUI stageText;
+    public Slider hpSlider;
 
+    
     void Awake()
     {
         // Singleton Pattern implementation.
@@ -23,28 +25,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Updates the timer UI. Called by the GameManager.
-    /// </summary>
+
     public void UpdateTimeUI(float currentTime)
     {
-        if (timeText != null)
+        if (timerText != null)
         {
             int minutes = Mathf.FloorToInt(currentTime / 60);
             int seconds = Mathf.FloorToInt(currentTime % 60);
-            timeText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
+            timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
         }
     }
 
-    /// <summary>
-    /// Updates the health bar UI. Called by CharacterStats when health changes.
-    /// </summary>
-    public void UpdateHealthUI(float currentHealth, float maxHealth)
+
+    public void UpdateStageUI(int currentStage)
     {
-        if (healthSlider != null)
-        {
-            // The slider's value is a ratio from 0 to 1, so we divide current by max.
-            healthSlider.value = currentHealth / maxHealth;
-        }
+        stageText.text = "Stage " + currentStage;  
+    }
+
+    public void UpdateHP(int currentHP, int maxHP)
+    {
+            hpSlider.value = currentHP / maxHP;
     }
 }

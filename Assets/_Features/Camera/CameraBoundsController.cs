@@ -2,17 +2,14 @@ using UnityEngine;
 
 public class CameraBoundsController : MonoBehaviour
 {
-    [Header("Camera Boundaries")]
-    public float minX; // The minimum X position for the camera.
-    public float maxX; // The maximum X position for the camera.
-    public float minY; // The minimum Y position for the camera.
-    public float maxY; // The maximum Y position for the camera.
+    [Header("Following Target")]
+    public Transform playerTarget;
 
-    // The target the camera will follow (assigned automatically if tagged "Player").
-    private Transform playerTarget;
+    [Header("Camera Settings")]
+    public float smoothSpeed = 5f; 
 
-    // Stores the initial Z-axis offset of the camera.
-    private Vector3 offset;
+    private Camera mainCamera;
+    private Vector3 offset; // z offset to maintain camera distance
 
     void Start()
     {
@@ -23,7 +20,7 @@ public class CameraBoundsController : MonoBehaviour
             playerTarget = playerObject.transform;
         }
 
-        // Maintain the original Z position.
+        mainCamera = GetComponent<Camera>();
         offset = new Vector3(0, 0, transform.position.z);
     }
 
@@ -36,20 +33,22 @@ public class CameraBoundsController : MonoBehaviour
             return;
         }
 
-        // Use Mathf.Clamp to restrict the camera's position within the boundaries.
-        float clampedX = Mathf.Clamp(playerTarget.position.x, minX, maxX);
-        float clampedY = Mathf.Clamp(playerTarget.position.y, minY, maxY);
+        Vector3 targetPosition = playerTarget.position + offset;
+        //Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
 
-        // Apply the new, clamped position while keeping the original Z offset.
-        transform.position = new Vector3(clampedX, clampedY, offset.z);
-    }
+        Rect mapBounds = GameManager.Instance.mapBounds;
 
-    // Draws a yellow box in the Scene view to visualize the camera boundaries.
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Vector3 center = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, 0);
-        Vector3 size = new Vector3(maxX - minX, maxY - minY, 0);
-        Gizmos.DrawWireCube(center, size);
+        float camHeight = mainCamera.orthographicSize;
+        float camWidth = camHeight * mainCamera.aspect;
+
+        float minX = mapBounds.xMin + camWidth;
+        float maxX = mapBounds.xMax - camWidth;
+        float minY = mapBounds.yMin + camHeight;
+        float maxY = mapBounds.yMax - camHeight;
+
+        targetPosition.x = Mathf.Clamp(targetPosition.x, minX, maxX);
+        targetPosition.y = Mathf.Clamp(targetPosition.y, minY, maxY);
+
+        transform.position = targetPosition;
     }
 }
