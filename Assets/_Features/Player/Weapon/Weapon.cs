@@ -5,10 +5,11 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     [Header("Common Stats")]
-    public float damage = 10f;
+    
+    public float weaponDamage = 10f;
     public float attackCooldown = 0.5f;
     public float knockback = 5f;
-
+    
     protected float lastAttackTime;
 
     // The common 'attack attempt' logic that all child weapons will use.
