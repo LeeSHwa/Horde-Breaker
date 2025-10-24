@@ -1,4 +1,6 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Rendering;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CharacterStats))]
 public class PlayerController : MonoBehaviour
@@ -9,16 +11,24 @@ public class PlayerController : MonoBehaviour
     // Variable to store the direction of input
     private Vector2 moveInput;
 
+    private Camera mainCamera;
+
     private CharacterStats stats; // Reference to CharacterStats script
+
+    public Vector2 AimDirection { get; private set; }
 
     void Start()
     {
         // Get the Rigidbody2D component attached to this GameObject
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<CharacterStats>(); // Get the CharacterStats component
+
+        mainCamera = Camera.main;
+
+        AimDirection = Vector2.right; // Default aim direction
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         // 1. Get keyboard input
@@ -28,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
         // 2. Store the input as a Vector2 and normalize it to ensure consistent speed diagonally
         moveInput = new Vector2(moveX, moveY).normalized;
+
+        UpdateAimDirection();
     }
 
     private void FixedUpdate()
@@ -37,4 +49,19 @@ public class PlayerController : MonoBehaviour
         //rb.MovePosition(rb.position + moveInput * stats.moveSpeed * Time.fixedDeltaTime); // chaged for Animation
         rb.linearVelocity = moveInput * stats.moveSpeed;
     }
+
+
+    private void UpdateAimDirection()
+    {
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+
+    Vector2 direction = new Vector2(
+        mousePosition.x - transform.position.x,
+        mousePosition.y - transform.position.y
+        ).normalized;
+
+    AimDirection = direction;
+    }
 }
+
+

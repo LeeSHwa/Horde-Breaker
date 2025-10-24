@@ -10,6 +10,8 @@ public class CharacterStats : MonoBehaviour
     public float moveSpeed = 5f;
     public float BaseMoveSpeed { get; private set; } // ? 
 
+    public float damageMutifle = 1.0f;
+
     // Hides this variable in the Inspector.
     [HideInInspector]
     // The character's current health.
@@ -46,7 +48,6 @@ public class CharacterStats : MonoBehaviour
         if (gameObject.CompareTag("Player"))
         {
             UIManager.Instance.UpdateHP((int)currentHP, (int)maxHP);
-            StartCoroutine(TakePeriodicDamageRoutine());
         }
     }
 
@@ -55,23 +56,11 @@ public class CharacterStats : MonoBehaviour
         // Note: We don't directly set `moveSpeed = BaseMoveSpeed;` here because a speed effect might be active.
         // The SpeedEffectController is responsible for applying the correct speed,
         // so we just update the base value and let the controller handle the rest.
-    private IEnumerator TakePeriodicDamageRoutine()
-    {
-        int i = 0;
-        while (true)
-        {
-            yield return new WaitForSeconds(3f);
-            if (i >= 5) break;
-            TakeDamage(10f);
-            i++;
-        }
-    }
+
 
     public void UpdateBaseMoveSpeed(float newBaseSpeed)
     {
-
         BaseMoveSpeed = newBaseSpeed;
-
     }
 
 
