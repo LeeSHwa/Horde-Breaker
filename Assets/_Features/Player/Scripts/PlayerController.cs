@@ -1,8 +1,9 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering;
+
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(CharacterStats))]
+[RequireComponent(typeof(StatsController))]
 public class PlayerController : MonoBehaviour
 {
     // Rigidbody component for physics-based movement
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
 
     private Camera mainCamera;
 
-    private CharacterStats stats; // Reference to CharacterStats script
+    private StatsController stats;
 
     public Vector2 AimDirection { get; private set; }
 
@@ -21,7 +22,7 @@ public class PlayerController : MonoBehaviour
     {
         // Get the Rigidbody2D component attached to this GameObject
         rb = GetComponent<Rigidbody2D>();
-        stats = GetComponent<CharacterStats>(); // Get the CharacterStats component
+        stats = GetComponent<StatsController>(); // Get the CharacterStats component
 
         mainCamera = Camera.main;
 
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
         // 3. Move the player physically using Rigidbody2D
         // This should be done in FixedUpdate for physics consistency
         //rb.MovePosition(rb.position + moveInput * stats.moveSpeed * Time.fixedDeltaTime); // chaged for Animation
-        rb.linearVelocity = moveInput * stats.moveSpeed;
+        rb.linearVelocity = moveInput * stats.currentMoveSpeed;
     }
 
 

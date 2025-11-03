@@ -2,45 +2,62 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float speed = 20f;
-    public Rigidbody2D rb;
-
-    public float knockbackForce;
-
+    // Stats (damage, knockback) will be "injected" by Initialize()
     private float damage;
+    private float knockback;
+    private bool penetration; // Does this bullet penetrate?
 
-    public void Initialize(float damageAmount)
+    // Bullet's own properties
+    public float speed = 20f;
+    public float lifetime = 2f; // Auto-deactivates after 2 seconds
+    private float lifetimeTimer;
+
+    // (1) [Core API] Initialization method called by Gun.cs when firing.
+    public void Initialize(float dmg, float kb, bool pen)
     {
-        this.damage = damageAmount;
+        this.damage = dmg;
+        this.knockback = kb;
+        this.penetration = pen;
+        this.lifetimeTimer = lifetime; // Reset lifetime
     }
 
-    void Start()
+    void Update()
     {
-        if (rb != null)
+        // (2) If lifetime expires, deactivate instead of destroying.
+        lifetimeTimer -= Time.deltaTime;
+        if (lifetimeTimer <= 0)
         {
-            rb.linearVelocity = transform.right * speed;
+            gameObject.SetActive(false); // Changed from Destroy(gameObject)
         }
-        Destroy(gameObject, 3f);
+
+        // (Note) Logic for moving forward (assuming bullet faces right by default)
+        transform.Translate(Vector2.right * speed * Time.deltaTime);
     }
 
-    void OnTriggerEnter2D(Collider2D hitInfo)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (hitInfo.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            CharacterStats stats = hitInfo.GetComponent<CharacterStats>();
-
-            if (stats != null)
+            StatsController enemyStats = other.GetComponent<StatsController>();
+            if (enemyStats != null)
             {
-                stats.TakeDamage(damage);
+                // (3) Attack with the injected damage.
+                enemyStats.TakeDamage(damage);
+                // (Knockback logic can be added here...)
             }
 
-            Rigidbody2D enemyRb = hitInfo.GetComponent<Rigidbody2D>();
-            if (enemyRb != null)
+            // (4) If this bullet does not penetrate, deactivate self on hit.
+            if (!penetration)
             {
-                enemyRb.AddForce(transform.right * knockbackForce, ForceMode2D.Impulse);
+                gameObject.SetActive(false); // Changed from Destroy(gameObject)
             }
         }
+    }
 
-        Destroy(gameObject);
+    // (5) [Important] Called when the object is re-enabled from the pool.
+    void OnEnable()
+    {
+        // Reset the lifetime timer every time it's fired.
+        lifetimeTimer = lifetime;
     }
 }

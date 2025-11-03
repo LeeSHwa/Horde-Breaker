@@ -1,40 +1,91 @@
 using UnityEngine;
 
-public class Gun : Weapon
+public class Gun : Weapon2
 {
-    // The bullet prefab to be fired
-    public GameObject bulletPrefab;
+    // A private variable to hold our *specific* data.
+    private GunDataSO gunData;
 
-    // The point where the bullet will be spawned (the muzzle)
-    public Transform firePoint;
+    // Gun-specific runtime stats
+    private bool currentProjectilePenetration = false;
 
-    // The rate of fire (delay between shots in seconds)
-    public float fireRate = 0.5f;
-
-    // A variable to store the time of the next allowed shot
-    private float nextFireTime = 0f;
-
-    private CharacterStats ownerStats;
-
-    // Start is called before the first frame update
-    void Start()
+    // We use Awake() to get references and cast our data.
+    protected override void Awake()
     {
-        ownerStats = GetComponentInParent<CharacterStats>();
+        base.Awake(); // Run the parent's Awake()
+
+        // Cast the generic 'weaponData' (from base class)
+        // into our specific 'gunData'.
+        if (weaponData is GunDataSO)
+        {
+            gunData = (GunDataSO)weaponData;
+        }
+        else
+        {
+            Debug.LogError(gameObject.name + " has the wrong WeaponDataSO assigned. Expected GunDataSO.");
+        }
     }
 
-    // This function fulfills the 'contract' from the parent Weapon class.
+    // PerformAttack (Now references the specific 'gunData')
     protected override void PerformAttack(Vector2 aimDirection)
     {
-        GameObject bulletObject = Instantiate(bulletPrefab, aim.position, aim.rotation);
+        // [Core] Get the prefab from 'gunData' (our specific SO)
+        // We use the prefab's name as the Tag for the PoolManager.
+        // (This requires the PoolManager Tag to match the prefab name)
+        GameObject bulletObject = PoolManager.Instance.GetFromPool(gunData.bulletPrefab.name);
+
+        if (bulletObject == null) return;
+
+        bulletObject.transform.position = aim.position;
+        bulletObject.transform.rotation = aim.rotation;
 
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         if (bullet != null)
         {
-            bullet.Initialize(damage);
+            // Calculate final damage
+            float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
+
+            // Initialize the bullet
+            bullet.Initialize(
+                finalDamage,
+                weaponData.knockback, // 'knockback' is a common stat from base 'weaponData'
+                currentProjectilePenetration // 'penetration' is a Gun-specific runtime stat
+            );
         }
-
-
     }
-    
 
+    // [Core Logic] Implement the level-up logic
+    // This function READS data from 'gunData'
+    protected override void ApplyLevelUpStats()
+    {
+        // 'currentLevel' was already incremented by the base Weapon class
+        switch (currentLevel)
+        {
+            case 2:
+                // Read Lvl 2 data from our SO
+                currentDamage += gunData.level2_DamageBonus;
+                break;
+            case 3:
+                // Read Lvl 3 data from our SO
+                currentProjectileCount = gunData.level3_ProjectileCount;
+                break;
+            case 4:
+                // Read Lvl 4 data from our SO
+                currentAttackCooldown -= gunData.level4_CooldownReduction;
+                break;
+            case 5:
+                // Read Lvl 5 data from our SO
+                currentProjectilePenetration = gunData.level5_UnlocksPenetration;
+                break;
+        }
+    }
+
+    // [Core Logic] Initialize Gun-specific stats
+    protected override void InitializeStats()
+    {
+        base.InitializeStats(); // Runs base logic (resets damage, cooldown from base SO)
+
+        // Reset Gun-specific stats for Level 1
+        currentProjectilePenetration = false;
+        // 'currentProjectileCount' is already managed by base Weapon.cs
+    }
 }
