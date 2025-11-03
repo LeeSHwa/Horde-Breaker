@@ -62,12 +62,10 @@ public class GameManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // 맵 경계를 초록색으로 표시
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(mapBounds.center, mapBounds.size);
 
-        // 스폰 영역을 빨간색으로 표시
-        if (Application.isPlaying) // 에디터에서 실행 중일 때만 표시
+        if (Application.isPlaying) 
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(SpawnBounds.center, SpawnBounds.size);

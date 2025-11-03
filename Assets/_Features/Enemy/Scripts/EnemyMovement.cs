@@ -8,7 +8,7 @@ public class EnemyMovement : MonoBehaviour
     [Header("Weight")] // Name to Display in Inspector Tab
     public float mass = 0.5f; // Weight of the enemy
 
-    private CharacterStats stats; // Load CharacterStats script
+    private StatsController stats; // Load CharacterStats script
 
     private Transform player; // Load the player's Transform component
     private Rigidbody2D rb; // Physics Engine(Rigidbody2D)
@@ -26,7 +26,7 @@ public class EnemyMovement : MonoBehaviour
         {
             player = playerObject.transform; // Load the player's Transform component
         }
-        stats = GetComponent<CharacterStats>(); // Get the CharacterStats component
+        stats = GetComponent<StatsController>(); // Get the CharacterStats component
 
     }
 
@@ -43,7 +43,7 @@ public class EnemyMovement : MonoBehaviour
             Vector2 direction = (player.position - transform.position).normalized; // Get the direction from enemy to player
                                                                                    //float faceAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // Calculate the angle to See the player
                                                                                    //rb.rotation = faceAngle; // Rotate the enemy to face the player
-            rb.linearVelocity = direction * stats.moveSpeed; // Move the enemy towards the player
+            rb.linearVelocity = direction * stats.currentMoveSpeed;                // Move the enemy towards the player
         }
     }
     // --- KNOCKBACK FIX ---
