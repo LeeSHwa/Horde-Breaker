@@ -15,7 +15,32 @@ public class Pool
 public class PoolManager : MonoBehaviour
 {
     // (2) Singleton: Allows access from anywhere via PoolManager.Instance.
-    public static PoolManager Instance;
+    // [MODIFIED] Changed to a private backing field
+    private static PoolManager _instance;
+
+    // [MODIFIED] Changed 'Instance' to a public property with a 'get' block
+    public static PoolManager Instance
+    {
+        get
+        {
+            // If the instance hasn't been set yet (e.g., Awake hasn't run)
+            if (_instance == null)
+            {
+                // [FIX] Replaced obsolete 'FindObjectOfType' with modern 'FindFirstObjectByType'
+                // This resolves the CS0618 warning
+                _instance = FindFirstObjectByType<PoolManager>();
+
+                if (_instance == null)
+                {
+                    // This will only happen if the PoolManager object is missing or disabled
+                    Debug.LogError("PoolManager is not found in the scene! Make sure it exists and is enabled.");
+                }
+            }
+            // Return the instance
+            return _instance;
+        }
+    }
+
 
     [Header("Pools")]
     // (3) List of pools to configure in the Inspector.
@@ -27,11 +52,12 @@ public class PoolManager : MonoBehaviour
     void Awake()
     {
         // (5) Singleton setup.
-        if (Instance == null)
+        // [MODIFIED] Use the private '_instance' field
+        if (_instance == null)
         {
-            Instance = this;
+            _instance = this;
         }
-        else
+        else if (_instance != this) // Check if another instance already exists
         {
             Destroy(gameObject);
             return;
@@ -69,6 +95,13 @@ public class PoolManager : MonoBehaviour
     //    (Example: Called by Gun.cs)
     public GameObject GetFromPool(string tag)
     {
+        if (poolDictionary == null)
+        {
+            // This can happen if Awake() hasn't finished.
+            Debug.LogError("PoolManager dictionary not initialized. Awake() may not have run yet.");
+            return null;
+        }
+
         if (!poolDictionary.ContainsKey(tag))
         {
             Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
@@ -78,8 +111,24 @@ public class PoolManager : MonoBehaviour
         // (11) Dequeue an object from the queue.
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
 
-        // (Note: If queue is empty, logic for a 'growing pool' (Instantiate new) can be added here)
-        // (Skipped for simplicity for now)
+        // [MODIFIED] Added a null-check in case the pooled object was somehow destroyed
+        if (objectToSpawn == null)
+        {
+            // Find the original prefab to re-instantiate
+            foreach (var pool in pools)
+            {
+                if (pool.tag == tag)
+                {
+                    objectToSpawn = Instantiate(pool.prefab);
+                    if (pool.container != null)
+                    {
+                        objectToSpawn.transform.SetParent(pool.container);
+                    }
+                    break;
+                }
+            }
+        }
+
 
         objectToSpawn.SetActive(true); // Activate it!
 
@@ -89,6 +138,4 @@ public class PoolManager : MonoBehaviour
 
         return objectToSpawn;
     }
-
-
 }

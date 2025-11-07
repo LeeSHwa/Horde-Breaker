@@ -23,7 +23,9 @@ public abstract class Skills : MonoBehaviour
             Debug.LogError("Skill cannot find StatsController in parent!");
         }
 
-        InitializeStats();
+        // [MODIFIED] Do NOT call InitializeStats() here.
+        // The child script must call it after setting up its specific data.
+        // InitializeStats(); // [REMOVED]
     }
 
     public virtual void TryAttack()
@@ -42,7 +44,7 @@ public abstract class Skills : MonoBehaviour
         if (currentLevel >= 5) return;
 
         currentLevel++;
-        ApplyLevelUpStats(); 
+        ApplyLevelUpStats();
     }
 
     protected abstract void ApplyLevelUpStats();
