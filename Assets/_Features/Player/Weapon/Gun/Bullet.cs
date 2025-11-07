@@ -43,7 +43,12 @@ public class Bullet : MonoBehaviour
             {
                 // (3) Attack with the injected damage.
                 enemyStats.TakeDamage(damage);
-                // (Knockback logic can be added here...)
+                EnemyMovement enemyMove = other.GetComponent<EnemyMovement>();
+                if (enemyMove != null)
+                {                  
+                    Vector2 knockbackDirection = (other.transform.position - transform.position).normalized;
+                    enemyMove.ApplyKnockback(knockbackDirection, this.knockback, 0.1f);
+                }
             }
 
             // (4) If this bullet does not penetrate, deactivate self on hit.
