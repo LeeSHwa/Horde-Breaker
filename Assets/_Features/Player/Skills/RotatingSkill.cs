@@ -41,7 +41,7 @@ public class RotatingSkill : Skills // Inherits from Skills
     }
 
     // ... (PerformAttack, ApplyLevelUpStats
-    //     ... (이하 코드는 이전과 동일) ...
+
     protected override void PerformAttack()
     {
         float angleStep = 360f / currentProjectileCount;

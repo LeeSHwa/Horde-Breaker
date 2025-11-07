@@ -18,8 +18,8 @@ MonoBehaviour:
   skillName: New Skill
   skillDescription: Skill description.
   zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
-  baseDuration: 3
-  baseArea: 1
+  baseDuration: 1
+  baseArea: 8
   speedDebuffPercentage: 30
   level2_DamageIncrease: 5
   level3_AreaIncrease: 0.5
