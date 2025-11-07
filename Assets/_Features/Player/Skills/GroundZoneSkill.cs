@@ -38,7 +38,7 @@ public class GroundZoneSkill : Skills // Inherits from Skills
     }
 
     // ... (PerformAttack, ApplyLevelUpStats
-    //     ... (이하 코드는 이전과 동일) ...
+
     protected override void PerformAttack()
     {
         GameObject zoneObject = PoolManager.Instance.GetFromPool(zoneData.zonePrefab.name);
