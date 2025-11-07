@@ -14,6 +14,10 @@ public class SwordHitbox : MonoBehaviour
     // Stores the damage value passed from Sword.cs.
     private float currentDamage;
 
+   
+    private float currentKnockback;
+  
+
     // Called automatically by the PoolManager when this object is activated.
     void OnEnable()
     {
@@ -21,11 +25,13 @@ public class SwordHitbox : MonoBehaviour
         timer = slashDuration;
     }
 
+
     // Public method called by Sword.cs right after spawning.
     // It passes in the weapon's current stats.
-    public void Initialize(float damage, float area, Quaternion rotation)
+    public void Initialize(float damage, float knockback, float area, Quaternion rotation)
     {
         this.currentDamage = damage;
+        this.currentKnockback = knockback; 
 
         // Note: The scale is set in the Sword.cs coroutine,
         // but this could be a way to set an initial size if needed.
@@ -56,19 +62,30 @@ public class SwordHitbox : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Log any collision for debugging.
-        Debug.Log("Sword collided with: " + collision.tag);
+        // Debug.Log("Sword collided with: " + collision.tag);
 
         // Check if the collided object has the "Enemy" tag.
         if (collision.CompareTag("Enemy"))
         {
-            Debug.Log("Hit an Enemy: " + collision.name);
+            // Debug.Log("Hit an Enemy: " + collision.name);
 
             // Try to find the StatsController component on the enemy.
             if (collision.TryGetComponent<StatsController>(out StatsController enemyStats))
             {
                 // If found, apply damage.
-                Debug.Log("Dealing " + currentDamage + " damage to " + collision.name);
+                // Debug.Log("Dealing " + currentDamage + " damage to " + collision.name);
                 enemyStats.TakeDamage(currentDamage);
+
+
+                EnemyMovement enemyMove = collision.GetComponent<EnemyMovement>();
+                if (enemyMove != null)
+                {
+                    
+                    Vector2 knockbackDirection = (collision.transform.position - transform.position).normalized;
+
+                    enemyMove.ApplyKnockback(knockbackDirection, this.currentKnockback, 0.15f);
+                }
+
             }
             else
             {

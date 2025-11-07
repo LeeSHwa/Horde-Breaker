@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4950b017278666340b557e112ce5f479, type: 3}
   m_Name: Gun_Data
   m_EditorClassIdentifier: 
-  baseDamage: 50
+  baseDamage: 1
   baseAttackCooldown: 0.1
   knockback: 5
   weaponName: Weapon

@@ -10,6 +10,9 @@ public class Sword : Weapon2
     // The current attack area, modified by level-ups.
     protected float currentArea;
 
+    // The current knockback strength.
+    protected float currentKnockback;
+
     // The duration of the slash attack in seconds, configurable in the Inspector.
     [SerializeField]
     private float slashDuration = 0.3f;
@@ -25,6 +28,10 @@ public class Sword : Weapon2
 
         // Set the initial attack area from the data.
         currentArea = swordData.baseArea;
+
+        
+        // Manually set the knockback from the SO data, as base class doesn't handle it.
+        currentKnockback = swordData.knockback; 
     }
 
     // Called by the Weapon2 base class to perform an attack.
@@ -46,8 +53,8 @@ public class Sword : Weapon2
         SwordHitbox hitboxScript = slashHitbox.GetComponent<SwordHitbox>();
         if (hitboxScript != null)
         {
-            // Pass the current damage and area to the hitbox.
-            hitboxScript.Initialize(currentDamage, currentArea, aim.rotation);
+            // Pass the current damage, knockback, and area to the hitbox.
+            hitboxScript.Initialize(currentDamage, currentKnockback, currentArea, aim.rotation);
 
             // Start the coroutine that creates the swinging motion.
             StartCoroutine(SwingSwordHitbox(slashHitbox, slashHitbox.transform.rotation, currentArea));
@@ -98,8 +105,6 @@ public class Sword : Weapon2
             yield return null; // Wait for the next frame.
         }
 
-        // Note: The hitbox is returned to the pool by its own script (SwordHitbox.cs),
-        // presumably after its own duration or animation ends.
     }
 
     // Applies stat changes when the weapon levels up.
