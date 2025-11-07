@@ -77,6 +77,19 @@ public class StatsController : MonoBehaviour
         if (isDead || damage < 0) return;
 
         currentHP -= damage;
+
+        GameObject popup = PoolManager.Instance.GetFromPool("DamageText");
+        if (popup != null)
+        {
+            popup.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+
+            DamagePopup dp = popup.GetComponent<DamagePopup>();
+            if (dp != null)
+            {
+                dp.Setup(damage, false); // false = isCritical (dummy for now)
+            }
+        }
+
         Debug.Log(transform.name + " takes " + damage + " damage.");
 
         if (gameObject.CompareTag("Player"))
@@ -91,6 +104,7 @@ public class StatsController : MonoBehaviour
             Die();
         }
     }
+
 
     private void Die()
     {

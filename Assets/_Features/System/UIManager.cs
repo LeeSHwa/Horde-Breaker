@@ -37,13 +37,13 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void UpdateStageUI(int currentStage)
-    {
-        stageText.text = "Stage " + currentStage;  
-    }
+    //public void UpdateStageUI(int currentStage)
+    //{
+    //    stageText.text = "Stage " + currentStage;  
+    //}
 
-    public void UpdateHP(int currentHP, int maxHP)
+    public void UpdateHP(float currentHP, float maxHP)
     {
-            hpSlider.value = currentHP / maxHP;
+            hpSlider.value = Mathf.Clamp01(currentHP / maxHP);
     }
 }

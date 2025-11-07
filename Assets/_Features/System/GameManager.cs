@@ -33,10 +33,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.UpdateStageUI(currentStage);
-        }
+        //if (UIManager.Instance != null)
+        //{
+        //    UIManager.Instance.UpdateStageUI(currentStage);
+        //}
     }
 
 
