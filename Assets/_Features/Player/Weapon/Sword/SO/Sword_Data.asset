@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4950b017278666340b557e112ce5f479, type: 3}
-  m_Name: Gun_Data
+  m_Script: {fileID: 11500000, guid: 51e76ab445195c84cabe77ddd570a84e, type: 3}
+  m_Name: Sword_Data
   m_EditorClassIdentifier: 
   baseDamage: 1
-  baseAttackCooldown: 0.1
+  baseAttackCooldown: 0.5
   knockback: 5
   weaponName: Weapon
   weaponDescription: Weapon description.
-  bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
-  level2_DamageBonus: 5
-  level3_ProjectileCount: 2
-  level4_CooldownReduction: 0.25
-  level5_UnlocksPenetration: 1
+  hitboxPrefab: {fileID: 7679575230289758465, guid: 19d8208547681c049ae786cda34f7f2c, type: 3}
+  baseArea: 1
+  sizeMultiplier: 5
+  level3_AreaIncrease: 1.2
+  level5_PierceIncrease: 1
