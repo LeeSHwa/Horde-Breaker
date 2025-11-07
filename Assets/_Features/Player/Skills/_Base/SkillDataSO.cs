@@ -1,20 +1,19 @@
 using UnityEngine;
 
-// This is the abstract base class for ALL skill data.
-// It ONLY contains data truly common to all skills (Aura, Satellite, etc.)
-public abstract class SkillDataSO : ScriptableObject
+// This path must match the existing file
+[CreateAssetMenu(fileName = "NewSkillData", menuName = "Stats/Skill Data")]
+public class SkillDataSO : ScriptableObject
 {
     [Header("Common Stats")]
-    // Stats that EVERY skill MUST have.
-    public float baseDamage = 5f;
-    public float baseAttackCooldown = 3f; // Skills often have different timings
-    public float knockback = 1f;
+    // These two are required by Skills.cs
+    public float baseDamage = 10f;
+    public float baseAttackCooldown = 1f;
+
+    // Added for RotatingSkill
+    public float knockback = 3f;
 
     [Header("Description")]
-    public string skillName = "Skill";
+    public string skillName = "New Skill";
     [TextArea]
     public string skillDescription = "Skill description.";
-
-    // Note: All Level Up stats (like 'area size' or 'satellite count')
-    // are defined in the CHILD SO (e.g., AuraDataSO, SatelliteDataSO)
 }
