@@ -7,17 +7,21 @@ public class Bullet : MonoBehaviour
     private float knockback;
     private bool penetration; // Does this bullet penetrate?
 
+    // [New] Variable to store the attack's source (the player)
+    private Transform attackSource;
+
     // Bullet's own properties
     public float speed = 20f;
     public float lifetime = 2f; // Auto-deactivates after 2 seconds
     private float lifetimeTimer;
 
-    // (1) [Core API] Initialization method called by Gun.cs when firing.
-    public void Initialize(float dmg, float kb, bool pen)
+    // [Modified] Added 'Transform source' parameter to Initialize method
+    public void Initialize(float dmg, float kb, bool pen, Transform source)
     {
         this.damage = dmg;
         this.knockback = kb;
         this.penetration = pen;
+        this.attackSource = source; // Store the attacker's info
         this.lifetimeTimer = lifetime; // Reset lifetime
     }
 
@@ -45,8 +49,24 @@ public class Bullet : MonoBehaviour
                 enemyStats.TakeDamage(damage);
                 EnemyMovement enemyMove = other.GetComponent<EnemyMovement>();
                 if (enemyMove != null)
-                {                  
-                    Vector2 knockbackDirection = (other.transform.position - transform.position).normalized;
+                {
+                    // [Modified] Changed knockback calculation basis to 'attackSource' (the player)
+                    if (attackSource == null)
+                    {
+                        // Prevents null reference if attackSource is not assigned
+                        Debug.LogWarning("Bullet's attackSource is not set!");
+                        return;
+                    }
+
+                    Vector2 knockbackDirection = (other.transform.position - attackSource.position).normalized;
+
+                    // Prevents the direction vector from becoming (0,0) if player and enemy overlap
+                    if (knockbackDirection == Vector2.zero)
+                    {
+                        // (Fallback) Knock them back in the bullet's traveling direction (transform.right)
+                        knockbackDirection = transform.right;
+                    }
+
                     enemyMove.ApplyKnockback(knockbackDirection, this.knockback, 0.1f);
                 }
             }
@@ -64,5 +84,9 @@ public class Bullet : MonoBehaviour
     {
         // Reset the lifetime timer every time it's fired.
         lifetimeTimer = lifetime;
+
+        // (Optional) Reset attackSource to null to prevent errors
+        // attackSource = null; 
+        // -> Not recommended to reset in OnEnable, as Initialize overwrites it every time.
     }
 }

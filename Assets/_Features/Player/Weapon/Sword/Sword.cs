@@ -29,9 +29,8 @@ public class Sword : Weapon2
         // Set the initial attack area from the data.
         currentArea = swordData.baseArea;
 
-        
         // Manually set the knockback from the SO data, as base class doesn't handle it.
-        currentKnockback = swordData.knockback; 
+        currentKnockback = swordData.knockback;
     }
 
     // Called by the Weapon2 base class to perform an attack.
@@ -54,7 +53,13 @@ public class Sword : Weapon2
         if (hitboxScript != null)
         {
             // Pass the current damage, knockback, and area to the hitbox.
-            hitboxScript.Initialize(currentDamage, currentKnockback, currentArea, aim.rotation);
+            hitboxScript.Initialize(
+                currentDamage,
+                currentKnockback,
+                currentArea,
+                aim.rotation,
+                ownerStats.transform // [New] Pass the owner's transform as the attack source
+            );
 
             // Start the coroutine that creates the swinging motion.
             StartCoroutine(SwingSwordHitbox(slashHitbox, slashHitbox.transform.rotation, currentArea));
@@ -104,7 +109,6 @@ public class Sword : Weapon2
             timer += Time.deltaTime;
             yield return null; // Wait for the next frame.
         }
-
     }
 
     // Applies stat changes when the weapon levels up.
