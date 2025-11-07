@@ -13,10 +13,9 @@ public class SwordHitbox : MonoBehaviour
 
     // Stores the damage value passed from Sword.cs.
     private float currentDamage;
-
-   
     private float currentKnockback;
-  
+
+    private Transform attackSource;
 
     // Called automatically by the PoolManager when this object is activated.
     void OnEnable()
@@ -25,13 +24,13 @@ public class SwordHitbox : MonoBehaviour
         timer = slashDuration;
     }
 
-
     // Public method called by Sword.cs right after spawning.
     // It passes in the weapon's current stats.
-    public void Initialize(float damage, float knockback, float area, Quaternion rotation)
+    public void Initialize(float damage, float knockback, float area, Quaternion rotation, Transform source)
     {
         this.currentDamage = damage;
-        this.currentKnockback = knockback; 
+        this.currentKnockback = knockback;
+        this.attackSource = source; 
 
         // Note: The scale is set in the Sword.cs coroutine,
         // but this could be a way to set an initial size if needed.
@@ -76,16 +75,24 @@ public class SwordHitbox : MonoBehaviour
                 // Debug.Log("Dealing " + currentDamage + " damage to " + collision.name);
                 enemyStats.TakeDamage(currentDamage);
 
-
                 EnemyMovement enemyMove = collision.GetComponent<EnemyMovement>();
                 if (enemyMove != null)
                 {
-                    
-                    Vector2 knockbackDirection = (collision.transform.position - transform.position).normalized;
+                    if (attackSource == null)
+                    {
+                        Debug.LogWarning("SwordHitbox's attackSource is not set!");
+                        return;
+                    }
+
+                    Vector2 knockbackDirection = (collision.transform.position - attackSource.position).normalized;
+
+                    if (knockbackDirection == Vector2.zero)
+                    {
+                        knockbackDirection = (collision.transform.position - transform.position).normalized;
+                    }
 
                     enemyMove.ApplyKnockback(knockbackDirection, this.currentKnockback, 0.15f);
                 }
-
             }
             else
             {

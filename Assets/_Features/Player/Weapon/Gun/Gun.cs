@@ -48,7 +48,8 @@ public class Gun : Weapon2
             bullet.Initialize(
                 finalDamage,
                 weaponData.knockback, // 'knockback' is a common stat from base 'weaponData'
-                currentProjectilePenetration // 'penetration' is a Gun-specific runtime stat
+                currentProjectilePenetration, // 'penetration' is a Gun-specific runtime stat
+                ownerStats.transform // [New] Pass the owner's transform as the attack source
             );
         }
     }
