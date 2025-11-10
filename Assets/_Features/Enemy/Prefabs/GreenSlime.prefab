@@ -219,4 +219,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitCooldown: 0.5
+  hitCooldown: 0.01
