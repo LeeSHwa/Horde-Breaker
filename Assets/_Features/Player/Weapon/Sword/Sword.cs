@@ -81,6 +81,9 @@ public class Sword : Weapon
         // Calculate the final target size, including the global multiplier from the SO.
         float finalTargetArea = targetArea * swordData.sizeMultiplier;
 
+        float y_adjustment = 0.2f;
+        Vector3 positionOffset = new Vector3(0, -y_adjustment, 0);
+
         // Set the initial scale of the hitbox.
         hitbox.transform.localScale = Vector3.one * (finalTargetArea * initialScaleFactor);
 
@@ -92,6 +95,11 @@ public class Sword : Weapon
             // 'progress' goes from 0 to 1 over the swingDuration.
             float progress = timer / swingDuration;
 
+            if (aim != null)
+            {
+                hitbox.transform.position = aim.position + positionOffset;
+            }
+
             // Animate the rotation:
             // Lerp creates a smooth rotation from the start angle to the end angle.
             float currentAngle = Mathf.Lerp(startAngleOffset, startAngleOffset + swingAngle, progress);
@@ -99,7 +107,7 @@ public class Sword : Weapon
 
             // Animate the scale:
             // Mathf.Sin(progress * Mathf.PI) creates a "grow and shrink" effect (0 -> 1 -> 0).
-            float scaleProgress = Mathf.Sin(progress * Mathf.PI);
+            float scaleProgress = progress;            
             // Apply the scaling effect, starting from initialScaleFactor up to finalTargetArea.
             hitbox.transform.localScale = Vector3.one * (finalTargetArea * (initialScaleFactor + (1 - initialScaleFactor) * scaleProgress));
 
