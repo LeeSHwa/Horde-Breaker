@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI stageText;
-    public Slider hpSlider;
+    public Image playerHPBarFill;
 
     
     void Awake()
@@ -39,11 +39,15 @@ public class UIManager : MonoBehaviour
 
     //public void UpdateStageUI(int currentStage)
     //{
-    //    stageText.text = "Stage " + currentStage;  
+    //    stageText.text = "Stage " + currentStage;
     //}
 
-    //public void UpdateHP(float currentHP, float maxHP)
-    //{
-    //        hpSlider.value = Mathf.Clamp01(currentHP / maxHP);
-    //}
+    public void UpdateHP(float currentHP, float maxHP)
+    {
+        if (playerHPBarFill != null)
+        {
+            // 0.0 ~ 1.0 사이 값으로 변환하여 이미지 채움 정도 조절
+            playerHPBarFill.fillAmount = Mathf.Clamp01(currentHP / maxHP);
+        }
+    }
 }
