@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5370613933579842449}
   - component: {fileID: 156969259526360926}
   - component: {fileID: 1033783065703509946}
+  - component: {fileID: 8851462600876830387}
   m_Layer: 0
   m_Name: GreenSlime
   m_TagString: Enemy
@@ -202,7 +203,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 2c42e1199c8dc70448e1b9ec4d50f9c8, type: 2}
+  baseStats: {fileID: 11400000, guid: 454c5dcf4f4cee14482d8901419ceda7, type: 2}
   currentHP: 0
   currentMoveSpeed: 0
   currentDamageMultiplier: 0
+--- !u!114 &8851462600876830387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8068589428734277748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCooldown: 0.5

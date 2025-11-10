@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -6003777276541363339}
   - component: {fileID: 2624853290534050862}
   - component: {fileID: -1998696949730818253}
+  - component: {fileID: 6678338938222245641}
   m_Layer: 0
   m_Name: RedSlime
   m_TagString: Enemy
@@ -202,7 +203,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: dd863f848c06d0d44bac93948e9ab29a, type: 2}
+  baseStats: {fileID: 11400000, guid: 5511fec38b803094582955939fb81b72, type: 2}
   currentHP: 0
   currentMoveSpeed: 0
   currentDamageMultiplier: 0
+--- !u!114 &6678338938222245641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171226546246630872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCooldown: 0.5
