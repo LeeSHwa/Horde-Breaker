@@ -44,22 +44,22 @@ public class StatsController : MonoBehaviour
         InitializeStats();
     }
 
-    void Start()
-    {
-        // [FIX] Move the UI logic here.
-        // Start() runs AFTER all Awake() methods (including UIManager.Awake()) are complete.
-        if (gameObject.CompareTag("Player"))
-        {
-            if (UIManager.Instance != null)
-            {
-                UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
-            }
-            else
-            {
-                Debug.LogError("UIManager.Instance is STILL null, even in Start()! Check the UIManager object.");
-            }
-        }
-    }
+    //void Start()
+    //{
+    //    // [FIX] Move the UI logic here.
+    //    // Start() runs AFTER all Awake() methods (including UIManager.Awake()) are complete.
+    //    if (gameObject.CompareTag("Player"))
+    //    {
+    //        if (UIManager.Instance != null)
+    //        {
+    //            UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+    //        }
+    //        else
+    //        {
+    //            Debug.LogError("UIManager.Instance is STILL null, even in Start()! Check the UIManager object.");
+    //        }
+    //    }
+    //}
 
     // Added Update for slow recalculation
     void Update()
@@ -82,12 +82,12 @@ public class StatsController : MonoBehaviour
 
         InitializeStats(); // OK to re-initialize stats
 
-        // [FIX] We also need to update UI when re-enabled (e.g. Player respawns)
-        // But we must check if UIManager.Instance is ready.
-        if (gameObject.CompareTag("Player") && UIManager.Instance != null)
-        {
-            UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
-        }
+        //// [FIX] We also need to update UI when re-enabled (e.g. Player respawns)
+        //// But we must check if UIManager.Instance is ready.
+        //if (gameObject.CompareTag("Player") && UIManager.Instance != null)
+        //{
+        //    UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+        //}
     }
 
     public void InitializeStats()
@@ -130,10 +130,10 @@ public class StatsController : MonoBehaviour
 
         Debug.Log(transform.name + " takes " + damage + " damage.");
 
-        if (gameObject.CompareTag("Player"))
-        {
-            UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
-        }
+        //if (gameObject.CompareTag("Player"))
+        //{
+        //    UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+        //}
 
         if (currentHP <= 0)
         {
