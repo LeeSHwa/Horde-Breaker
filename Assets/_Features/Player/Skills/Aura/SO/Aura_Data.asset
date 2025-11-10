@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75eb4e08ed5df0e4fbc20817d1e4fafa, type: 3}
   m_Name: Aura_Data
   m_EditorClassIdentifier: 
-  baseDamage: 100
+  baseDamage: 3
   baseAttackCooldown: 1
   knockback: 0
   skillName: New Skill
   skillDescription: Skill description.
   zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
   baseDuration: 1
-  baseArea: 8
-  speedDebuffPercentage: 30
+  baseArea: 5
+  speedDebuffPercentage: 80
   level2_DamageIncrease: 5
   level3_AreaIncrease: 0.5
   level4_DurationIncrease: 1
-  level5_DebuffIncrease: -10
+  level5_DebuffIncrease: -40

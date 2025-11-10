@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 659070801362135580}
   - component: {fileID: 1511943895030665893}
   m_Layer: 0
-  m_Name: MoonPrefab
+  m_Name: Moon_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

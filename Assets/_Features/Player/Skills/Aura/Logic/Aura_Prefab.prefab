@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 1676932308153316477}
   - component: {fileID: 5689882085076745875}
   m_Layer: 0
-  m_Name: AuraPrefab
+  m_Name: Aura_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

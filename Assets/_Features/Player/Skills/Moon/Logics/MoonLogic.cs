@@ -1,9 +1,9 @@
-// FileName: RotatingLogic.cs
 using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider2D))]
-public class RotatingLogic : MonoBehaviour
+// [MODIFIED] Class name changed from RotatingLogic to MoonLogic
+public class MoonLogic : MonoBehaviour
 {
     private Transform centerPoint; // Rotation center (Player)
     private float damage;
