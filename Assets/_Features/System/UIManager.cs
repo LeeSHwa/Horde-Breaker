@@ -42,8 +42,8 @@ public class UIManager : MonoBehaviour
     //    stageText.text = "Stage " + currentStage;  
     //}
 
-    public void UpdateHP(float currentHP, float maxHP)
-    {
-            hpSlider.value = Mathf.Clamp01(currentHP / maxHP);
-    }
+    //public void UpdateHP(float currentHP, float maxHP)
+    //{
+    //        hpSlider.value = Mathf.Clamp01(currentHP / maxHP);
+    //}
 }

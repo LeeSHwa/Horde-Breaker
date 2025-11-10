@@ -1,68 +1,99 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(StatsController))]
 public class PlayerController : MonoBehaviour
 {
-    // Rigidbody component for physics-based movement
+    [Header("References")]
+    public Transform aimObject;       // Reference to the 'aim' GameObject in scene
+    public Transform weaponHolder;    // Parent transform for instantiating weapons
+    public GameObject startingWeaponPrefab; // Prefab to equip at start
+
     private Rigidbody2D rb;
-
-    // Variable to store the direction of input
     private Vector2 moveInput;
-
     private Camera mainCamera;
-
     private StatsController stats;
 
+    // The currently equipped weapon instance
+    private Weapon currentWeapon;
+
+    // Public property for other scripts to access aim direction if needed
     public Vector2 AimDirection { get; private set; }
 
     void Start()
     {
-        // Get the Rigidbody2D component attached to this GameObject
         rb = GetComponent<Rigidbody2D>();
-        stats = GetComponent<StatsController>(); // Get the CharacterStats component
-
+        stats = GetComponent<StatsController>();
         mainCamera = Camera.main;
 
-        AimDirection = Vector2.right; // Default aim direction
-    }
+        AimDirection = Vector2.right;
 
+        // Equip starting weapon if assigned
+        if (startingWeaponPrefab != null)
+        {
+            EquipWeapon(startingWeaponPrefab);
+        }
+    }
 
     void Update()
     {
-        // 1. Get keyboard input
-        // GetAxisRaw returns -1, 0, or 1 for immediate response
-        float moveX = Input.GetAxisRaw("Horizontal"); // Horizontal input (left/right)
-        float moveY = Input.GetAxisRaw("Vertical");   // Vertical input (up/down)
-
-        // 2. Store the input as a Vector2 and normalize it to ensure consistent speed diagonally
+        // 1. Handle Movement Input
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
         moveInput = new Vector2(moveX, moveY).normalized;
 
-        UpdateAimDirection();
+        // 2. Calculate Aim Direction
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 direction = new Vector2(
+            mousePosition.x - transform.position.x,
+            mousePosition.y - transform.position.y
+        ).normalized;
+        AimDirection = direction;
+
+        // 3. Update & Attack with Current Weapon
+        if (currentWeapon != null)
+        {
+            // Always update aim visual
+            currentWeapon.UpdateAim(AimDirection);
+
+            // Check for attack input (e.g., left mouse button)
+            // For auto-attack, remove this if-check and just call TryAttack
+
+            currentWeapon.TryAttack(AimDirection);
+
+        }
     }
 
     private void FixedUpdate()
     {
-        // 3. Move the player physically using Rigidbody2D
-        // This should be done in FixedUpdate for physics consistency
-        //rb.MovePosition(rb.position + moveInput * stats.moveSpeed * Time.fixedDeltaTime); // chaged for Animation
+        // Physics-based movement
+        // Assuming 'linearVelocity' is a valid property in your Unity version (Unity 6+)
+        // older versions use 'rb.velocity'
         rb.linearVelocity = moveInput * stats.currentMoveSpeed;
     }
 
-
-    private void UpdateAimDirection()
+    // Method to equip a new weapon from a prefab
+    public void EquipWeapon(GameObject newWeaponPrefab)
     {
-        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        // 1. Destroy old weapon if it exists
+        if (currentWeapon != null)
+        {
+            Destroy(currentWeapon.gameObject);
+        }
 
-    Vector2 direction = new Vector2(
-        mousePosition.x - transform.position.x,
-        mousePosition.y - transform.position.y
-        ).normalized;
+        // 2. Instantiate new weapon as a child of weaponHolder
+        GameObject weaponObj = Instantiate(newWeaponPrefab, weaponHolder.position, Quaternion.identity, weaponHolder);
 
-    AimDirection = direction;
+        // 3. Get Weapon component and initialize it
+        currentWeapon = weaponObj.GetComponent<Weapon>();
+        if (currentWeapon != null)
+        {
+            // Inject dependencies: aim object and stats controller
+            currentWeapon.Initialize(this.aimObject, this.stats);
+        }
+        else
+        {
+            Debug.LogError("Equipped prefab does not have a Weapon component!");
+        }
     }
 }
-
-

@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     // A variable that can hold any type of Weapon, not just a specific one like a Gun.
-    public Weapon2 currentWeapon;
+    public Weapon currentWeapon;
 
     private PlayerController playerController;
 

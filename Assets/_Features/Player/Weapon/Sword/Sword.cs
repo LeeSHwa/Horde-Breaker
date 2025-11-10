@@ -2,7 +2,7 @@
 using System.Collections;
 
 // This class manages the logic for the Sword weapon, inheriting from Weapon2.
-public class Sword : Weapon2
+public class Sword : Weapon
 {
     // Caches the Sword-specific ScriptableObject data.
     private SwordDataSO swordData;
@@ -17,19 +17,17 @@ public class Sword : Weapon2
     [SerializeField]
     private float slashDuration = 0.3f;
 
-    // Initializes the sword's stats from the SwordDataSO.
-    protected override void InitializeStats()
+    // (1) Override Initialize to handle Sword-specific data
+    public override void Initialize(Transform aimObj, StatsController owner)
     {
-        // Cast the generic weaponData to the specific SwordDataSO.
+        // MUST call base.Initialize first to set up common stats
+        base.Initialize(aimObj, owner);
+
+        // Cast generic data to specific data
         swordData = (SwordDataSO)weaponData;
 
-        // Call the base class's InitializeStats (e.g., to set currentDamage).
-        base.InitializeStats();
-
-        // Set the initial attack area from the data.
+        // Initialize Sword-specific stats
         currentArea = swordData.baseArea;
-
-        // Manually set the knockback from the SO data, as base class doesn't handle it.
         currentKnockback = swordData.knockback;
     }
 
