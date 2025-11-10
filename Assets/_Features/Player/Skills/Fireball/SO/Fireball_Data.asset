@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285d5f811faacfa4f87ea6a342f7f117, type: 3}
+  m_Name: Fireball_Data
+  m_EditorClassIdentifier: 
+  baseDamage: 50
+  baseAttackCooldown: 1
+  knockback: 0
+  skillName: New Skill
+  skillDescription: Skill description.
+  projectilePrefab: {fileID: 9187814388354200019, guid: 09f7740eb69a65644ba0a63401054df4, type: 3}
+  baseProjectileSpeed: 20
+  baseProjectileLifetime: 5
+  damageFalloffPercentage: 100
+  level2_DamageIncrease: 10
+  level3_AreaIncrease: 0.2
+  level4_CooldownReduction: 0.2
+  level5_ProjectileCount: 3
+  level5_SpreadAngle: 15

@@ -1,9 +1,11 @@
 using UnityEngine;
 
-public class RotatingSkill : Skills // Inherits from Skills
+// [MODIFIED] Class name changed from RotatingSkill to MoonSkill
+public class MoonSkill : Skills // Inherits from Skills
 {
+    // [MODIFIED] Changed type from RotatingSkillDataSO to MoonDataSO
     // [FIX] Renamed this variable to avoid hiding the parent's 'skillData'
-    private RotatingSkillDataSO rotatingSkillData;
+    private MoonDataSO rotatingSkillData; // [NOTE] Variable name 'rotatingSkillData' is kept for minimal code changes
 
     // Runtime stats
     protected float currentDuration;
@@ -14,15 +16,17 @@ public class RotatingSkill : Skills // Inherits from Skills
     {
         base.Awake(); // This now ONLY sets ownerStats
 
+        // [MODIFIED] Now casts to MoonDataSO
         // [FIX] Cast the PARENT'S 'skillData' to our specific variable
-        if (skillData is RotatingSkillDataSO) // 'skillData' now refers to the parent's (Skills.skillData)
+        if (skillData is MoonDataSO) // 'skillData' now refers to the parent's (Skills.skillData)
         {
             // Assign to our new, correctly named variable
-            rotatingSkillData = (RotatingSkillDataSO)skillData;
+            rotatingSkillData = (MoonDataSO)skillData;
         }
         else
         {
-            Debug.LogError(gameObject.name + " has the wrong SkillDataSO assigned.");
+            // [MODIFIED] Error message updated
+            Debug.LogError(gameObject.name + " has the wrong SkillDataSO assigned. Expected MoonDataSO.");
         }
 
         // [MOVED] Call InitializeStats() AFTER the 'rotatingSkillData' variable is set.
@@ -50,7 +54,10 @@ public class RotatingSkill : Skills // Inherits from Skills
             GameObject projObject = PoolManager.Instance.GetFromPool(rotatingSkillData.projectilePrefab.name);
             if (projObject == null) continue;
             projObject.transform.position = ownerStats.transform.position;
-            RotatingLogic logic = projObject.GetComponent<RotatingLogic>();
+
+            // [MODIFIED] GetComponent call changed from RotatingLogic to MoonLogic
+            MoonLogic logic = projObject.GetComponent<MoonLogic>();
+
             if (logic != null)
             {
                 float startAngle = i * angleStep;

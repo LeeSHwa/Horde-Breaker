@@ -1,8 +1,10 @@
 using UnityEngine;
 
-public class GroundZoneSkill : Skills // Inherits from Skills
+// [MODIFIED] Class name changed from GroundZoneSkill to AuraSkill
+public class AuraSkill : Skills // Inherits from Skills
 {
-    private GroundZoneDataSO zoneData;
+    // [MODIFIED] Changed type from GroundZoneDataSO to AuraDataSO
+    private AuraDataSO zoneData;
 
     // Runtime stats
     protected float currentDuration;
@@ -14,13 +16,15 @@ public class GroundZoneSkill : Skills // Inherits from Skills
         base.Awake(); // This now ONLY sets ownerStats
 
         // Cast the generic 'skillData' into our specific 'zoneData'
-        if (skillData is GroundZoneDataSO)
+        // [MODIFIED] Now casts to AuraDataSO
+        if (skillData is AuraDataSO)
         {
-            zoneData = (GroundZoneDataSO)skillData;
+            zoneData = (AuraDataSO)skillData;
         }
         else
         {
-            Debug.LogError(gameObject.name + " has the wrong SkillDataSO assigned.");
+            // [MODIFIED] Error message updated
+            Debug.LogError(gameObject.name + " has the wrong SkillDataSO assigned. Expected AuraDataSO.");
         }
 
         // [MOVED] Call InitializeStats() AFTER the 'zoneData' variable is set.
@@ -44,7 +48,10 @@ public class GroundZoneSkill : Skills // Inherits from Skills
         GameObject zoneObject = PoolManager.Instance.GetFromPool(zoneData.zonePrefab.name);
         if (zoneObject == null) return;
         zoneObject.transform.position = ownerStats.transform.position;
-        ZoneLogic logic = zoneObject.GetComponent<ZoneLogic>();
+
+        // [MODIFIED] GetComponent call changed from ZoneLogic to AuraLogic
+        AuraLogic logic = zoneObject.GetComponent<AuraLogic>();
+
         if (logic != null)
         {
             float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
