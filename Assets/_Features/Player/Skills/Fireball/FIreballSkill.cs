@@ -4,10 +4,12 @@ using UnityEngine;
 public class FireballSkill : Skills // Inherits from Skills
 {
     private FireballDataSO fireballData;
-    private Rigidbody2D ownerRb; // To check if the player is moving
 
-    // [NEW] Variable to store the player's last non-zero movement direction
-    private Vector2 lastMoveDirection;
+    // [REMOVED] Rigidbody2D is no longer needed to determine direction
+    // private Rigidbody2D ownerRb; 
+
+    // [REMOVED] We no longer need to store the last movement direction
+    // private Vector2 lastMoveDirection;
 
     // Runtime stats
     protected float currentSpeed;
@@ -18,8 +20,8 @@ public class FireballSkill : Skills // Inherits from Skills
     {
         base.Awake(); // Sets ownerStats
 
-        // Get the player's Rigidbody2D from the StatsController's GameObject
-        ownerRb = ownerStats.GetComponent<Rigidbody2D>();
+        // [REMOVED] No longer need to get the Rigidbody2D
+        // ownerRb = ownerStats.GetComponent<Rigidbody2D>();
 
         if (skillData is FireballDataSO)
         {
@@ -30,8 +32,8 @@ public class FireballSkill : Skills // Inherits from Skills
             Debug.LogError("FireballSkill has the wrong SkillDataSO assigned!");
         }
 
-        // [NEW] Set a default firing direction in case the player never moves
-        lastMoveDirection = Vector2.right; // Default to firing right
+        // [REMOVED] No longer need to set a default direction
+        // lastMoveDirection = Vector2.right; 
 
         InitializeStats();
     }
@@ -42,36 +44,25 @@ public class FireballSkill : Skills // Inherits from Skills
         currentSpeed = fireballData.baseProjectileSpeed;
         currentLifetime = fireballData.baseProjectileLifetime;
         currentArea = 1f; // 100% scale
+
+        // [TESTING NOTE] If you are still testing 3-way shot, keep this line:
+        // currentProjectileCount = 3; 
     }
 
-    // [MODIFIED] This function is now responsible for *updating* the direction
-    // AND checking the cooldown (original base logic).
-    public override void TryAttack()
-    {
-        // [NEW] Check if the player is *currently* moving.
-        // If so, update the lastMoveDirection.
-        if (ownerRb.linearVelocity.magnitude > 0.1f)
-        {
-            lastMoveDirection = ownerRb.linearVelocity.normalized;
-        }
-
-        // [RESTORED] This is the original logic from the Skills.cs base class.
-        // It will now fire *regardless* of whether the player is moving,
-        // using the 'lastMoveDirection' that we just updated (or kept).
-        if (Time.time >= lastAttackTime + currentAttackCooldown)
-        {
-            PerformAttack();
-            lastAttackTime = Time.time;
-        }
-    }
 
     protected override void PerformAttack()
     {
-        // [MODIFIED] Use the stored 'lastMoveDirection'.
-        // We no longer use the *opposite* direction.
-        Vector2 fireDirection = lastMoveDirection;
+        // [MODIFIED] This is the core change.
+        // Generate a new random direction every time PerformAttack is called.
+        Vector2 fireDirection = Random.insideUnitCircle.normalized;
 
-        // Calculate the base angle from the fire direction
+        // Fallback in case the random vector is (0,0)
+        if (fireDirection == Vector2.zero)
+        {
+            fireDirection = Vector2.right;
+        }
+
+        // Calculate the base angle from the new random fire direction
         float baseAngle = Mathf.Atan2(fireDirection.y, fireDirection.x) * Mathf.Rad2Deg;
 
         // Calculate the starting angle for the 3-way shot (if count is 3)
