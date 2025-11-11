@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Gun_Data
   m_EditorClassIdentifier: 
   baseDamage: 50
-  baseAttackCooldown: 0.5
+  baseAttackCooldown: 0.1
   knockback: 5
   weaponName: Gun
   weaponDescription: Weapon description.
