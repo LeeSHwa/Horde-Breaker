@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
-  m_Name: NewEnemyStats
+  m_Name: 3. green_slime_stats
   m_EditorClassIdentifier: 
   baseMaxHealth: 100
   baseMoveSpeed: 5
   baseDamageMultiplier: 1
   damageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 0.5
+  contactDamage: 0.3
