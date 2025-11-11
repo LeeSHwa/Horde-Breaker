@@ -14,10 +14,18 @@ public class StatsController : MonoBehaviour
     public float currentMoveSpeed;
     public float currentDamageMultiplier;
 
+
     private bool isDead = false;
     private Animator anim;
     private Rigidbody2D rb;
     private Collider2D col;
+
+    // --- References (found automatically) ---
+    private PlayerStatsSO playerStats; // (Player-Only) Ref to the casted SO
+    private PlayerPickup playerPickup; // (Player-Only) Ref to the child component
+    private int currentLevel = 1;      // (Player-Only)
+    private int currentExp = 0;        // (Player-Only)
+    private int expNeededForNextLevel; // (Player-Only)
 
     // --- Slow Effect (Integrated from SpeedEffectController) ---
     private class SpeedModifier
@@ -46,7 +54,6 @@ public class StatsController : MonoBehaviour
 
     void Start()
     {
-        // [FIX] Move the UI logic here.
         // Start() runs AFTER all Awake() methods (including UIManager.Awake()) are complete.
         if (gameObject.CompareTag("Player"))
         {
@@ -74,20 +81,13 @@ public class StatsController : MonoBehaviour
 
     void OnEnable()
     {
-        // ... (Re-enable components: isDead, col, rb) ...
-        // Added component re-activation logic (was not in the original StatsController.cs)
         isDead = false;
         if (col != null) col.enabled = true;
         if (rb != null) rb.simulated = true;
 
-        InitializeStats(); // OK to re-initialize stats
+        InitializeStats();
 
-        //// [FIX] We also need to update UI when re-enabled (e.g. Player respawns)
-        //// But we must check if UIManager.Instance is ready.
-        //if (gameObject.CompareTag("Player") && UIManager.Instance != null)
-        //{
-        //    UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
-        //}
+
     }
 
     public void InitializeStats()
@@ -108,6 +108,41 @@ public class StatsController : MonoBehaviour
         activeSpeedModifiers.Clear(); // Remove all slow effects
         needsSpeedRecalculation = true; // Set flag to restore speed to base on OnEnable
         // ---
+
+        if (gameObject.CompareTag("Player"))
+        {
+            // Cast to PlayerStatsSO
+            playerStats = baseStats as PlayerStatsSO;
+            if (playerStats == null)
+            {
+                Debug.LogError("Player's StatsController is NOT using a PlayerStatsSO!");
+            }
+
+            // Init Level & Exp
+            currentLevel = 1;
+            currentExp = 0;
+            UpdateExpNeeded();
+
+            // Init UI
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+                UIManager.Instance.UpdateExp(currentExp, expNeededForNextLevel);
+                UIManager.Instance.UpdateLevel(currentLevel);
+            }
+
+            // Init Pickup Radius using SO data
+            if (playerPickup != null && playerStats != null)
+            {
+                playerPickup.InitializeRadius(playerStats.basePickupRadius);
+            }
+        }
+        else
+        {
+            playerStats = null; // Ensure this is null for enemies
+        }
+
+
     }
 
     public void TakeDamage(float damage)
@@ -150,6 +185,19 @@ public class StatsController : MonoBehaviour
         if (rb != null) { rb.linearVelocity = Vector2.zero; rb.simulated = false; }
         if (col != null) col.enabled = false;
 
+        // EXP Drop Logic (Enemy-Only)
+        if (!gameObject.CompareTag("Player"))
+        {
+            // Try to cast baseStats to EnemyStatsSO to get drop value
+            EnemyStatsSO enemyStats = baseStats as EnemyStatsSO;
+
+            // If cast is successful (it's an enemy) and it has EXP to drop
+            if (enemyStats != null)
+            {
+                SpawnExpOrb(enemyStats.expValue);
+            }
+        }
+
         StartCoroutine(DieAndDisable(baseStats.deathAnimationLength));
     }
 
@@ -157,6 +205,79 @@ public class StatsController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         gameObject.SetActive(false);
+    }
+
+    private void SpawnExpOrb(int expAmount)
+    {
+        GameObject expOrb = PoolManager.Instance.GetFromPool("ExpOrb");
+        if (expOrb != null)
+        {
+            expOrb.transform.position = transform.position;
+
+            ExpOrb orbComponent = expOrb.GetComponent<ExpOrb>();
+            if (orbComponent != null)
+            {
+                orbComponent.Initialize(expAmount);
+            }
+        }
+    }
+
+    // --- Player-Only Functions ---
+
+    public void AddExp(int amount)
+    {
+        if (!gameObject.CompareTag("Player") || playerStats == null) return;
+
+        currentExp += amount;
+
+        while (currentExp >= expNeededForNextLevel)
+        {
+            currentExp -= expNeededForNextLevel;
+            LevelUp();
+        }
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateExp(currentExp, expNeededForNextLevel);
+        }
+    }
+
+    private void LevelUp()
+    {
+        currentLevel++;
+        Debug.Log($"LEVEL UP! New Level: {currentLevel}");
+
+        // Call your level up UI logic
+        // Example: GameManager.Instance.ShowLevelUpOptions();
+
+        UpdateExpNeeded(); // Get EXP for the *next* level
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateLevel(currentLevel);
+        }
+    }
+
+    private void UpdateExpNeeded()
+    {
+        if (playerStats == null || playerStats.expToNextLevel == null || playerStats.expToNextLevel.Length == 0)
+        {
+            if (playerStats != null) Debug.LogError("expToNextLevel array is not set in Player's StatsSO!");
+            expNeededForNextLevel = 999999;
+            return;
+        }
+
+        int index = currentLevel - 1;
+
+        if (index < playerStats.expToNextLevel.Length)
+        {
+            expNeededForNextLevel = playerStats.expToNextLevel[index];
+        }
+        else
+        {
+            // Max level reached, use last value
+            expNeededForNextLevel = playerStats.expToNextLevel[playerStats.expToNextLevel.Length - 1];
+        }
     }
 
     // --- [New] Function to Apply Slow Effect (called by ZoneLogic.cs) ---

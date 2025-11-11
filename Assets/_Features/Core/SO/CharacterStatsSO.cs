@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewCharacterStats", menuName = "Stats/Character Stats Data")]
 public class CharacterStatsSO : ScriptableObject
 {
     [Header("Core Stats")]
