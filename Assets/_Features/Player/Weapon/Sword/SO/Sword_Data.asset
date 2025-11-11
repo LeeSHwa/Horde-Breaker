@@ -12,15 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e76ab445195c84cabe77ddd570a84e, type: 3}
   m_Name: Sword_Data
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
+  baseDamage: 15
+  baseAttackCooldown: 0.5
+  knockback: 5
+  weaponName: Sword
+  weaponDescription: Weapon description.
+  hitboxPrefab: {fileID: 7679575230289758465, guid: 19d8208547681c049ae786cda34f7f2c, type: 3}
+  baseArea: 1
+  sizeMultiplier: 5
+  level3_AreaIncrease: 1.2
+  level5_PierceIncrease: 1
+=======
   baseDamage: 10
-  baseAttackCooldown: 0.2
-  knockback: 25
+  baseAttackCooldown: 2
+  knockback: 5
   weaponName: Weapon
   weaponDescription: Weapon description.
   baseSwingDuration: 0.1
-  baseAngle: 360
-  baseAreaRadius: 3
-  swingStartOffset: 180
+  baseAngle: 90
+  baseAreaRadius: 2
+  swingStartOffset: 45
   level2_DamageBonus: 10
   level2_SpeedIncrease: 0.1
   level3_AreaIncrease: 1.5
@@ -30,3 +42,4 @@ MonoBehaviour:
   projectileDamagePercent: 0.5
   projectileKnockbackPercent: 0.5
   projectileLifetime: 3
+>>>>>>> parent of 85dd7792 (fix: solved merge issue)

@@ -19,18 +19,14 @@ public abstract class Weapon : MonoBehaviour
     protected float currentAttackCooldown;
     protected int currentProjectileCount = 1; // Default
     protected float lastAttackTime;
-
-    // [MODIFIED] Added references for PlayerAnimator and StatsController
     protected StatsController ownerStats;
-    protected PlayerAnimator playerAnimator; // Reference to control player animations
 
-    // (3) [INITIALIZATION] [MODIFIED] Added 'PlayerAnimator animator' parameter
-    public virtual void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
+    // (3) [INITIALIZATION] Replaces Awake/Start for dependency injection
+    public virtual void Initialize(Transform aimObj, StatsController owner)
     {
         // Inject external dependencies
         this.aim = aimObj;
         this.ownerStats = owner;
-        this.playerAnimator = animator; // [ADDED] Store the reference
 
         // Initialize runtime stats from SO
         currentLevel = 1;
