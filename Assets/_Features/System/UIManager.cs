@@ -10,8 +10,10 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI stageText;
     public Image playerHPBarFill;
+    public Image expBarFill;
 
-    
+    public TextMeshProUGUI levelText;
+
     void Awake()
     {
         // Singleton Pattern implementation.
@@ -46,8 +48,27 @@ public class UIManager : MonoBehaviour
     {
         if (playerHPBarFill != null)
         {
-            // 0.0 ~ 1.0 사이 값으로 변환하여 이미지 채움 정도 조절
             playerHPBarFill.fillAmount = Mathf.Clamp01(currentHP / maxHP);
         }
     }
+
+    // Called by StatsController.AddExp()
+    public void UpdateExp(int current, int max)
+    {
+        if (expBarFill != null)
+        {
+            // Use fillAmount for Image-based bars
+            // We need to cast to float for division
+            expBarFill.fillAmount = Mathf.Clamp01((float)current / max);
+        }
+    }
+
+    public void UpdateLevel(int newLevel)
+    {
+        if (levelText != null)
+        {
+            levelText.text = "Lv. " + newLevel;
+        }
+    }
+
 }

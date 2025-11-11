@@ -15,19 +15,25 @@ public class EnemyMovement : MonoBehaviour
 
     private bool canMove = true;
 
+    // --- [Modified] 1. Add SpriteRenderer variable ---
+    private SpriteRenderer spriteRenderer;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // Load Physics Engine(Rigidbody2D)
         rb.mass = mass; // Set the weight of the enemy(from Hearder "Weight")
         rb.gravityScale = 0; // Top Down 2D game(no gravity)
 
+        stats = GetComponent<StatsController>(); // Get the CharacterStats component
+
+        // --- [Modified] 2. Get the SpriteRenderer component ---
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player"); // Finding "player" tag
         if (playerObject != null)
         {
             player = playerObject.transform; // Load the player's Transform component
         }
-        stats = GetComponent<StatsController>(); // Get the CharacterStats component
-
     }
 
     void FixedUpdate()
@@ -41,9 +47,20 @@ public class EnemyMovement : MonoBehaviour
             }
 
             Vector2 direction = (player.position - transform.position).normalized; // Get the direction from enemy to player
-                                                                                   //float faceAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // Calculate the angle to See the player
-                                                                                   //rb.rotation = faceAngle; // Rotate the enemy to face the player
-            rb.linearVelocity = direction * stats.currentMoveSpeed;                // Move the enemy towards the player
+            rb.linearVelocity = direction * stats.currentMoveSpeed; // Move the enemy towards the player
+
+            // --- [Modified] 3. Sprite flipping logic ---
+            // (Assumption: Original sprite is facing right)
+            if (direction.x > 0)
+            {
+                // When moving right (x is positive)
+                spriteRenderer.flipX = false; // Don't flip (original direction)
+            }
+            else if (direction.x < 0)
+            {
+                // When moving left (x is negative)
+                spriteRenderer.flipX = true; // Flip horizontally
+            }
         }
     }
     // --- KNOCKBACK FIX ---
