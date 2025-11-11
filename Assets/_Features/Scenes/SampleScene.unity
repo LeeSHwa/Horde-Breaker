@@ -134,7 +134,7 @@ PrefabInstance:
     - target: {fileID: 1797215466139439991, guid: 790816146be5e1340ad0a7b637301f4c, type: 3}
       propertyPath: startingWeaponPrefab
       value: 
-      objectReference: {fileID: 4781247372546516598, guid: 2ac310e9ff43e2644af215bd5b453fa7, type: 3}
+      objectReference: {fileID: 3208832912233475808, guid: 620266aaf6e2cfb42b21ed1a9b530b16, type: 3}
     - target: {fileID: 5323571712790566422, guid: 790816146be5e1340ad0a7b637301f4c, type: 3}
       propertyPath: baseStats
       value: 
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 136041022}
   - component: {fileID: 136041021}
   m_Layer: 0
-  m_Name: RedSlime_Spawner
+  m_Name: TestSpawner2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f98793cadfdc546b13d95cacbb1cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 8171226546246630872, guid: cb5b27ab1c178924ba02bd694d583b33, type: 3}
+  enemyPrefab: {fileID: 3054697985336647317, guid: b571e96fa8947fe4c9fd5e14aca83695, type: 3}
   spawnInterval: 1
   enemyContainer: {fileID: 2115672899}
 --- !u!4 &136041022
@@ -1034,7 +1034,7 @@ GameObject:
   - component: {fileID: 768893182}
   - component: {fileID: 768893181}
   m_Layer: 0
-  m_Name: Ghost_Spawner
+  m_Name: TestSpawner3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1052,7 +1052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f98793cadfdc546b13d95cacbb1cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 839540718817352759, guid: 6240eeea6a04f714998ef2f244aad123, type: 3}
+  enemyPrefab: {fileID: 3399415705255232510, guid: 48dcddda84b119d48bead51297cb5b8d, type: 3}
   spawnInterval: 1
   enemyContainer: {fileID: 2115672899}
 --- !u!4 &768893182
@@ -1627,7 +1627,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 03216ca7e9c0a3940b194c9d05f56a20, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2211,7 +2211,7 @@ GameObject:
   - component: {fileID: 1848153827}
   - component: {fileID: 1848153826}
   m_Layer: 0
-  m_Name: EnemySpawner
+  m_Name: TestSpawner1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2229,7 +2229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f98793cadfdc546b13d95cacbb1cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
+  enemyPrefab: {fileID: 6033797287192625791, guid: 3644074e1a011804b96fb3af2781e6a2, type: 3}
   spawnInterval: 1
   enemyContainer: {fileID: 2115672899}
 --- !u!4 &1848153827
