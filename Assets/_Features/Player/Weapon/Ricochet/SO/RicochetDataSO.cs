@@ -10,5 +10,5 @@ public class RicochetDataSO : WeaponDataSO
     public float projectileSpeed = 10f; 
     public int maxBounces = 3;          
     public float bounceRange = 7f;      
-    public float lifetime = 5f;         
+    public float lifetime = 5f;
 }
