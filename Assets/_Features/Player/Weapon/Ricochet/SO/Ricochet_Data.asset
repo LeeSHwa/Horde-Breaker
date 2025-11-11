@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c525b2bdb3bc44eb391b9dd9a0640a, type: 3}
   m_Name: Ricochet_Data
   m_EditorClassIdentifier: 
-  baseDamage: 100
-  baseAttackCooldown: 0.5
+  baseDamage: 10
+  baseAttackCooldown: 0.7
   knockback: 5
   weaponName: Weapon
   weaponDescription: Weapon description.
   projectilePrefab: {fileID: 5562750625780970372, guid: f6927456b7174b149b0920b48e9a5d87, type: 3}
-  projectileSpeed: 10
-  maxBounces: 3
-  bounceRange: 7
+  projectileSpeed: 20
+  maxBounces: 5
+  bounceRange: 10
   lifetime: 5

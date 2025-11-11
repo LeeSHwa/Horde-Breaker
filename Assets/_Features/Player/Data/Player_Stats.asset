@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseMaxHealth: 100
   baseMoveSpeed: 15
+  baseDamageMultiplier: 1
   damageMultiplier: 5
   deathAnimationLength: 0.5
