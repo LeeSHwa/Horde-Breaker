@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private StatsController stats;
 
+    // [ADDED] Reference to the PlayerAnimator
+    private PlayerAnimator playerAnimator;
+
     // The currently equipped weapon instance
     private Weapon currentWeapon;
 
@@ -24,6 +27,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<StatsController>();
+        // [ADDED] Get the PlayerAnimator component
+        playerAnimator = GetComponent<PlayerAnimator>();
         mainCamera = Camera.main;
 
         AimDirection = Vector2.right;
@@ -88,8 +93,8 @@ public class PlayerController : MonoBehaviour
         currentWeapon = weaponObj.GetComponent<Weapon>();
         if (currentWeapon != null)
         {
-            // Inject dependencies: aim object and stats controller
-            currentWeapon.Initialize(this.aimObject, this.stats);
+            // [MODIFIED] Inject dependencies: aim object, stats controller, AND player animator
+            currentWeapon.Initialize(this.aimObject, this.stats, this.playerAnimator);
         }
         else
         {
