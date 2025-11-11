@@ -8,13 +8,12 @@ public class Gun : Weapon
     // Gun-specific runtime stats
     private bool currentProjectilePenetration = false;
 
-    // (1) [INITIALIZATION] [MODIFIED] Added 'PlayerAnimator animator' parameter
+    // (1) [INITIALIZATION] Override base.Initialize to handle Gun-specific setup
     // Replaces Awake() for dependency injection and data casting
-    public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
+    public override void Initialize(Transform aimObj, StatsController owner)
     {
         // MUST call base.Initialize first to set up common references (aim, ownerStats)
-        // [MODIFIED] Pass 'animator' to the base method
-        base.Initialize(aimObj, owner, animator);
+        base.Initialize(aimObj, owner);
 
         // Cast the generic 'weaponData' (from base class) into our specific 'gunData'.
         if (weaponData is GunDataSO)
@@ -26,7 +25,7 @@ public class Gun : Weapon
             Debug.LogError(gameObject.name + " has the wrong WeaponDataSO assigned. Expected GunDataSO.");
         }
 
-        // Initialize Gun-specific stats
+        // Initialize Gun-specific stats (moved from InitializeStats for clarity, or keep it there)
         currentProjectilePenetration = false;
     }
 
@@ -81,4 +80,15 @@ public class Gun : Weapon
                 break;
         }
     }
+
+    // (Optional) If you want to keep InitializeStats separate, you can.
+    // But putting it in Initialize() is often cleaner when you have overrides.
+    // If you remove this, make sure the logic is in Initialize() above.
+    /*
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+        currentProjectilePenetration = false;
+    }
+    */
 }
