@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Sword_Data
   m_EditorClassIdentifier: 
   baseDamage: 10
-  baseAttackCooldown: 2
-  knockback: 5
+  baseAttackCooldown: 0.2
+  knockback: 25
   weaponName: Weapon
   weaponDescription: Weapon description.
   baseSwingDuration: 0.1
-  baseAngle: 90
-  baseAreaRadius: 2
-  swingStartOffset: 45
+  baseAngle: 360
+  baseAreaRadius: 3
+  swingStartOffset: 180
   level2_DamageBonus: 10
   level2_SpeedIncrease: 0.1
   level3_AreaIncrease: 1.5
