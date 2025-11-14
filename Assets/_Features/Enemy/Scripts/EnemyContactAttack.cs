@@ -29,6 +29,11 @@ public class EnemyContactAttack : MonoBehaviour
             // 2. Cooldown Check: Has enough time passed for the next hit?
             if (Time.time >= lastHitTime + hitCooldown)
             {
+                PlayerDash playerDash = collision.gameObject.GetComponent<PlayerDash>();
+                if (playerDash != null && playerDash.IsInvincible())
+                {
+                    return; 
+                }
                 // 3. Get the player's StatsController.
                 StatsController playerStats = collision.gameObject.GetComponent<StatsController>();
 

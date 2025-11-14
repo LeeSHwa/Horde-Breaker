@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     // The currently equipped weapon instance
     private Weapon currentWeapon;
 
+    private PlayerDash playerDash;
+    public Vector2 LastMoveInput { get; private set; }
+
     // Public property for other scripts to access aim direction if needed
     public Vector2 AimDirection { get; private set; }
 
@@ -38,6 +41,8 @@ public class PlayerController : MonoBehaviour
         {
             EquipWeapon(startingWeaponPrefab);
         }
+        playerDash = GetComponent<PlayerDash>(); 
+        LastMoveInput = Vector2.right; 
     }
 
     void Update()
@@ -54,6 +59,11 @@ public class PlayerController : MonoBehaviour
             mousePosition.y - transform.position.y
         ).normalized;
         AimDirection = direction;
+
+        if (moveInput != Vector2.zero)
+        {
+            LastMoveInput = moveInput; // [Ãß°¡]
+        }
 
         // 3. Update & Attack with Current Weapon
         if (currentWeapon != null)
@@ -74,6 +84,10 @@ public class PlayerController : MonoBehaviour
         // Physics-based movement
         // Assuming 'linearVelocity' is a valid property in your Unity version (Unity 6+)
         // older versions use 'rb.velocity'
+        if (playerDash != null && playerDash.IsDashing())
+        {
+            return; 
+        }
         rb.linearVelocity = moveInput * stats.currentMoveSpeed;
     }
 
