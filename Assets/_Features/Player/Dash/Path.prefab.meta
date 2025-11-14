@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7cabe2baa5a86b247b43c021e54035b6
+timeCreated: 1427643070
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 113529
+  packageName: Free Pixel Effect
+  packageVersion: 1.0
+  assetPath: Assets/FreePixelEffect/Path.prefab
+  uploadId: 238949
