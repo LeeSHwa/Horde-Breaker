@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic; // Added for using List
 using System.Linq; // Added for using LINQ functions like .Min(), .FirstOrDefault()
 using UnityEngine;
+using System; // [new-for-ShieldSkill] Added for Func
 
 public class StatsController : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public class StatsController : MonoBehaviour
     public float currentMoveSpeed;
     public float currentDamageMultiplier;
 
+    // --- [new-for-ShieldSkill] Added Event for Damage Interception ---
+    // Returns true if the damage was blocked by a skill (like Shield)
+    public Func<float, bool> OnDamageProcess;
+    // ---------------------------------------------------------------
 
     private bool isDead = false;
     private Animator anim;
@@ -39,7 +44,11 @@ public class StatsController : MonoBehaviour
     private bool needsSpeedRecalculation = false;
     // The original base move speed from the SO
     private float baseMoveSpeed;
-    // --- End of Slow Effect ---
+
+    // --- [new-for-ShieldSkill] Speed Buff Variable ---
+    // Stores percentage increase (e.g., 0.5f = 50% boost). Default is 0.
+    private float activeSpeedBuff = 0f;
+    // -------------------------------------------------
 
     void Awake()
     {
@@ -106,6 +115,11 @@ public class StatsController : MonoBehaviour
         // --- Slow Logic Initialization ---
         baseMoveSpeed = baseStats.baseMoveSpeed; // Store the original speed
         activeSpeedModifiers.Clear(); // Remove all slow effects
+
+        // --- [new-for-ShieldSkill] Reset Speed Buff ---
+        activeSpeedBuff = 0f;
+        // ----------------------------------------------
+
         needsSpeedRecalculation = true; // Set flag to restore speed to base on OnEnable
         // ---
 
@@ -148,6 +162,15 @@ public class StatsController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         if (isDead || damage < 0) return;
+
+        // --- [new-for-ShieldSkill] Intercept Damage ---
+        // If a listener (ShieldSkill) returns true, the damage is blocked.
+        if (OnDamageProcess != null)
+        {
+            bool isBlocked = OnDamageProcess.Invoke(damage);
+            if (isBlocked) return; // Stop here, do not apply damage
+        }
+        // ---------------------------------------------
 
         currentHP -= damage;
 
@@ -314,19 +337,32 @@ public class StatsController : MonoBehaviour
         }
     }
 
+    // --- [new-for-ShieldSkill] Speed Buff Logic ---
+    public void SetSpeedBuff(float buffPercent)
+    {
+        // Only recalculate if the value actually changes
+        if (activeSpeedBuff != buffPercent)
+        {
+            activeSpeedBuff = buffPercent;
+            needsSpeedRecalculation = true;
+        }
+    }
+    // ----------------------------------------------
+
     // --- [New] Speed Recalculation Function ---
     private void RecalculateSpeed()
     {
-        if (activeSpeedModifiers.Count == 0)
+        // 1. Calculate Base * Slow Modifiers
+        float speedAfterSlow = baseMoveSpeed;
+
+        if (activeSpeedModifiers.Count > 0)
         {
-            // If no effects are active, restore to base speed
-            currentMoveSpeed = baseMoveSpeed;
-            return;
+            float slowestPercentage = activeSpeedModifiers.Min(m => m.SpeedPercentage);
+            speedAfterSlow = baseMoveSpeed * (slowestPercentage / 100f);
         }
 
-        // Find the effect that slows the most (lowest percentage) and apply it
-        // (e.g., If 80% slow and 70% slow overlap, the 70% slow is applied)
-        float slowestPercentage = activeSpeedModifiers.Min(m => m.SpeedPercentage);
-        currentMoveSpeed = baseMoveSpeed * (slowestPercentage / 100f);
+        // 2. [new-for-ShieldSkill] Apply Speed Buff (Ghost Mode, etc.)
+        // Example: activeSpeedBuff = 0.5f -> Multiplier is 1.5f
+        currentMoveSpeed = speedAfterSlow * (1f + activeSpeedBuff);
     }
 }
