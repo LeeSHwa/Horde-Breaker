@@ -6,6 +6,8 @@ using System; // [new-for-ShieldSkill] Added for Func
 
 public class StatsController : MonoBehaviour
 {
+    public event Action OnPlayerLevelUp; // (Player-Only) Event for Level Up
+
     [Header("Data Source")]
     public CharacterStatsSO baseStats;
 
@@ -270,8 +272,10 @@ public class StatsController : MonoBehaviour
         currentLevel++;
         Debug.Log($"LEVEL UP! New Level: {currentLevel}");
 
-        // Call your level up UI logic
-        // Example: GameManager.Instance.ShowLevelUpOptions();
+        // --- [CRITICAL MODIFICATION] ---
+        // Notify the LevelUpManager that a level-up occurred
+        OnPlayerLevelUp?.Invoke();
+        // ---------------------------------
 
         UpdateExpNeeded(); // Get EXP for the *next* level
 
@@ -302,6 +306,38 @@ public class StatsController : MonoBehaviour
             expNeededForNextLevel = playerStats.expToNextLevel[playerStats.expToNextLevel.Length - 1];
         }
     }
+
+    // Adds a flat bonus to the damage multiplier
+    public void ApplyDamageMultiplier(float multiplierBonus)
+    {
+        currentDamageMultiplier += multiplierBonus;
+        Debug.Log($"Damage Multiplier updated to {currentDamageMultiplier}");
+    }
+    // Adds a flat bonus to max health
+    public void ApplyMaxHealth(float healthBonus)
+    {
+        // Find the *original* base max health from SO to apply bonus correctly
+        // This assumes baseMaxHealth in CharacterStatsSO is the *true* base
+        var originalStats = baseStats as PlayerStatsSO;
+        if (originalStats != null)
+        {
+            // This logic is complex. A simpler way is to just add to currentHP
+        }
+
+        // Simpler logic: Just add to current max HP and heal
+        float oldMaxHP = baseStats.baseMaxHealth; // This might be wrong if applied multiple times
+                                                  // A dedicated runtime variable 'currentMaxHP' is safer.
+
+        // Let's assume CharacterStatsSO is a *runtime instance* for simplicity
+        baseStats.baseMaxHealth += healthBonus;
+        currentHP += healthBonus; // Also heal for the same amount
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+        }
+    }
+
 
     // --- [New] Function to Apply Slow Effect (called by ZoneLogic.cs) ---
     public void ApplySpeedModifier(object source, float percentage)

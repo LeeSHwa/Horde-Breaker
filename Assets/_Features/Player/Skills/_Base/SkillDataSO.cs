@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // This path must match the existing file
@@ -12,8 +13,13 @@ public class SkillDataSO : ScriptableObject
     // Added for RotatingSkill
     public float knockback = 3f;
 
-    [Header("Description")]
-    public string skillName = "New Skill";
-    [TextArea]
+    [Header("UI & Leveling")]
+    public string skillName = "Skill";
+    public Sprite icon;
+    public int maxLevel = 5;
+
+    [TextArea(3, 5)]
     public string skillDescription = "Skill description.";
+
+    public List<string> levelDescriptions;
 }

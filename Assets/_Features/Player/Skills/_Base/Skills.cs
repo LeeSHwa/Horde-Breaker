@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Skills : MonoBehaviour
+public abstract class Skills : MonoBehaviour, AttackInterface
 {
     [Header("Data Source")]
 
@@ -14,6 +14,33 @@ public abstract class Skills : MonoBehaviour
     protected float lastAttackTime;
 
     protected StatsController ownerStats;
+
+    public int CurrentLevel { get { return currentLevel; } }
+    public int MaxLevel { get { return skillData.maxLevel; } }
+
+
+    public string GetName()
+    {
+        // Example: Get name from the Scriptable Object
+        return skillData.skillName; // Assuming weaponName is in SO
+    }
+    public string GetNextLevelDescription()
+    {
+        // Must reference skillData, NOT weaponData
+        int index = currentLevel - 1; // Level 2 desc is at index 0
+        if (skillData.levelDescriptions != null && index < skillData.levelDescriptions.Count)
+        {
+            return skillData.levelDescriptions[index];
+        }
+        return "Max Level Reached";
+    }
+
+    public Sprite GetIcon()
+    {
+        // Example: Get icon from the Scriptable Object
+        return skillData.icon;
+    }
+
 
     protected virtual void Awake()
     {

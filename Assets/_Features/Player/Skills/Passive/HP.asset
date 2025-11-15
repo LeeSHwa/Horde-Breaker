@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d919d59176ae6e408e57053564ca99c, type: 3}
-  m_Name: Player_Stats3
+  m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
+  m_Name: HP
   m_EditorClassIdentifier: 
-  baseMaxHealth: 100
-  baseMoveSpeed: 5
-  baseDamageMultiplier: 1
-  damageMultiplier: 1
-  deathAnimationLength: 0.5
-  expToNextLevel: 
+  type: 1
+  value: 50
+  upgradeName: HP Up
+  icon: {fileID: 2229681161047128923, guid: 6d4f6a36c178bcc4a860e411cb4a8a62, type: 3}
+  description: HP Up!

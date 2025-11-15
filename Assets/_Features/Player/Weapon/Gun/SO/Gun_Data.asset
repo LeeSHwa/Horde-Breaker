@@ -16,7 +16,13 @@ MonoBehaviour:
   baseAttackCooldown: 0.2
   knockback: 5
   weaponName: Gun
+  icon: {fileID: 21300000, guid: 95406b6737b66479a80d172766f8bac5, type: 3}
+  maxLevel: 5
   weaponDescription: Weapon description.
+  levelDescriptions:
+  - test1
+  - test2
+  - test3
   bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
   level2_DamageBonus: 5
   level3_ProjectileCount: 2

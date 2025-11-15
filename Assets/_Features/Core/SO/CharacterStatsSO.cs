@@ -6,7 +6,6 @@ public class CharacterStatsSO : ScriptableObject
     public float baseMaxHealth = 100f;
     public float baseMoveSpeed = 5f;
     public float baseDamageMultiplier = 1.0f;
-    public float damageMultiplier = 1.0f;
 
     [Header("Death")]
     public float deathAnimationLength = 0.5f;
