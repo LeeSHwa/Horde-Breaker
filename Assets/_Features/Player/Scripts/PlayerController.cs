@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
         if (moveInput != Vector2.zero)
         {
-            LastMoveInput = moveInput; // [Ãß°¡]
+            LastMoveInput = moveInput;
         }
 
         // 3. Update & Attack with Current Weapon
@@ -114,5 +114,9 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Equipped prefab does not have a Weapon component!");
         }
+    }
+    public Weapon GetCurrentWeapon()
+    {
+        return currentWeapon;
     }
 }
