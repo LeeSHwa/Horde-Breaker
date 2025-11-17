@@ -16,7 +16,10 @@ MonoBehaviour:
   baseAttackCooldown: 1
   knockback: 0
   skillName: New Skill
-  skillDescription: Skill description.
+  icon: {fileID: 370836429328893637, guid: 704bd17a9ec01cb428c3ede986b43894, type: 3}
+  maxLevel: 5
+  skillDescription: tseatr1
+  levelDescriptions: []
   projectilePrefab: {fileID: 9187814388354200019, guid: 09f7740eb69a65644ba0a63401054df4, type: 3}
   baseProjectileSpeed: 20
   baseProjectileLifetime: 5

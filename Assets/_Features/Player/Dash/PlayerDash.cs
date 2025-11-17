@@ -4,7 +4,6 @@ using System.Collections;
 public class PlayerDash : MonoBehaviour
 {
     public DashConfigSO dashConfig;
-    public GameObject pathPrefab; 
     public Material ghostMaterial;
     public float trailEffectLifetime = 0.5f;
     public float trailSpawnInterval = 0.05f;
@@ -64,7 +63,7 @@ public class PlayerDash : MonoBehaviour
         Vector2 endPos = startPos + dashDirection * dashDistance;
         rb.MovePosition(endPos);
 
-        if (pathPrefab != null && ghostMaterial != null)
+        if (ghostMaterial != null)
         {
             StartCoroutine(SpawnBlinkTrailCoroutine(startPos));
         }

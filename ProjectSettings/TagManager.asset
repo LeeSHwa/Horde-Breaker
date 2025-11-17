@@ -43,8 +43,20 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Swing
+  - name: Ground
     uniqueID: 1279811217
+    locked: 0
+  - name: Onjects_Back
+    uniqueID: 3938820261
+    locked: 0
+  - name: Characters
+    uniqueID: 935647521
+    locked: 0
+  - name: Effects
+    uniqueID: 4233784419
+    locked: 0
+  - name: UI
+    uniqueID: 3859456855
     locked: 0
   m_RenderingLayers:
   - Default

@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a190ef20d9829243b403ef5e44ee571, type: 3}
-  m_Name: Dash_SO
+  m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
+  m_Name: 0. ExpTest
   m_EditorClassIdentifier: 
-  dashSpeed: 50
-  dashMoveDuration: 0.1
-  invincibilityDuration: 1
-  maxDashStacks: 3
-  stackRechargeCooldown: 0.001
-  startingDashStacks: 3
+  baseMaxHealth: 1
+  baseMoveSpeed: 20
+  baseDamageMultiplier: 0.01
+  deathAnimationLength: 0.5
+  contactDamage: 10
+  expValue: 100
