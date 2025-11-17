@@ -6,7 +6,7 @@ using System.Collections.Generic; // Required for List
 public class ExpOrb : MonoBehaviour
 {
     [Header("Settings")]
-    public float moveSpeed = 8f;        // Speed when moving to player
+    public float moveSpeed = 40f;        // Speed when moving to player
     public float directPickupRadius = 0.5f; // Distance to be "collected"
 
     // --- [NEW] Static list to track all active orbs ---

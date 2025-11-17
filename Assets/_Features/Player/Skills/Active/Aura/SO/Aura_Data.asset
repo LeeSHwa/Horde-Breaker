@@ -15,8 +15,15 @@ MonoBehaviour:
   baseDamage: 3
   baseAttackCooldown: 1
   knockback: 0
-  skillName: New Skill
-  skillDescription: Skill description.
+  skillName: Aura
+  icon: {fileID: -2159065795798256927, guid: 986a1197619128a479007b073825d7d9, type: 3}
+  maxLevel: 5
+  skillDescription: test1
+  levelDescriptions:
+  - Damage Up
+  - double shot
+  - 4
+  - 5
   zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
   baseDuration: 1
   baseArea: 5
