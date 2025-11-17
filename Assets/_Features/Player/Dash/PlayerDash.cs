@@ -1,18 +1,17 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections; 
 
 public class PlayerDash : MonoBehaviour
 {
     public DashConfigSO dashConfig;
+    public GameObject pathPrefab; 
+    public Material ghostMaterial;
+    public float trailEffectLifetime = 0.5f;
+    public float trailSpawnInterval = 0.05f;
+    public int blinkTrailCount = 10;
 
-    public GameObject pathPrefab;
-    public Vector3 effectOffset = new Vector3(0, 0, 0);
-
-    public float effectExtraLifetime = 0.3f;
-
-    private int currentDashStacks;
+    private int currentDashStacks;
     private float stackRechargeTimer;
-    private GameObject currentPathEffect;
-
     private bool isDashing = false;
     private bool isInvincible = false;
     private float dashMoveTimer;
@@ -21,11 +20,13 @@ public class PlayerDash : MonoBehaviour
 
     private Rigidbody2D rb;
     private PlayerController playerController;
+    private SpriteRenderer playerSpriteRenderer;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerController = GetComponent<PlayerController>();
+        playerSpriteRenderer = GetComponent<SpriteRenderer>();
         currentDashStacks = Mathf.Max(0, Mathf.Min(dashConfig.startingDashStacks, dashConfig.maxDashStacks));
     }
 
@@ -34,11 +35,6 @@ public class PlayerDash : MonoBehaviour
         HandleInput();
         HandleStackRecharge();
         HandleDashTimers();
-    }
-
-    void FixedUpdate()
-    {
-        HandleDashMovement();
     }
 
     private void HandleInput()
@@ -53,7 +49,6 @@ public class PlayerDash : MonoBehaviour
     {
         isDashing = true;
         isInvincible = true;
-
         dashMoveTimer = dashConfig.dashMoveDuration;
         invincibilityTimer = dashConfig.invincibilityDuration;
         currentDashStacks--;
@@ -64,18 +59,63 @@ public class PlayerDash : MonoBehaviour
             dashDirection = playerController.LastMoveInput;
         }
 
-        if (pathPrefab != null)
+        Vector2 startPos = rb.position;
+        float dashDistance = dashConfig.dashSpeed * dashConfig.dashMoveDuration;
+        Vector2 endPos = startPos + dashDirection * dashDistance;
+        rb.MovePosition(endPos);
+
+        if (pathPrefab != null && ghostMaterial != null)
         {
-            SpawnPathEffect();
+            StartCoroutine(SpawnBlinkTrailCoroutine(startPos));
+        }
+    }
+    private IEnumerator SpawnBlinkTrailCoroutine(Vector2 startPos)
+    {
+        Sprite sprite = playerSpriteRenderer.sprite;
+        bool flipX = playerSpriteRenderer.flipX;
+        int sortingOrder = playerSpriteRenderer.sortingOrder;
+        string dashPoolTag = "DashEffect";
+
+        for (int i = 0; i < blinkTrailCount; i++)
+        {
+            Vector2 currentDynamicEndPos = transform.position;
+            float t = (blinkTrailCount <= 1) ? 0.5f : (float)i / (blinkTrailCount - 1);
+            Vector2 trailPos = Vector2.Lerp(startPos, currentDynamicEndPos, t);
+
+            GameObject effectObj = PoolManager.Instance.GetFromPool(dashPoolTag);
+
+            if (effectObj == null)
+            {
+                Debug.LogWarning("DashEffect pool is full or does not exist!!");
+                break;
+            }
+
+            effectObj.transform.position = trailPos;
+            effectObj.transform.rotation = Quaternion.identity;
+
+            DashEffect effectScript = effectObj.GetComponent<DashEffect>();
+
+            if (effectScript != null)
+            {
+                effectScript.Initialize(
+          sprite,
+          flipX,
+          sortingOrder,
+          ghostMaterial,
+          trailEffectLifetime
+        );
+            }
+
+            yield return new WaitForSeconds(trailSpawnInterval);
         }
     }
 
+
     private void HandleStackRecharge()
     {
-        if (currentDashStacks < dashConfig.maxDashStacks)
+        if (currentDashStacks < dashConfig.maxDashStacks)
         {
             stackRechargeTimer += Time.deltaTime;
-
             if (stackRechargeTimer >= dashConfig.stackRechargeCooldown)
             {
                 currentDashStacks++;
@@ -84,52 +124,14 @@ public class PlayerDash : MonoBehaviour
         }
     }
 
-    private void SpawnPathEffect()
-    {
-        GameObject effectObj = Instantiate(pathPrefab, transform);
-
-        effectObj.transform.localPosition = effectOffset;
-        effectObj.transform.localRotation = Quaternion.identity;
-
-        PathEffect effectScript = effectObj.GetComponent<PathEffect>();
-        if (effectScript != null)
-        {
-            effectScript.Setup(dashDirection);
-        }
-        else
-        {
-            effectObj.transform.right = dashDirection;
-        }
-
-        currentPathEffect = effectObj;
-    }
-
     private void HandleDashTimers()
     {
-        if (isDashing)
+        if (isDashing)
         {
             dashMoveTimer -= Time.deltaTime;
             if (dashMoveTimer <= 0)
             {
                 isDashing = false;
-                rb.linearVelocity = Vector2.zero;
-
-                if (currentPathEffect != null)
-                {
-                    currentPathEffect.transform.SetParent(null);
-
-                    PathEffect effectScript = currentPathEffect.GetComponent<PathEffect>();
-                    if (effectScript != null)
-                    {
-                        effectScript.StartFadeOut(effectExtraLifetime);
-                    }
-                    else
-                    {
-                        Destroy(currentPathEffect, effectExtraLifetime);
-                    }
-
-                    currentPathEffect = null;
-                }
             }
         }
 
@@ -142,16 +144,7 @@ public class PlayerDash : MonoBehaviour
             }
         }
     }
-
-    private void HandleDashMovement()
-    {
-        if (isDashing)
-        {
-            rb.linearVelocity = dashDirection * dashConfig.dashSpeed;
-        }
-    }
-
-    public bool IsDashing() { return isDashing; }
+    public bool IsDashing() { return isDashing; }
     public bool IsInvincible() { return isInvincible; }
     public int GetCurrentStacks() { return currentDashStacks; }
     public float GetCooldownProgress()
