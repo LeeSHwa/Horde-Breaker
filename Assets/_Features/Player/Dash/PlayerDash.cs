@@ -6,8 +6,7 @@ public class PlayerDash : MonoBehaviour
     public DashConfigSO dashConfig;
     public Material ghostMaterial;
     public float trailEffectLifetime = 0.5f;
-    public float trailSpawnInterval = 0.05f;
-    public int blinkTrailCount = 10;
+    public float trailSpawnInterval = 0.03f;
 
     private int currentDashStacks;
     private float stackRechargeTimer;
@@ -36,6 +35,13 @@ public class PlayerDash : MonoBehaviour
         HandleDashTimers();
     }
 
+    public void FixedUpdate()
+    {
+        if (isDashing)
+        {
+            rb.linearVelocity = dashDirection * dashConfig.dashSpeed;
+        }
+    }
     private void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.Space) && currentDashStacks > 0)
@@ -58,57 +64,56 @@ public class PlayerDash : MonoBehaviour
             dashDirection = playerController.LastMoveInput;
         }
 
-        Vector2 startPos = rb.position;
-        float dashDistance = dashConfig.dashSpeed * dashConfig.dashMoveDuration;
-        Vector2 endPos = startPos + dashDirection * dashDistance;
-        rb.MovePosition(endPos);
+        //Vector2 startPos = rb.position;
+        //float dashDistance = dashConfig.dashSpeed * dashConfig.dashMoveDuration;
+        //Vector2 endPos = startPos + dashDirection * dashDistance;
+        //rb.MovePosition(endPos);
 
         if (ghostMaterial != null)
         {
-            StartCoroutine(SpawnBlinkTrailCoroutine(startPos));
+            StartCoroutine(SpawnTrailCoroutine());
         }
     }
-    private IEnumerator SpawnBlinkTrailCoroutine(Vector2 startPos)
+
+    private IEnumerator SpawnTrailCoroutine()
     {
+        // Get player sprite info *once* at the start
         Sprite sprite = playerSpriteRenderer.sprite;
         bool flipX = playerSpriteRenderer.flipX;
         int sortingOrder = playerSpriteRenderer.sortingOrder;
-        string dashPoolTag = "DashEffect";
+        string dashPoolTag = "DashEffect"; // The tag for the pool
 
-        for (int i = 0; i < blinkTrailCount; i++)
+        // Loop *while* the dash is active
+        while (isDashing)
         {
-            Vector2 currentDynamicEndPos = transform.position;
-            float t = (blinkTrailCount <= 1) ? 0.5f : (float)i / (blinkTrailCount - 1);
-            Vector2 trailPos = Vector2.Lerp(startPos, currentDynamicEndPos, t);
-
-            GameObject effectObj = PoolManager.Instance.GetFromPool(dashPoolTag);
+            GameObject effectObj = PoolManager.Instance.GetFromPool(dashPoolTag);
 
             if (effectObj == null)
             {
                 Debug.LogWarning("DashEffect pool is full or does not exist!!");
-                break;
+                break; // Stop the coroutine if pool is empty
             }
 
-            effectObj.transform.position = trailPos;
+            // Set position to the player's *current* position
+            effectObj.transform.position = transform.position;
             effectObj.transform.rotation = Quaternion.identity;
 
-            DashEffect effectScript = effectObj.GetComponent<DashEffect>();
-
+            DashEffect effectScript = effectObj.GetComponent<DashEffect>();
             if (effectScript != null)
             {
-                effectScript.Initialize(
-          sprite,
-          flipX,
-          sortingOrder,
-          ghostMaterial,
-          trailEffectLifetime
-        );
+                effectScript.Initialize(
+                    sprite,
+                    flipX,
+                    sortingOrder, // Will be set to (sortingOrder - 1) in DashEffect.cs
+                    ghostMaterial,
+                    trailEffectLifetime
+                );
             }
 
+            // Wait for the next spawn interval
             yield return new WaitForSeconds(trailSpawnInterval);
         }
     }
-
 
     private void HandleStackRecharge()
     {
@@ -131,6 +136,8 @@ public class PlayerDash : MonoBehaviour
             if (dashMoveTimer <= 0)
             {
                 isDashing = false;
+
+                rb.linearVelocity = Vector2.zero;
             }
         }
 
