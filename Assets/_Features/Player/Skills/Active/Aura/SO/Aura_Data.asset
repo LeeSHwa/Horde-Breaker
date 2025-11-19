@@ -16,19 +16,21 @@ MonoBehaviour:
   baseAttackCooldown: 1
   knockback: 0
   skillName: Aura
-  icon: {fileID: -2159065795798256927, guid: 986a1197619128a479007b073825d7d9, type: 3}
+  icon: {fileID: 4662751524554112198, guid: 8932db4e8d3425b4084664c8a8fec723, type: 3}
   maxLevel: 5
-  skillDescription: test1
+  skillDescription: Damages surrounding enemies
   levelDescriptions:
-  - Damage Up
-  - double shot
-  - 4
-  - 5
+  - LV.2 Damage up
+  - LV.3 Increased Area
+  - LV.4 Slowing effect on Aura
+  - 'LV.MAX Master of Aura: Upgrade All'
   zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
   baseDuration: 1
-  baseArea: 5
-  speedDebuffPercentage: 80
-  level2_DamageIncrease: 5
-  level3_AreaIncrease: 0.5
-  level4_DurationIncrease: 1
+  baseArea: 4
+  speedDebuffPercentage: 0
+  level2_DamageIncrease: 3
+  level3_AreaIncrease: 1
+  level4_SlowValue: 70
+  level5_DamageIncrease: 3
+  level5_AreaIncrease: 2
   level5_DebuffIncrease: -40

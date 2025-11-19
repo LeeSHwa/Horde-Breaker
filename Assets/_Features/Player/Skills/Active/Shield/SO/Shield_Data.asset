@@ -13,12 +13,19 @@ MonoBehaviour:
   m_Name: Shield_Data
   m_EditorClassIdentifier: 
   baseDamage: 0
-  baseAttackCooldown: 5
+  baseAttackCooldown: 10
   knockback: 0
-  skillName: New Skill
-  skillDescription: Skill description.
+  skillName: Shield
+  icon: {fileID: 4941912509069588640, guid: 48b0f55fad1315a4aa5f5aeb9e259a31, type: 3}
+  maxLevel: 5
+  skillDescription: '"Even a broken shield can block it for a while."'
+  levelDescriptions:
+  - LV.2 Stack 3 Shields
+  - LV.3 Invincible 3s when losing Shield
+  - LV.4 Get Shields faster
+  - LV.MAX Speed up when losing Shield
   shieldVisualPrefab: {fileID: 6850633904461164430, guid: b34c5e6283621c343b33dc3c7cb29e10, type: 3}
-  baseMaxStacks: 3
+  baseMaxStacks: 1
   baseInvulnTime: 1
   level2_StackIncrease: 2
   level3_InvulnTimeIncrease: 2

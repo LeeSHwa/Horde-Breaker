@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 0. ExpTest
   m_EditorClassIdentifier: 
   baseMaxHealth: 1
-  baseMoveSpeed: 20
+  baseMoveSpeed: 5
   baseDamageMultiplier: 0.01
   deathAnimationLength: 0.5
   contactDamage: 10
-  expValue: 100
+  expValue: 20

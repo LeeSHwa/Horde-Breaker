@@ -13,17 +13,21 @@ MonoBehaviour:
   m_Name: Missile_Data
   m_EditorClassIdentifier: 
   baseDamage: 30
-  baseAttackCooldown: 1
+  baseAttackCooldown: 5
   knockback: 3
-  skillName: missile
-  icon: {fileID: -2159065795798256927, guid: 986a1197619128a479007b073825d7d9, type: 3}
+  skillName: Hellfire
+  icon: {fileID: -7139488364972308601, guid: 4f8a17eef0e3a5c4d9a5aa440ff78773, type: 3}
   maxLevel: 5
-  skillDescription: Skill description.
-  levelDescriptions: []
+  skillDescription: Tracks the nearest enemy
+  levelDescriptions:
+  - LV.2 Damage up
+  - LV.3  Double Casting
+  - LV.4 Reduced casting cooldown
+  - LV.MAX Triple Casting
   missilePrefab: {fileID: 9067339777270423991, guid: 7ebcdbddd78cada4ebbf11036e45aae7, type: 3}
-  missileSpeed: 15
-  searchRadius: 50
-  level2_DamageIncrease: 10
+  missileSpeed: 10
+  searchRadius: 100
+  level2_DamageIncrease: 20
   level3_ProjectileCount: 2
-  level4_CooldownReduction: 0.5
+  level4_CooldownReduction: 2
   level5_ProjectileCount: 3

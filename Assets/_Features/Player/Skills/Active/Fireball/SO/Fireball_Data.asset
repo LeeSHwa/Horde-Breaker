@@ -13,19 +13,23 @@ MonoBehaviour:
   m_Name: Fireball_Data
   m_EditorClassIdentifier: 
   baseDamage: 50
-  baseAttackCooldown: 1
+  baseAttackCooldown: 5
   knockback: 0
-  skillName: New Skill
-  icon: {fileID: 370836429328893637, guid: 704bd17a9ec01cb428c3ede986b43894, type: 3}
+  skillName: Fireball
+  icon: {fileID: -6106694002393148830, guid: 0217dede9b8e52a46ac0302837722d76, type: 3}
   maxLevel: 5
-  skillDescription: tseatr1
-  levelDescriptions: []
+  skillDescription: Fires in a random direction
+  levelDescriptions:
+  - LV.2 Damage up
+  - LV.3 Bigger Fireball
+  - LV.4 Reduced firing frequency
+  - LV.MAX Fire spread
   projectilePrefab: {fileID: 9187814388354200019, guid: 09f7740eb69a65644ba0a63401054df4, type: 3}
   baseProjectileSpeed: 20
-  baseProjectileLifetime: 5
-  damageFalloffPercentage: 100
+  baseProjectileLifetime: 6
+  damageFalloffPercentage: 75
   level2_DamageIncrease: 10
-  level3_AreaIncrease: 0.2
-  level4_CooldownReduction: 0.2
+  level3_AreaIncrease: 0.75
+  level4_CooldownReduction: 2
   level5_ProjectileCount: 3
   level5_SpreadAngle: 15

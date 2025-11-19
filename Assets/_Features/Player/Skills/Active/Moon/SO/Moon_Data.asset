@@ -12,19 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cd6cc36d5128f44f90d5461e8e3a1b5, type: 3}
   m_Name: Moon_Data
   m_EditorClassIdentifier: 
-  baseDamage: 10
+  baseDamage: 5
   baseAttackCooldown: 3.6
   knockback: 0
-  skillName: New Skill
-  icon: {fileID: 0}
+  skillName: Moon
+  icon: {fileID: 2273202081559884391, guid: a85923eb08b670f468a454332f4fb7b1, type: 3}
   maxLevel: 5
-  skillDescription: Skill description.
-  levelDescriptions: []
+  skillDescription: Get 1 orbiting Moon
+  levelDescriptions:
+  - LV.2 Damage up
+  - LV.3 Two Moons          "Mars has two Moon"
+  - LV.4 Rotation speeds up
+  - LV.MAX Far Moon             "Looks safe, right?"
   projectilePrefab: {fileID: 2615944730286373386, guid: 9e30334dde7ab50479843e2c310a9bea, type: 3}
   baseDuration: 3.6
   baseRotationSpeed: 100
-  baseRotationRadius: 8
-  level2_DamageIncrease: 10
+  baseRotationRadius: 5
+  level2_DamageIncrease: 5
   level3_ProjectileCount: 2
-  level4_RotationSpeedIncrease: 20
-  level5_RadiusIncrease: 0.5
+  level4_RotationSpeedIncrease: 50
+  level5_RadiusIncrease: 3
+  level5_ProjectileCount: 2
