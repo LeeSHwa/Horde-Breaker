@@ -15,6 +15,6 @@ MonoBehaviour:
   baseMaxHealth: 100
   baseMoveSpeed: 5
   baseDamageMultiplier: 1
-  damageMultiplier: 1
   deathAnimationLength: 0.5
   contactDamage: 10
+  expValue: 5

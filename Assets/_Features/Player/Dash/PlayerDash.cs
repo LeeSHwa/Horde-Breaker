@@ -26,6 +26,11 @@ public class PlayerDash : MonoBehaviour
         playerController = GetComponent<PlayerController>();
         playerSpriteRenderer = GetComponent<SpriteRenderer>();
         currentDashStacks = Mathf.Max(0, Mathf.Min(dashConfig.startingDashStacks, dashConfig.maxDashStacks));
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.InitDashSlots(dashConfig.maxDashStacks);
+        }
     }
 
     void Update()
@@ -33,6 +38,8 @@ public class PlayerDash : MonoBehaviour
         HandleInput();
         HandleStackRecharge();
         HandleDashTimers();
+
+        UpdateDashUI();
     }
 
     public void FixedUpdate()
@@ -64,16 +71,31 @@ public class PlayerDash : MonoBehaviour
             dashDirection = playerController.LastMoveInput;
         }
 
-        //Vector2 startPos = rb.position;
-        //float dashDistance = dashConfig.dashSpeed * dashConfig.dashMoveDuration;
-        //Vector2 endPos = startPos + dashDirection * dashDistance;
-        //rb.MovePosition(endPos);
-
         if (ghostMaterial != null)
         {
             StartCoroutine(SpawnTrailCoroutine());
         }
     }
+
+    private void UpdateDashUI()
+    {
+        if (UIManager.Instance == null) return;
+
+        float totalCharge = 0f;
+
+        if (currentDashStacks >= dashConfig.maxDashStacks)
+        {
+            totalCharge = (float)dashConfig.maxDashStacks;
+        }
+        else
+        {
+            float progress = stackRechargeTimer / dashConfig.stackRechargeCooldown;
+            totalCharge = currentDashStacks + progress;
+        }
+        UIManager.Instance.UpdateDashUI(totalCharge);
+
+    }
+
 
     private IEnumerator SpawnTrailCoroutine()
     {

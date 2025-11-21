@@ -71,7 +71,7 @@ public class StatsController : MonoBehaviour
         {
             if (UIManager.Instance != null)
             {
-                UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+                UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
             }
             else
             {
@@ -326,7 +326,7 @@ public class StatsController : MonoBehaviour
 
         if (UIManager.Instance != null)
         {
-            UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+            UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
         }
     }
 

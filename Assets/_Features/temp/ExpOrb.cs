@@ -19,6 +19,13 @@ public class ExpOrb : MonoBehaviour
     private Transform targetPlayer;      // The player to move towards
     private bool isMovingToPlayer = false;
 
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     void OnEnable()
     {
         isMovingToPlayer = false;
@@ -55,8 +62,25 @@ public class ExpOrb : MonoBehaviour
     public void Initialize(int value)
     {
         this.expValue = value;
+        UpdateColor(value);
     }
 
+    private void UpdateColor(int value)
+    {
+        // Example: Change color based on value tiers
+        if (value >= 15)
+        {
+            spriteRenderer.color = new Color(1f, 0.95f, 0.1f);
+        }
+        else if (value >= 5)
+        {
+            spriteRenderer.color = new Color(0.3f, 1f, 1f);
+        }
+        else
+        {
+            spriteRenderer.color = Color.white;
+        }
+    }
     // Called by PlayerPickup.cs or Magnet Item
     public void ActivateMagnet(Transform playerTarget)
     {

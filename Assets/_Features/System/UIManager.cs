@@ -1,5 +1,6 @@
-using UnityEngine;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -7,12 +8,22 @@ public class UIManager : MonoBehaviour
     // Singleton instance to allow easy access from anywhere.
     public static UIManager Instance { get; private set; }
 
+    [Header("Text UI")]
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI stageText;
+    public TextMeshProUGUI levelText;
+
+    [Header("Bars & Fill UI")]
     public Image playerHPBarFill;
+    public Image hudHPBarFill;
+
+    public TextMeshProUGUI playerHPText;
     public Image expBarFill;
 
-    public TextMeshProUGUI levelText;
+    [Header("Dash UI")]
+    public Transform dashContainer;
+    public GameObject dashSlotPrefab;
+    private List<Image> dashFillImages = new List<Image>();
 
     void Awake()
     {
@@ -46,10 +57,24 @@ public class UIManager : MonoBehaviour
 
     public void UpdateHP(float currentHP, float maxHP)
     {
+        float ratio = Mathf.Clamp01(currentHP / maxHP);
+
         if (playerHPBarFill != null)
         {
-            playerHPBarFill.fillAmount = Mathf.Clamp01(currentHP / maxHP);
+            playerHPBarFill.fillAmount = ratio;
         }
+
+        if (hudHPBarFill != null)
+        {
+            hudHPBarFill.fillAmount = ratio;
+        }
+
+        if (playerHPText != null)
+        {
+            int displayHP = Mathf.Max(0, (int)currentHP);
+            playerHPText.text = $"{displayHP} / {(int)maxHP}";
+        }
+
     }
 
     // Called by StatsController.AddExp()
@@ -67,7 +92,31 @@ public class UIManager : MonoBehaviour
     {
         if (levelText != null)
         {
-            levelText.text = "Lv. " + newLevel;
+            levelText.text = "" + newLevel;
+        }
+    }
+
+    public void InitDashSlots(int maxDashCount)
+    {
+        if (dashContainer == null || dashSlotPrefab == null) return;
+
+        foreach (Transform child in dashContainer) Destroy(child.gameObject);
+        dashFillImages.Clear();
+
+        for (int i = 0; i < maxDashCount; i++)
+        {
+            GameObject slot = Instantiate(dashSlotPrefab, dashContainer);
+            Image fill = slot.transform.GetChild(0).GetComponent<Image>();
+            if (fill != null) dashFillImages.Add(fill);
+        }
+    }
+
+    public void UpdateDashUI(float currentCharge)
+    {
+        for (int i = 0; i < dashFillImages.Count; i++)
+        {
+            float fill = Mathf.Clamp01(currentCharge - i);
+            dashFillImages[i].fillAmount = fill;
         }
     }
 

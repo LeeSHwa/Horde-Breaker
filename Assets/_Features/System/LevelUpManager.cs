@@ -1,6 +1,3 @@
-// It uses an internal 'UpgradeChoice' class to handle 3 different
-// types of upgrades: Existing Items, New Skills, and Passive Stats.
-
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq; // Required for .OrderBy() and .Take()
@@ -14,13 +11,13 @@ public class LevelUpManager : MonoBehaviour
     // The main panel that shows the upgrade choices
     public GameObject levelUpPanel;
 
-    // You MUST assign your 3 UI Card scripts here (e.g., a script on the card)
+    // You MUST assign your 3 UI Card scripts here
     public UpgradeCardUI[] uiCards;
 
     [Header("System References")]
     public StatsController playerStats;
     public PlayerController playerController;
-    public ActiveSkillManager skillManager; // Renaming to ActiveSkillManager is recommended
+    public ActiveSkillManager skillManager;
 
     [Header("Available Upgrade Pools")]
     // All possible *new* skills to offer (Assign prefabs in Inspector)
@@ -29,10 +26,16 @@ public class LevelUpManager : MonoBehaviour
     // All possible *passive* stat boosts to offer (Assign SOs in Inspector)
     public List<PassiveUpgradeSO> passiveUpgrades;
 
+    [Header("Settings")]
+    public int maxLevel = 99; // Max Level Cap
+
     // Used for shuffling
     private System.Random rng = new System.Random();
 
-    // --- [NEW] Helper class to manage the 3 upgrade types ---
+    // [NEW] Counter for pending level-ups to handle multiple level-ups at once
+    private int pendingLevelUps = 0;
+
+    // --- [Helper Class to manage upgrade types] ---
     public class UpgradeChoice
     {
         // 1. For existing items (Weapon or Skill)
@@ -53,7 +56,6 @@ public class LevelUpManager : MonoBehaviour
         public string GetName()
         {
             if (itemToUpgrade != null) return itemToUpgrade.GetName();
-            // Assumes prefab has Skills.cs to get data
             if (newSkillPrefab != null) return newSkillPrefab.GetComponent<Skills>().skillData.skillName;
             if (passiveUpgrade != null) return passiveUpgrade.upgradeName;
             return "Error";
@@ -102,7 +104,8 @@ public class LevelUpManager : MonoBehaviour
 
     void Start()
     {
-        if (playerStats != null) { playerStats.OnPlayerLevelUp += ShowLevelUpChoices; }
+        // [CHANGED] Bind to 'RegisterLevelUp' instead of showing UI immediately
+        if (playerStats != null) { playerStats.OnPlayerLevelUp += RegisterLevelUp; } 
         else { Debug.LogError("LevelUpManager: playerStats is not assigned!"); }
 
         if (playerController == null) Debug.LogError("LevelUpManager: playerController is not assigned!");
@@ -113,24 +116,58 @@ public class LevelUpManager : MonoBehaviour
 
     void OnDestroy()
     {
-        if (playerStats != null) { playerStats.OnPlayerLevelUp -= ShowLevelUpChoices; }
+        // [CHANGED] Unsubscribe correctly
+        if (playerStats != null) { playerStats.OnPlayerLevelUp -= RegisterLevelUp; }
     }
 
-    private void ShowLevelUpChoices()
+    // [NEW] 1. Entry Point: Receives level-up event and queues it
+    private void RegisterLevelUp()
     {
-        Time.timeScale = 0f;
+        // Increment queue
+        pendingLevelUps++;
+        
+        // If the UI is NOT active, start the process.
+        // If UI IS active, this level-up sits in 'pendingLevelUps' waiting for its turn.
+        if (!levelUpPanel.activeSelf)
+        {
+            ProcessNextLevelUp();
+        }
+    }
+
+    // [NEW] 2. Manager: Decides whether to show UI or resume game
+    private void ProcessNextLevelUp()
+    {
+        if (pendingLevelUps > 0)
+        {
+            // Still have levels to process -> Show UI
+            ShowUpgradeOptions(); 
+        }
+        else
+        {
+            // No more levels -> Close UI and Resume Game
+            if (levelUpPanel != null) { levelUpPanel.SetActive(false); }
+            Time.timeScale = 1f;
+        }
+    }
+
+    // [MOVED] 3. Worker: Prepares and displays the cards (Logic only)
+    private void ShowUpgradeOptions()
+    {
+        Time.timeScale = 0f; // Pause Game
         if (levelUpPanel != null) { levelUpPanel.SetActive(true); }
 
         List<UpgradeChoice> choicePool = new List<UpgradeChoice>();
 
-        // 1. Get Weapon upgrade
+        // --- A. Gather Choices ---
+
+        // 1. Weapon upgrade
         Weapon weapon = playerController.GetCurrentWeapon();
         if (weapon != null && weapon.CurrentLevel < weapon.MaxLevel)
         {
             choicePool.Add(new UpgradeChoice(weapon));
         }
 
-        // 2. Get equipped Skill upgrades
+        // 2. Equipped Skill upgrades
         List<Skills> skills = skillManager.GetEquippedSkills();
         foreach (Skills skill in skills)
         {
@@ -140,20 +177,18 @@ public class LevelUpManager : MonoBehaviour
             }
         }
 
-        // 3. [FIXED] Add "New Skill" options
+        // 3. New Skills
         if (skills.Count < 6) // Max 6 skills
         {
-            // Find skills that are NOT already equipped
             List<GameObject> availableNewSkills = new List<GameObject>();
             foreach (var skillPrefab in newSkillPrefabs)
             {
-                // Check prefab name against instantiated game object names
                 string prefabName = skillPrefab.name;
                 bool isEquipped = false;
                 foreach (var equippedSkill in skills)
                 {
-                    // Assumes instantiated object is named like "MySkill(Clone)"
-                    if (equippedSkill.gameObject.name.StartsWith(prefabName))
+                    // Check name (handling (Clone))
+                    if (equippedSkill.gameObject.name.Contains(prefabName))
                     {
                         isEquipped = true;
                         break;
@@ -165,32 +200,29 @@ public class LevelUpManager : MonoBehaviour
                 }
             }
 
-            // Add all available new skills to the pool
             foreach (var newSkill in availableNewSkills)
             {
                 choicePool.Add(new UpgradeChoice(newSkill));
             }
         }
 
-        // 4. [FIXED] Add "Passive Stat" options
+        // 4. Passive Stats
         foreach (var passive in passiveUpgrades)
         {
-            // TODO: Add logic to check if passive is maxed out
+            // Add logic here if passives have max limits
             choicePool.Add(new UpgradeChoice(passive));
         }
 
-        // 5. Randomly pick 3
-        var randomChoices = choicePool.OrderBy(x => rng.Next()).Take(3).ToList();
+        // --- B. Select Random 3 ---
+        int countToTake = Mathf.Min(3, choicePool.Count);
+        var randomChoices = choicePool.OrderBy(x => rng.Next()).Take(countToTake).ToList();
 
-        // 6. Assign to UI cards (Pseudo-code)
-        // Your UI Card script must be able to handle 'UpgradeChoice'
-
-        Debug.Log($"Offering {randomChoices.Count} choices:");
+        // --- C. Update UI ---
         for (int i = 0; i < uiCards.Length; i++)
         {
             if (i < randomChoices.Count)
             {
-                uiCards[i].Display(randomChoices[i]); // Pass the whole choice
+                uiCards[i].Display(randomChoices[i]);
                 uiCards[i].gameObject.SetActive(true);
             }
             else
@@ -198,20 +230,20 @@ public class LevelUpManager : MonoBehaviour
                 uiCards[i].gameObject.SetActive(false);
             }
         }
-
     }
 
-    // This function must be called by the UI button.
-    // The button must pass back the 'UpgradeChoice' it was displaying.
+    // [NEW] 4. Exit Point: Called by UI Button
     public void OnUpgradeSelected(UpgradeChoice chosenUpgrade)
     {
         if (chosenUpgrade == null) return;
 
-        // 1. Apply the upgrade
+        // Apply the upgrade
         chosenUpgrade.Apply(playerStats, playerController, skillManager);
 
-        // 2. Hide the panel and unpause
-        if (levelUpPanel != null) { levelUpPanel.SetActive(false); }
-        Time.timeScale = 1f;
+        // Decrease queue count
+        pendingLevelUps--;
+
+        // Check if there are more level-ups waiting
+        ProcessNextLevelUp();
     }
 }
