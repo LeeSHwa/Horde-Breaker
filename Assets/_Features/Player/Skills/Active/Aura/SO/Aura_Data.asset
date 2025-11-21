@@ -24,13 +24,16 @@ MonoBehaviour:
   - LV.3 Increased Area
   - LV.4 Slowing effect on Aura
   - 'LV.MAX Master of Aura: Upgrade All'
+  castSound: {fileID: 0}
+  hitSound: {fileID: 0}
   zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
   baseDuration: 1
   baseArea: 4
-  speedDebuffPercentage: 0
+  speedDebuffPercentage: 100
   level2_DamageIncrease: 3
   level3_AreaIncrease: 1
-  level4_SlowValue: 70
+  level4_SlowValue: 60
   level5_DamageIncrease: 3
   level5_AreaIncrease: 2
-  level5_DebuffIncrease: -40
+  level5_DebuffIncrease: -30
+  slowHitSound: {fileID: 0}

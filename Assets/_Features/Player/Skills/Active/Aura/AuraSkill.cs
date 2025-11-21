@@ -42,7 +42,7 @@ public class AuraSkill : Skills // Inherits from Skills
         currentDebuffPercent = zoneData.speedDebuffPercentage;
     }
 
-    // ... (PerformAttack is unchanged)
+    // ... (ApplyLevelUpStats is updated as per recent logic)
 
     protected override void PerformAttack()
     {
@@ -56,12 +56,15 @@ public class AuraSkill : Skills // Inherits from Skills
         if (logic != null)
         {
             float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
+
+            // [MODIFIED] Pass 'zoneData.slowHitSound' as the last argument
             logic.Initialize(
                 finalDamage,
                 currentDuration,
                 currentArea,
                 currentDebuffPercent,
-                ownerStats.transform
+                ownerStats.transform,
+                zoneData.slowHitSound // [NEW] Pass the sound clip
             );
         }
     }

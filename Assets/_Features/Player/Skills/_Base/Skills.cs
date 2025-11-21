@@ -61,6 +61,12 @@ public abstract class Skills : MonoBehaviour, AttackInterface
         {
             PerformAttack();
             lastAttackTime = Time.time;
+
+            // [NEW] Cast Sound Logic
+            if (skillData.castSound != null)
+            {
+                SoundManager.Instance.PlaySFX(skillData.castSound, 0.1f);
+            }
         }
     }
 

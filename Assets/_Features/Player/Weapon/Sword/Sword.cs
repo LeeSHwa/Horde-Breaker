@@ -110,6 +110,12 @@ public class Sword : Weapon
         {
             lastAttackTime = Time.time;
             StartCoroutine(SwingCoroutine(aimDirection));
+
+            // [NEW] Play Attack Sound
+            if (weaponData.attackSound != null)
+            {
+                SoundManager.Instance.PlaySFX(weaponData.attackSound, 0.1f);
+            }
         }
     }
 
@@ -238,7 +244,9 @@ public class Sword : Weapon
             {
                 float projDmg = (currentDamage * ownerStats.currentDamageMultiplier) * swordData.projectileDamagePercent;
                 float projKb = currentKnockback * swordData.projectileKnockbackPercent;
-                projectileScript.Initialize(projDmg, projKb, true, ownerStats.transform);
+
+                // [MODIFIED] Pass 'weaponData.hitSound'
+                projectileScript.Initialize(projDmg, projKb, true, ownerStats.transform, weaponData.hitSound);
             }
         }
     }
@@ -248,10 +256,16 @@ public class Sword : Weapon
     {
         switch (currentLevel)
         {
-            case 2: // Damage + Speed
+            case 2: // Damage + Speed + Cooldown
                 currentDamage += swordData.level2_DamageBonus;
+
+                // Swing Duration (Animation Speed)
                 currentSwingDuration -= swordData.level2_SpeedIncrease;
                 if (currentSwingDuration < 0.1f) currentSwingDuration = 0.1f;
+
+                // [NEW] Cooldown Reduction (Wait Time)
+                currentAttackCooldown -= swordData.level2_CooldownReduction;
+                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
                 break;
 
             case 3: // Length (Radius)
@@ -279,8 +293,12 @@ public class Sword : Weapon
                 currentAngle += swordData.level4_AngleIncrease;
                 break;
 
-            case 5: // Projectile
+            case 5: // Projectile + Cooldown
                 attackCount = 0;
+
+                // [NEW] Cooldown Reduction
+                currentAttackCooldown -= swordData.level5_CooldownReduction;
+                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
                 break;
         }
     }
@@ -296,6 +314,12 @@ public class Sword : Weapon
             Vector2 knockbackDirection = (enemyCollider.transform.position - ownerStats.transform.position).normalized;
             if (knockbackDirection == Vector2.zero) { knockbackDirection = pivot.right; }
             enemyMove.ApplyKnockback(knockbackDirection, knockback, 0.1f);
+        }
+
+        // [NEW] Play Hit Sound (Directly)
+        if (weaponData.hitSound != null)
+        {
+            SoundManager.Instance.PlaySFX(weaponData.hitSound, 0.1f);
         }
     }
 

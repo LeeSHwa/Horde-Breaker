@@ -69,7 +69,8 @@ public class MoonSkill : Skills // Inherits from Skills
                     currentRotationRadius,
                     ownerStats.transform,
                     startAngle,
-                    rotatingSkillData.knockback
+                    rotatingSkillData.knockback,
+                    skillData.hitSound // [NEW] Pass hit sound
                 );
             }
         }

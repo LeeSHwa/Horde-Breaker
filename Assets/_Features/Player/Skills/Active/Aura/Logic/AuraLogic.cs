@@ -11,6 +11,9 @@ public class AuraLogic : MonoBehaviour
     private float speedDebuffPercent;
     private Transform playerToFollow;
 
+    // [NEW] Variable to store sound clip
+    private AudioClip hitSound;
+
     private CircleCollider2D zoneCollider;
 
     // A reference to the child 'Visuals' transform
@@ -39,12 +42,14 @@ public class AuraLogic : MonoBehaviour
     }
 
     // Initialization function called on skill cast
-    public void Initialize(float damage, float duration, float area, float debuff, Transform player)
+    // [MODIFIED] Added AudioClip sound = null
+    public void Initialize(float damage, float duration, float area, float debuff, Transform player, AudioClip sound = null)
     {
         this.damagePerSecond = damage;
         this.durationTimer = duration;
         this.speedDebuffPercent = debuff;
         this.playerToFollow = player;
+        this.hitSound = sound; // [NEW] Store the sound
 
         // 1. Set the physics collider radius
         this.zoneCollider.radius = area;
@@ -159,6 +164,12 @@ public class AuraLogic : MonoBehaviour
                 if (!enemiesInZone.Contains(enemyStats))
                 {
                     enemiesInZone.Add(enemyStats);
+                }
+
+                // [NEW] Play Hit Sound (Throttling applied by SoundManager automatically)
+                if (hitSound != null)
+                {
+                    SoundManager.Instance.PlaySFX(hitSound, 0.1f);
                 }
             }
         }

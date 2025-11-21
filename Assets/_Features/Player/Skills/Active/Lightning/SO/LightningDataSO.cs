@@ -36,4 +36,11 @@ public class LightningDataSO : SkillDataSO
     [Header("Level 5 (Unlock Tier 3 & Mastery)")]
     public bool level5_UnlockTier3 = true;
     public float level5_BonusDamage = 20f;
+
+    [Header("Lightning Audio")] // [NEW]
+    [Tooltip("Sound for the initial Pivot strike (e.g., 'Bang')")]
+    public AudioClip thunderStrikeSound;
+
+    [Tooltip("Sound for the chain propagation (e.g., 'Zzzzt')")]
+    public AudioClip chainSound;
 }

@@ -24,6 +24,8 @@ MonoBehaviour:
   - LV.3 Bigger Fireball
   - LV.4 Reduced firing frequency
   - LV.MAX Fire spread
+  castSound: {fileID: 8300000, guid: a652877b012108e41871f867ada9f176, type: 3}
+  hitSound: {fileID: 8300000, guid: eaae8fe8d600e1f459f34aa5757fa3b8, type: 3}
   projectilePrefab: {fileID: 9187814388354200019, guid: 09f7740eb69a65644ba0a63401054df4, type: 3}
   baseProjectileSpeed: 20
   baseProjectileLifetime: 6

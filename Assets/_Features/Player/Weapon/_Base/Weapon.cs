@@ -21,6 +21,10 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
     protected int currentProjectileCount = 1; // Default
     protected float lastAttackTime;
 
+    // Added references for PlayerAnimator and StatsController
+    protected StatsController ownerStats;
+    protected PlayerAnimator playerAnimator; // Reference to control player animations
+
     public int CurrentLevel { get { return currentLevel; } }
     public int MaxLevel { get { return weaponData.maxLevel; } }
 
@@ -45,10 +49,6 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
         // Example: Get icon from the Scriptable Object
         return weaponData.icon;
     }
-
-    // Added references for PlayerAnimator and StatsController
-    protected StatsController ownerStats;
-    protected PlayerAnimator playerAnimator; // Reference to control player animations
 
     // (3) [INITIALIZATION] Added 'PlayerAnimator animator' parameter
     public virtual void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
@@ -86,6 +86,13 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
         {
             PerformAttack(aimDirection);
             lastAttackTime = Time.time;
+
+            // [NEW] Attack Sound Logic
+            if (weaponData.attackSound != null)
+            {
+                // Pitch variation 0.1 added for natural feel
+                SoundManager.Instance.PlaySFX(weaponData.attackSound, 0.1f);
+            }
         }
     }
 

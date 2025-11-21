@@ -12,6 +12,9 @@ public class MoonLogic : MonoBehaviour
     private float knockbackForce;
     private float currentAngle;
 
+    // [NEW] Variable to store hit sound
+    private AudioClip hitSound;
+
     // [New] Duration timer for pooling
     private float durationTimer;
 
@@ -21,7 +24,8 @@ public class MoonLogic : MonoBehaviour
     private List<Collider2D> cooldownKeysToRemove = new List<Collider2D>();
 
     // [Modified] Changed original Setup to Initialize and added duration/knockback
-    public void Initialize(float dmg, float duration, float speed, float radius, Transform center, float startAngle, float knockback)
+    // [MODIFIED] Added 'AudioClip sound' parameter
+    public void Initialize(float dmg, float duration, float speed, float radius, Transform center, float startAngle, float knockback, AudioClip sound = null)
     {
         this.damage = dmg;
         this.durationTimer = duration; // [New] Set duration
@@ -30,6 +34,7 @@ public class MoonLogic : MonoBehaviour
         this.centerPoint = center;
         this.currentAngle = startAngle;
         this.knockbackForce = knockback;
+        this.hitSound = sound; // [NEW] Store hit sound
 
         // [Removed] Original Destroy(gameObject, duration) line. Using pooling.
         // Destroy(gameObject, duration); 
@@ -109,6 +114,12 @@ public class MoonLogic : MonoBehaviour
             if (other.TryGetComponent<StatsController>(out var stats))
             {
                 stats.TakeDamage(damage);
+
+                // [NEW] Play Hit Sound
+                if (hitSound != null)
+                {
+                    SoundManager.Instance.PlaySFX(hitSound, 0.1f);
+                }
             }
             // [Removed] Original CharacterStats logic
             // if (other.TryGetComponent<CharacterStats>(out var stats))

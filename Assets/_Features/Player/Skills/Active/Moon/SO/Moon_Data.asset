@@ -24,6 +24,8 @@ MonoBehaviour:
   - LV.3 Two Moons          "Mars has two Moon"
   - LV.4 Rotation speeds up
   - LV.MAX Far Moon             "Looks safe, right?"
+  castSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: e1e2d06fe0d78194b9c7c8cc88414d0d, type: 3}
   projectilePrefab: {fileID: 2615944730286373386, guid: 9e30334dde7ab50479843e2c310a9bea, type: 3}
   baseDuration: 3.6
   baseRotationSpeed: 100

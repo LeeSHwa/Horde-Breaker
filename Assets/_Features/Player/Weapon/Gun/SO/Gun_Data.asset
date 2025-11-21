@@ -23,6 +23,8 @@ MonoBehaviour:
   - test1
   - test2
   - test3
+  attackSound: {fileID: 8300000, guid: 2352822feb4caa14ebdbc0c713289f8d, type: 3}
+  hitSound: {fileID: 8300000, guid: eaae8fe8d600e1f459f34aa5757fa3b8, type: 3}
   bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
   level2_DamageBonus: 5
   level3_ProjectileCount: 2

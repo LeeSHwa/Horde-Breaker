@@ -56,7 +56,8 @@ public class Gun : Weapon
                 finalDamage,
                 weaponData.knockback, // 'knockback' is a common stat from base 'weaponData'
                 currentProjectilePenetration, // 'penetration' is a Gun-specific runtime stat
-                ownerStats.transform // Pass the owner's transform as the attack source
+                ownerStats.transform, // Pass the owner's transform as the attack source
+                weaponData.hitSound // [NEW] Pass hit sound
             );
         }
     }

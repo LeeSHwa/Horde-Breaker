@@ -24,6 +24,8 @@ MonoBehaviour:
   - LV.3  Double Casting
   - LV.4 Reduced casting cooldown
   - LV.MAX Triple Casting
+  castSound: {fileID: 8300000, guid: 5c7b6d4002009e842bd2621585546d19, type: 3}
+  hitSound: {fileID: 8300000, guid: 7bef0064f8567430cac22499c6b93d4f, type: 3}
   missilePrefab: {fileID: 9067339777270423991, guid: 7ebcdbddd78cada4ebbf11036e45aae7, type: 3}
   missileSpeed: 10
   searchRadius: 100

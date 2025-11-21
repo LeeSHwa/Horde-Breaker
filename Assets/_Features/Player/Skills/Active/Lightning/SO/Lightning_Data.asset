@@ -24,6 +24,8 @@ MonoBehaviour:
   - LV.3 Double chain effect (spreads far)
   - LV.4 Strike more often
   - LV.MAX Judgement (triple chain effect, more powerful)
+  castSound: {fileID: 0}
+  hitSound: {fileID: 0}
   chainVisualPrefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
   thunderStrikePrefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
   radius_R1: 4
@@ -38,3 +40,5 @@ MonoBehaviour:
   level4_CooldownReduction: 2
   level5_UnlockTier3: 1
   level5_BonusDamage: 0
+  thunderStrikeSound: {fileID: 8300000, guid: b7f8695cf65a4f24eb37544298821146, type: 3}
+  chainSound: {fileID: 8300000, guid: f1cb5d83282f2904a85f73111d068616, type: 3}

@@ -27,4 +27,8 @@ public class AuraDataSO : SkillDataSO //
     public float level5_AreaIncrease = 1f;
     [Tooltip("Level 5: Additional speed percentage reduction (e.g., -15 makes 75% -> 60%)")] 
     public float level5_DebuffIncrease = -15f;
+
+    [Header("Aura Audio")] // [NEW]
+    [Tooltip("Sound played when an enemy enters the aura (Throttling recommended)")]
+    public AudioClip slowHitSound;
 }
