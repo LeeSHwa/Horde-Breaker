@@ -14,6 +14,7 @@ public class StatsController : MonoBehaviour
     [Header("Runtime Stats")]
     [HideInInspector]
     public float currentHP;
+    private float runtimeMaxHP;
     public float currentMoveSpeed;
     public float currentDamageMultiplier;
 
@@ -70,7 +71,7 @@ public class StatsController : MonoBehaviour
         {
             if (UIManager.Instance != null)
             {
-                UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+                UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
             }
             else
             {
@@ -110,7 +111,9 @@ public class StatsController : MonoBehaviour
             return; // Stop here if baseStats is null
         }
 
-        currentHP = baseStats.baseMaxHealth;
+        runtimeMaxHP = baseStats.baseMaxHealth;
+        currentHP = runtimeMaxHP;
+
         currentMoveSpeed = baseStats.baseMoveSpeed;
         currentDamageMultiplier = baseStats.baseDamageMultiplier;
 
@@ -142,7 +145,7 @@ public class StatsController : MonoBehaviour
             // Init UI
             if (UIManager.Instance != null)
             {
-                UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+                UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
                 UIManager.Instance.UpdateExp(currentExp, expNeededForNextLevel);
                 UIManager.Instance.UpdateLevel(currentLevel);
             }
@@ -192,7 +195,7 @@ public class StatsController : MonoBehaviour
 
         if (gameObject.CompareTag("Player"))
         {
-            UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+            UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
         }
 
         if (currentHP <= 0)
@@ -307,34 +310,23 @@ public class StatsController : MonoBehaviour
         }
     }
 
+    //-------------------------passive skill API-------------------------
     // Adds a flat bonus to the damage multiplier
     public void ApplyDamageMultiplier(float multiplierBonus)
     {
         currentDamageMultiplier += multiplierBonus;
         Debug.Log($"Damage Multiplier updated to {currentDamageMultiplier}");
     }
+
     // Adds a flat bonus to max health
     public void ApplyMaxHealth(float healthBonus)
     {
-        // Find the *original* base max health from SO to apply bonus correctly
-        // This assumes baseMaxHealth in CharacterStatsSO is the *true* base
-        var originalStats = baseStats as PlayerStatsSO;
-        if (originalStats != null)
-        {
-            // This logic is complex. A simpler way is to just add to currentHP
-        }
-
-        // Simpler logic: Just add to current max HP and heal
-        float oldMaxHP = baseStats.baseMaxHealth; // This might be wrong if applied multiple times
-                                                  // A dedicated runtime variable 'currentMaxHP' is safer.
-
-        // Let's assume CharacterStatsSO is a *runtime instance* for simplicity
-        baseStats.baseMaxHealth += healthBonus;
+        runtimeMaxHP += healthBonus;
         currentHP += healthBonus; // Also heal for the same amount
 
         if (UIManager.Instance != null)
         {
-            UIManager.Instance.UpdateHP((int)currentHP, (int)baseStats.baseMaxHealth);
+            UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
         }
     }
 

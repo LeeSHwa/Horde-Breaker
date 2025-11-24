@@ -22,7 +22,7 @@ public class PlayerPickup : MonoBehaviour
         // Ensure Rigidbody2D is Kinematic
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb == null) rb = gameObject.AddComponent<Rigidbody2D>(); // Add if missing
-        rb.isKinematic = true;
+        rb.bodyType = RigidbodyType2D.Kinematic;
         rb.gravityScale = 0;
     }
 
