@@ -30,17 +30,29 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<StatsController>();
-        // [ADDED] Get the PlayerAnimator component
         playerAnimator = GetComponent<PlayerAnimator>();
         mainCamera = Camera.main;
 
         AimDirection = Vector2.right;
 
-        // Equip starting weapon if assigned
-        if (startingWeaponPrefab != null)
+        GameObject weaponToEquip = startingWeaponPrefab;
+
+        if (GameManager.Instance != null && GameManager.Instance.selectedWeaponPrefab != null)
         {
-            EquipWeapon(startingWeaponPrefab);
+            weaponToEquip = GameManager.Instance.selectedWeaponPrefab;
         }
+
+        if (weaponToEquip != null)
+        {
+            EquipWeapon(weaponToEquip);
+        }
+        else
+        {
+            Debug.LogWarning("Error : Weapon is not equiped");
+        }
+
+
+
         playerDash = GetComponent<PlayerDash>(); 
         LastMoveInput = Vector2.right; 
     }

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043f9b8dfc53ab445adb99203d82b6e1, type: 3}
+  m_Name: Wave_02_00
+  m_EditorClassIdentifier: 
+  waveName: 1. Strat with Green Slime
+  startTime: 120
+  spawnRules:
+  - note: "\uC5EC\uAE30\uC11C\uBD80\uD130\uB294 \uB808\uB4DC\uC2AC\uB77C\uC784\uB9CC
+      \uCD9C\uD604"
+    prefab: {fileID: 8171226546246630872, guid: cb5b27ab1c178924ba02bd694d583b33, type: 3}
+    interval: 0.5
+    chance: 1
+  isBossWave: 0
