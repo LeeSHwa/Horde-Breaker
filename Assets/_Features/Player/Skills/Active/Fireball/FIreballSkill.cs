@@ -90,7 +90,8 @@ public class FireballSkill : Skills // Inherits from Skills
                     currentSpeed,
                     currentLifetime,
                     fireballData.damageFalloffPercentage,
-                    currentArea // Send the current size
+                    currentArea, // Send the current size
+                    skillData.hitSound // [NEW] Pass hit sound
                 );
             }
         }
@@ -108,6 +109,8 @@ public class FireballSkill : Skills // Inherits from Skills
                 break;
             case 4:
                 currentAttackCooldown -= fireballData.level4_CooldownReduction;
+                // [Added] Safety Cap
+                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
                 break;
             case 5:
                 currentProjectileCount = fireballData.level5_ProjectileCount;

@@ -53,7 +53,8 @@ public class RicochetWeapon : Weapon
                 currentMaxBounces,      // The current (potentially leveled-up) enemy bounce count
                 ricochetData.bounceRange,
                 ricochetData.lifetime,
-                ownerStats.transform    // Pass the player (owner) as the attack source
+                ownerStats.transform,    // Pass the player (owner) as the attack source
+                weaponData.hitSound // [NEW] Pass hit sound
             );
         }
     }

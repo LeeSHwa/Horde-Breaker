@@ -14,5 +14,11 @@ public class MoonDataSO : SkillDataSO // [MODIFIED] Class name changed from Rota
     public float level2_DamageIncrease = 10f;
     public int level3_ProjectileCount = 2;
     public float level4_RotationSpeedIncrease = 20f;
-    public float level5_RadiusIncrease = 0.5f;
+
+    // [MODIFIED] Changed to a "Mastery" level, keeping Radius and adding Projectile Count
+    [Header("Level 5 (Mastery)")] // [NEW] Added Header for clarity
+    [Tooltip("Level 5: Additional radius increase")] // [NEW] Added Tooltip
+    public float level5_RadiusIncrease = 0.5f; // This field was already here
+    [Tooltip("Level 5: Set the total number of projectiles")] // [NEW] Added new field
+    public int level5_ProjectileCount = 3;
 }

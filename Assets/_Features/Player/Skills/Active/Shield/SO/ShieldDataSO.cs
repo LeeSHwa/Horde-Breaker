@@ -31,4 +31,11 @@ public class ShieldDataSO : SkillDataSO
     public bool level5_UnlockGhostMode = true;
     // Percentage of speed increase during Ghost Mode (e.g., 0.5 = +50% speed).
     public float level5_MoveSpeedBonus = 0.5f;
+
+    [Header("Shield Audio")] // [NEW]
+    [Tooltip("Sound played when a shield stack is recharged")]
+    public AudioClip shieldRechargeSound;
+
+    [Tooltip("Sound played when a shield stack breaks")]
+    public AudioClip shieldBreakSound;
 }

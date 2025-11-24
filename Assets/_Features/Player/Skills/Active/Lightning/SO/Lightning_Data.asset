@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f97576d7d8727046956252d8e7af6a3, type: 3}
+  m_Name: Lightning_Data
+  m_EditorClassIdentifier: 
+  baseDamage: 70
+  baseAttackCooldown: 5
+  knockback: 0
+  skillName: Lightning
+  icon: {fileID: 7989235288497715281, guid: 8b45b3273e0b4a644bae011ab191c8ac, type: 3}
+  maxLevel: 5
+  skillDescription: Lightning strikes a random enemy, causing chain damage.
+  levelDescriptions:
+  - LV.2 Damage up
+  - LV.3 Double chain effect (spreads far)
+  - LV.4 Strike more often
+  - LV.MAX Judgement (triple chain effect, more powerful)
+  castSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  chainVisualPrefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
+  thunderStrikePrefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
+  radius_R1: 4
+  radius_R2: 7
+  radius_R3: 10
+  ratio_A: 0.8
+  ratio_B: 0.6
+  ratio_C: 0.4
+  maxBranches: 10
+  level2_DamageIncrease: 10
+  level3_UnlockTier2: 1
+  level4_CooldownReduction: 2
+  level5_UnlockTier3: 1
+  level5_BonusDamage: 0
+  thunderStrikeSound: {fileID: 8300000, guid: b7f8695cf65a4f24eb37544298821146, type: 3}
+  chainSound: {fileID: 8300000, guid: f1cb5d83282f2904a85f73111d068616, type: 3}

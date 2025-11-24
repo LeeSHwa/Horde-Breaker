@@ -44,7 +44,7 @@ public class MoonSkill : Skills // Inherits from Skills
         currentRotationRadius = rotatingSkillData.baseRotationRadius;
     }
 
-    // ... (PerformAttack, ApplyLevelUpStats
+    // ... (PerformAttack is unchanged)
 
     protected override void PerformAttack()
     {
@@ -69,26 +69,35 @@ public class MoonSkill : Skills // Inherits from Skills
                     currentRotationRadius,
                     ownerStats.transform,
                     startAngle,
-                    rotatingSkillData.knockback
+                    rotatingSkillData.knockback,
+                    skillData.hitSound // [NEW] Pass hit sound
                 );
             }
         }
     }
+
+    // [MOD..."ApplyLevelUpStats" METHOD FULLY REPLACED]...
     protected override void ApplyLevelUpStats()
     {
+        // [NEW] This function's logic is updated for the new Level 5 (Mastery) design.
         switch (currentLevel)
         {
-            case 2:
+            case 2: // Level 2: Damage Increase (Unchanged)
                 currentDamage += rotatingSkillData.level2_DamageIncrease;
                 break;
-            case 3:
+            case 3: // Level 3: Projectile Count 2 (Unchanged)
                 currentProjectileCount = rotatingSkillData.level3_ProjectileCount;
                 break;
-            case 4:
+            case 4: // Level 4: Rotation Speed (Unchanged)
                 currentRotationSpeed += rotatingSkillData.level4_RotationSpeedIncrease;
                 break;
-            case 5:
+            case 5: // Level 5: [MODIFIED] Apply Mastery (Radius AND Projectile Count)
+
+                // Apply original radius increase from SO
                 currentRotationRadius += rotatingSkillData.level5_RadiusIncrease;
+
+                // [NEW] Apply new projectile count from SO
+                currentProjectileCount = rotatingSkillData.level5_ProjectileCount;
                 break;
         }
     }

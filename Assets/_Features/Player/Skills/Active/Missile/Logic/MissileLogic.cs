@@ -7,6 +7,9 @@ public class MissileLogic : MonoBehaviour
     private float searchRadius; // Range to find enemies
     private Transform target;   // Currently locked target
 
+    // [NEW] Variable to store hit sound
+    private AudioClip hitSound;
+
     private float safetyTimer = 10f;
 
     // Optimization: Don't scan every single frame. Scan 10 times a second.
@@ -14,11 +17,13 @@ public class MissileLogic : MonoBehaviour
     private const float SCAN_INTERVAL = 0.1f;
 
     // [Modified] Now receives 'radius' instead of 'target'
-    public void Initialize(float dmg, float spd, float radius)
+    // [MODIFIED] Added 'AudioClip sound' parameter
+    public void Initialize(float dmg, float spd, float radius, AudioClip sound = null)
     {
         this.damage = dmg;
         this.speed = spd;
         this.searchRadius = radius;
+        this.hitSound = sound; // [NEW] Store hit sound
         this.target = null; // Start with no target
         this.safetyTimer = 10f;
         this.scanTimer = 0f;
@@ -94,6 +99,12 @@ public class MissileLogic : MonoBehaviour
             if (other.TryGetComponent<EnemyMovement>(out var enemyMove))
             {
                 enemyMove.ApplyKnockback(transform.right, 3f, 0.1f);
+            }
+
+            // [NEW] Play Hit Sound
+            if (hitSound != null)
+            {
+                SoundManager.Instance.PlaySFX(hitSound, 0.1f);
             }
 
             // Destroy on impact

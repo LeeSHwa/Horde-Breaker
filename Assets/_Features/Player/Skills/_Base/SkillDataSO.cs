@@ -22,4 +22,12 @@ public class SkillDataSO : ScriptableObject
     public string skillDescription = "Skill description.";
 
     public List<string> levelDescriptions;
+
+    // [NEW] Audio Section
+    [Header("Audio")]
+    [Tooltip("Sound played when the skill activates (on cooldown)")]
+    public AudioClip castSound;
+
+    [Tooltip("Sound played when the skill hits an enemy")]
+    public AudioClip hitSound;
 }
