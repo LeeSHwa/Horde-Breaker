@@ -55,7 +55,7 @@ public class LightningSkill : Skills
         float baseDmg = currentDamage * ownerStats.currentDamageMultiplier;
         ApplyDamage(pivot, baseDmg);
 
-        // [NEW] Play Thunder Strike Sound (Äç!)
+        // [NEW] Play Thunder Strike Sound (ï¿½ï¿½!)
         if (lightningData.thunderStrikeSound != null)
         {
             SoundManager.Instance.PlaySFX(lightningData.thunderStrikeSound, 0.2f);
@@ -134,7 +134,6 @@ public class LightningSkill : Skills
     {
         List<Transform> successfulHits = new List<Transform>();
 
-        // [NEW] Play Chain Sound (ÁöÁöÁ÷!) - Played once per tier connection
         if (lightningData.chainSound != null)
         {
             // Small pitch variation for electric buzz

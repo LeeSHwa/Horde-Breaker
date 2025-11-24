@@ -16,5 +16,5 @@ MonoBehaviour:
   dashMoveDuration: 0.1
   invincibilityDuration: 1
   maxDashStacks: 3
-  stackRechargeCooldown: 1
+  stackRechargeCooldown: 10
   startingDashStacks: 3

@@ -15,7 +15,6 @@ MonoBehaviour:
   baseMaxHealth: 100
   baseMoveSpeed: 15
   baseDamageMultiplier: 1
-  damageMultiplier: 1
   deathAnimationLength: 0.5
-  expToNextLevel: 140000001e0000002d000000
+  expToNextLevel: 140000001e0000002d000000410000005a000000780000009b000000c3000000f0000000220100005901000095010000
   basePickupRadius: 4
