@@ -64,7 +64,8 @@ public class MissileSkill : Skills
             float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
 
             // [Modified] Pass 'currentSearchRadius' instead of a specific target
-            logic.Initialize(finalDamage, currentSpeed, currentSearchRadius);
+            // [MODIFIED] Pass 'skillData.hitSound'
+            logic.Initialize(finalDamage, currentSpeed, currentSearchRadius, skillData.hitSound);
         }
     }
 

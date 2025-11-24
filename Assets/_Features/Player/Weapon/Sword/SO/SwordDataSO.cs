@@ -17,20 +17,27 @@ public class SwordDataSO : WeaponDataSO
     public float swingStartOffset = 45f;
 
     [Header("Sword Level Up Stats")]
-    [Header("Level 2 (Dmg + Speed)")]
+    [Header("Level 2 (Dmg + Swing Speed + Cooldown)")] // [MODIFIED] Header
     public float level2_DamageBonus = 10f;
-    [Tooltip("Reduces swing duration, making it faster.")]
-    public float level2_SpeedIncrease = 0.1f; // Swing duration 'reduction'
+
+    [Tooltip("Reduces swing duration (Action Speed).")]
+    public float level2_SpeedIncrease = 0.1f;
+
+    [Tooltip("Reduces attack cooldown (Wait Time).")] // [NEW]
+    public float level2_CooldownReduction = 0.1f;
 
     [Header("Level 3 (Length)")]
     [Tooltip("Increases the radius/length of the swing.")]
-    public float level3_AreaIncrease = 0.5f;  // Radius 'increase'
+    public float level3_AreaIncrease = 0.5f;
 
     [Header("Level 4 (Angle)")]
     [Tooltip("Increases the angle of the swing arc.")]
-    public float level4_AngleIncrease = 30f;  // Angle 'increase'
+    public float level4_AngleIncrease = 30f;
 
-    [Header("Level 5 (Projectile)")]
+    [Header("Level 5 (Projectile + Cooldown)")] // [MODIFIED] Header
+    [Tooltip("Reduces attack cooldown (Wait Time).")] // [NEW]
+    public float level5_CooldownReduction = 0.1f;
+
     [Tooltip("Number of swings required to launch one projectile.")]
     public int level5_AttacksPerProjectile = 5;
 
@@ -45,4 +52,7 @@ public class SwordDataSO : WeaponDataSO
 
     [Tooltip("How long the projectile lasts in seconds.")]
     public float projectileLifetime = 3f;
+
+    [Tooltip("Adjust this to fit the projectile length to the sword arc (Try 0.5 or 1.0)")]
+    public float projectileArcScaleMultiplier = 1.0f;
 }

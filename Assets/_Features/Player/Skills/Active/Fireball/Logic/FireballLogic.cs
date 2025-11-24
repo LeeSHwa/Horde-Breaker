@@ -12,6 +12,9 @@ public class FireballLogic : MonoBehaviour
 
     private float lifetimeTimer;
 
+    // [NEW] Variable to store hit sound
+    private AudioClip hitSound;
+
     // [NEW] List to track which enemies we've already hit
     private List<Collider2D> hitEnemies;
 
@@ -30,12 +33,14 @@ public class FireballLogic : MonoBehaviour
     }
 
     // Called by FireballSkill.cs when spawned
-    public void Initialize(float dmg, float spd, float life, float falloff, float area)
+    // [MODIFIED] Added 'AudioClip sound' parameter
+    public void Initialize(float dmg, float spd, float life, float falloff, float area, AudioClip sound = null)
     {
         this.damage = dmg;
         this.speed = spd;
         this.lifetime = life;
         this.falloffPercentage = falloff;
+        this.hitSound = sound; // [NEW] Store hit sound
         this.lifetimeTimer = life;
 
         // Apply area (size) increase
@@ -87,6 +92,12 @@ public class FireballLogic : MonoBehaviour
 
             // [NEW] Add enemy to the "hit" list so we don't hit them again
             hitEnemies.Add(other);
+
+            // [NEW] Play Hit Sound
+            if (hitSound != null)
+            {
+                SoundManager.Instance.PlaySFX(hitSound, 0.1f);
+            }
 
             // Note: We do NOT deactivate the projectile. This is penetration.
             // Note: We do NOT apply knockback, as requested.

@@ -15,6 +15,9 @@ public class RicochetProjectile : MonoBehaviour
     private float bounceRange;        // The maximum radius to search for a new enemy target after a hit.
     private Transform attackSource;   // Reference to the entity that fired this projectile (e.g., the player).
 
+    // [NEW] Variable to store hit sound
+    private AudioClip hitSound;
+
     // --- Internal State ---
     // These variables manage the projectile's own state during its life.
     private float lifetimeTimer;      // The *current* remaining time before this projectile is destroyed.
@@ -58,7 +61,8 @@ public class RicochetProjectile : MonoBehaviour
     /// This public method is called by the 'Weapon' script immediately after creating/activating the projectile.
     /// It "sets up" the projectile with all its necessary stats.
     /// </summary>
-    public void Initialize(float damage, float speed, int maxBounces, float range, float lifetime, Transform source)
+    // [MODIFIED] Added 'AudioClip sound' parameter
+    public void Initialize(float damage, float speed, int maxBounces, float range, float lifetime, Transform source, AudioClip sound = null)
     {
         this.currentDamage = damage;
         this.speed = speed;
@@ -70,6 +74,7 @@ public class RicochetProjectile : MonoBehaviour
         this.lifetimeTimer = lifetime;
 
         this.attackSource = source;
+        this.hitSound = sound; // [NEW] Store hit sound
         this.moveDirection = transform.right; // Set initial direction (forward from the weapon).
 
         // --- Object Pooling Safety ---
@@ -127,6 +132,12 @@ public class RicochetProjectile : MonoBehaviour
             if (collision.TryGetComponent<StatsController>(out StatsController enemyStats))
             {
                 enemyStats.TakeDamage(currentDamage);
+
+                // [NEW] Play Hit Sound
+                if (hitSound != null)
+                {
+                    SoundManager.Instance.PlaySFX(hitSound, 0.1f);
+                }
             }
 
             // 3. "Remember" this enemy.

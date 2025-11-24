@@ -1,11 +1,10 @@
 using UnityEngine;
 
 // Creates an asset menu item for this specific skill data
-// [MODIFIED] CreateAssetMenu path updated to reflect new name
 [CreateAssetMenu(fileName = "NewAuraData", menuName = "Stats/Skill Data/Aura Data")]
-public class AuraDataSO : SkillDataSO // [MODIFIED] Class name changed from GroundZoneDataSO
+public class AuraDataSO : SkillDataSO //
 {
-    [Header("Ground Zone Specific")] // [NOTE] Header kept for clarity, as this is still a ground zone type
+    [Header("Ground Zone Specific")]
     public GameObject zonePrefab;
     public float baseDuration = 3f;
     public float baseArea = 2f;
@@ -16,6 +15,20 @@ public class AuraDataSO : SkillDataSO // [MODIFIED] Class name changed from Grou
     [Header("Ground Zone Level Up Stats")] // [NOTE] Header kept for clarity
     public float level2_DamageIncrease = 5f;
     public float level3_AreaIncrease = 0.5f;
-    public float level4_DurationIncrease = 1f;
-    public float level5_DebuffIncrease = -10f;
+
+    [Header("Level 4 (Slow)")] 
+    [Tooltip("Level 4: Sets the enemy's speed percentage (e.g., 75 = 75% speed)")]
+    public float level4_SlowValue = 75f;
+
+    [Header("Level 5 (Mastery)")] 
+    [Tooltip("Level 5: Additional damage increase")] 
+    public float level5_DamageIncrease = 10f;
+    [Tooltip("Level 5: Additional area increase")]
+    public float level5_AreaIncrease = 1f;
+    [Tooltip("Level 5: Additional speed percentage reduction (e.g., -15 makes 75% -> 60%)")] 
+    public float level5_DebuffIncrease = -15f;
+
+    [Header("Aura Audio")] // [NEW]
+    [Tooltip("Sound played when an enemy enters the aura (Throttling recommended)")]
+    public AudioClip slowHitSound;
 }

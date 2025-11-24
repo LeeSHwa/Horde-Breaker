@@ -38,10 +38,11 @@ public class AuraSkill : Skills // Inherits from Skills
         // This is now safe because 'zoneData' is no longer null
         currentDuration = zoneData.baseDuration;
         currentArea = zoneData.baseArea;
+        // [MODIFIED] Set DebuffPercent based on the SO data (likely 0 if Lvl 4 adds it)
         currentDebuffPercent = zoneData.speedDebuffPercentage;
     }
 
-    // ... (PerformAttack, ApplyLevelUpStats
+    // ... (ApplyLevelUpStats is updated as per recent logic)
 
     protected override void PerformAttack()
     {
@@ -55,29 +56,43 @@ public class AuraSkill : Skills // Inherits from Skills
         if (logic != null)
         {
             float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
+
+            // [MODIFIED] Pass 'zoneData.slowHitSound' as the last argument
             logic.Initialize(
                 finalDamage,
                 currentDuration,
                 currentArea,
                 currentDebuffPercent,
-                ownerStats.transform
+                ownerStats.transform,
+                zoneData.slowHitSound // [NEW] Pass the sound clip
             );
         }
     }
+
+    // [MOD..."ApplyLevelUpStats" METHOD FULLY REPLACED]...
     protected override void ApplyLevelUpStats()
     {
+        // [NEW] This function's logic is updated for the new Level 4 (Slow) and Level 5 (Mastery) design.
         switch (currentLevel)
         {
-            case 2:
+            case 2: // Level 2: Damage Increase (Unchanged)
                 currentDamage += zoneData.level2_DamageIncrease;
                 break;
-            case 3:
+            case 3: // Level 3: Area Increase (Unchanged)
                 currentArea += zoneData.level3_AreaIncrease;
                 break;
-            case 4:
-                currentDuration += zoneData.level4_DurationIncrease;
+            case 4: // Level 4: [NEW] Apply Slow Effect
+                // Set the slow percentage directly from the SO's new 'level4_SlowValue' field.
+                currentDebuffPercent = zoneData.level4_SlowValue;
                 break;
-            case 5:
+            case 5: // Level 5: [NEW] Apply Mastery (All stats up)
+                // Apply Lvl 2 effect (Damage) again
+                currentDamage += zoneData.level5_DamageIncrease;
+
+                // Apply Lvl 3 effect (Area) again
+                currentArea += zoneData.level5_AreaIncrease;
+
+                // Apply Lvl 4 effect (Slow) again (adds a negative value)
                 currentDebuffPercent += zoneData.level5_DebuffIncrease;
                 break;
         }

@@ -103,6 +103,12 @@ public class ShieldSkill : Skills
             currentStacks++;
             UpdateVisuals();
             Debug.Log($"Shield Recharged! Current: {currentStacks}/{currentMaxStacks}");
+
+            // [NEW] Play Recharge Sound
+            if (shieldData.shieldRechargeSound != null)
+            {
+                SoundManager.Instance.PlaySFX(shieldData.shieldRechargeSound);
+            }
         }
     }
 
@@ -124,6 +130,12 @@ public class ShieldSkill : Skills
 
             UpdateVisuals();
             Debug.Log($"Shield Blocked! Remaining Stacks: {currentStacks}");
+
+            // [NEW] Play Break Sound
+            if (shieldData.shieldBreakSound != null)
+            {
+                SoundManager.Instance.PlaySFX(shieldData.shieldBreakSound);
+            }
 
             // Reset recharge timer so the next shield takes full duration to charge
             lastAttackTime = Time.time;

@@ -10,19 +10,24 @@ public class Bullet : MonoBehaviour
     // [New] Variable to store the attack's source (the player)
     private Transform attackSource;
 
+    // [NEW] Variable to store hit sound
+    private AudioClip hitSound;
+
     // Bullet's own properties
     public float speed = 20f;
     public float lifetime = 2f; // Auto-deactivates after 2 seconds
     private float lifetimeTimer;
 
     // [Modified] Added 'Transform source' parameter to Initialize method
-    public void Initialize(float dmg, float kb, bool pen, Transform source)
+    // [MODIFIED] Added 'AudioClip sound' parameter
+    public void Initialize(float dmg, float kb, bool pen, Transform source, AudioClip sound = null)
     {
         this.damage = dmg;
         this.knockback = kb;
         this.penetration = pen;
         this.attackSource = source; // Store the attacker's info
         this.lifetimeTimer = lifetime; // Reset lifetime
+        this.hitSound = sound; // [NEW] Store the hit sound
     }
 
     void Update()
@@ -68,6 +73,12 @@ public class Bullet : MonoBehaviour
                     }
 
                     enemyMove.ApplyKnockback(knockbackDirection, this.knockback, 0.1f);
+                }
+
+                // [NEW] Play Hit Sound
+                if (hitSound != null)
+                {
+                    SoundManager.Instance.PlaySFX(hitSound, 0.1f);
                 }
             }
 

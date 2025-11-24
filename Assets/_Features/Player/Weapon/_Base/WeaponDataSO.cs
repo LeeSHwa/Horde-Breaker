@@ -19,4 +19,12 @@ public class WeaponDataSO : ScriptableObject
 
     // A list to hold descriptions for levels 2, 3, 4, 5+
     public List<string> levelDescriptions;
+
+    // [NEW] Audio Section
+    [Header("Audio")]
+    [Tooltip("Sound played when attacking (Firing/Swinging)")]
+    public AudioClip attackSound;
+
+    [Tooltip("Sound played when the projectile hits an enemy")]
+    public AudioClip hitSound;
 }
