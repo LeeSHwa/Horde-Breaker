@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 6142389778920565495}
   - component: {fileID: 8531378266205847665}
   - component: {fileID: -4424138811310598057}
-  - component: {fileID: -6003777276541363339}
   - component: {fileID: 2624853290534050862}
   - component: {fileID: -1998696949730818253}
   - component: {fileID: 6678338938222245641}
+  - component: {fileID: 272946746058151902}
   m_Layer: 0
   m_Name: 2. RedSlime
   m_TagString: Enemy
@@ -142,8 +142,51 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!58 &-6003777276541363339
-CircleCollider2D:
+--- !u!114 &2624853290534050862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171226546246630872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00fe1b8cc14dcc04b83b41b96f54d057, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 0.5
+  isReverseSprite: 0
+--- !u!114 &-1998696949730818253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171226546246630872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStats: {fileID: 11400000, guid: 5511fec38b803094582955939fb81b72, type: 2}
+  currentHP: 0
+  currentMoveSpeed: 0
+  currentDamageMultiplier: 0
+--- !u!114 &6678338938222245641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171226546246630872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCooldown: 0.01
+--- !u!60 &272946746058151902
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -177,46 +220,25 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
---- !u!114 &2624853290534050862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8171226546246630872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00fe1b8cc14dcc04b83b41b96f54d057, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mass: 0.5
---- !u!114 &-1998696949730818253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8171226546246630872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 5511fec38b803094582955939fb81b72, type: 2}
-  currentHP: 0
-  currentMoveSpeed: 0
-  currentDamageMultiplier: 0
---- !u!114 &6678338938222245641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8171226546246630872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitCooldown: 0.01
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3, y: 1}
+    newSize: {x: 3, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.191782, y: 0.2095499}
+      - {x: -0.19416428, y: 0.20280838}
+      - {x: -0.41122818, y: 0.13605785}
+      - {x: -0.5710659, y: -0.051475525}
+      - {x: -0.58921623, y: -0.39697933}
+      - {x: -0.44971466, y: -0.5067425}
+      - {x: 0.42948914, y: -0.5202246}
+      - {x: 0.5778084, y: -0.3719082}
+      - {x: 0.58454895, y: -0.071700096}
+      - {x: 0.45526695, y: 0.083916664}
+  m_UseDelaunayMesh: 0
