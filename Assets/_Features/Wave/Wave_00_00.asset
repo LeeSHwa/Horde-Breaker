@@ -17,6 +17,6 @@ MonoBehaviour:
   spawnRules:
   - note: "\uC2DC\uC791 \uC2AC\uB77C\uC784"
     prefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
-    interval: 0
+    interval: 0.2
     chance: 1
   isBossWave: 0
