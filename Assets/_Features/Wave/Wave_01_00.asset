@@ -17,7 +17,7 @@ MonoBehaviour:
   spawnRules:
   - note: "\uC2DC\uC791 \uC2AC\uB77C\uC784"
     prefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
-    interval: 0.2
+    interval: 0
     chance: 1
   - note: "\uB808\uB4DC \uC2AC\uB77C\uC784"
     prefab: {fileID: 8171226546246630872, guid: cb5b27ab1c178924ba02bd694d583b33, type: 3}

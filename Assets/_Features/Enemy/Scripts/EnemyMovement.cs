@@ -2,11 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))] // Necessary Component
-[RequireComponent(typeof(CircleCollider2D))] // Necessary Component
 public class EnemyMovement : MonoBehaviour
 {
     [Header("Weight")] // Name to Display in Inspector Tab
     public float mass = 0.5f; // Weight of the enemy
+
+    public bool isReverseSprite = false;
 
     private StatsController stats; // Load CharacterStats script
 
@@ -40,26 +41,18 @@ public class EnemyMovement : MonoBehaviour
     {
         if (canMove)
         {
-            if (player == null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                return; // If no player survives on the map, it will stop.
-            }
+            if (player == null) { rb.linearVelocity = Vector3.zero; return; }
 
-            Vector2 direction = (player.position - transform.position).normalized; // Get the direction from enemy to player
-            rb.linearVelocity = direction * stats.currentMoveSpeed; // Move the enemy towards the player
+            Vector2 direction = (player.position - transform.position).normalized;
+            rb.linearVelocity = direction * stats.currentMoveSpeed;
 
-            // --- [Modified] 3. Sprite flipping logic ---
-            // (Assumption: Original sprite is facing right)
-            if (direction.x > 0)
+            if (direction.x > 0) 
             {
-                // When moving right (x is positive)
-                spriteRenderer.flipX = false; // Don't flip (original direction)
+                spriteRenderer.flipX = isReverseSprite;
             }
-            else if (direction.x < 0)
+            else if (direction.x < 0) 
             {
-                // When moving left (x is negative)
-                spriteRenderer.flipX = true; // Flip horizontally
+                spriteRenderer.flipX = !isReverseSprite;
             }
         }
     }
