@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class MissileLogic : MonoBehaviour
+public class HellfireLogic : MonoBehaviour
 {
     private float damage;
     private float speed;
     private float searchRadius; // Range to find enemies
     private Transform target;   // Currently locked target
 
-    // [NEW] Variable to store hit sound
+    // Variable to store hit sound
     private AudioClip hitSound;
 
     private float safetyTimer = 10f;

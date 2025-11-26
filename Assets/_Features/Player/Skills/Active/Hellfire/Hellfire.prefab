@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6227178745664515236}
   - component: {fileID: 2934437032518214306}
   m_Layer: 0
-  m_Name: Missile
+  m_Name: Hellfire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

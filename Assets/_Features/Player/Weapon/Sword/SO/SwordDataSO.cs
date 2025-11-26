@@ -4,55 +4,76 @@
 public class SwordDataSO : WeaponDataSO
 {
     [Header("Sword Specific")]
-    [Tooltip("The time it takes to complete one swing animation.")]
     public float baseSwingDuration = 0.5f;
-
-    [Tooltip("The base angle of the swing arc.")]
     public float baseAngle = 90f;
-
-    [Tooltip("The base radius/length of the swing.")]
     public float baseAreaRadius = 1.5f;
-
-    [Tooltip("Angle offset to make the swing look like 'over-the-top'. e.g., 45 degrees.")]
     public float swingStartOffset = 45f;
 
-    [Header("Sword Level Up Stats")]
-    [Header("Level 2 (Dmg + Swing Speed + Cooldown)")] // [MODIFIED] Header
+    [Header("Level 1")]
     public float level2_DamageBonus = 10f;
-
-    [Tooltip("Reduces swing duration (Action Speed).")]
     public float level2_SpeedIncrease = 0.1f;
 
-    [Tooltip("Reduces attack cooldown (Wait Time).")] // [NEW]
-    public float level2_CooldownReduction = 0.1f;
+    [Tooltip("Reduces attack cooldown by Percentage (e.g. 10 = 10%).")]
+    public float level2_CooldownReduction = 10f; // Example default changed to 10
+    public float level2_AreaIncrease = 0f;
+    public float level2_AngleIncrease = 0f;
 
-    [Header("Level 3 (Length)")]
-    [Tooltip("Increases the radius/length of the swing.")]
+    [Header("Level 2")]
+    public float level3_DamageBonus = 0f;
     public float level3_AreaIncrease = 0.5f;
+    public float level3_AngleIncrease = 0f;
+    [Tooltip("Reduces attack cooldown by Percentage.")]
+    public float level3_CooldownReduction = 0f;
 
-    [Header("Level 4 (Angle)")]
-    [Tooltip("Increases the angle of the swing arc.")]
+    [Header("Level 3")]
+    public float level4_DamageBonus = 0f;
+    public float level4_AreaIncrease = 0f;
     public float level4_AngleIncrease = 30f;
+    [Tooltip("Reduces attack cooldown by Percentage.")]
+    public float level4_CooldownReduction = 0f;
 
-    [Header("Level 5 (Projectile + Cooldown)")] // [MODIFIED] Header
-    [Tooltip("Reduces attack cooldown (Wait Time).")] // [NEW]
-    public float level5_CooldownReduction = 0.1f;
+    [Header("Level 4")]
+    public float level5_DamageBonus = 0f;
+    public float level5_AreaIncrease = 0f;
+    public float level5_AngleIncrease = 0f;
+    [Tooltip("Reduces attack cooldown by Percentage.")]
+    public float level5_CooldownReduction = 10f;
 
-    [Tooltip("Number of swings required to launch one projectile.")]
-    public int level5_AttacksPerProjectile = 5;
+    [Header("Level 5")]
+    public float level6_DamageBonus = 0f;
+    public float level6_AreaIncrease = 0f;
+    public float level6_AngleIncrease = 0f;
+    [Tooltip("Reduces attack cooldown by Percentage.")]
+    public float level6_CooldownReduction = 0f;
 
-    [Tooltip("The crescent-shaped projectile prefab to spawn.")]
+    [Header("Level 6")]
+    public float level7_DamageBonus = 0f;
+    public float level7_AreaIncrease = 0f;
+    public float level7_AngleIncrease = 0f;
+    [Tooltip("Reduces attack cooldown by Percentage.")]
+    public float level7_CooldownReduction = 0f;
+
+    [Header("Level 7")]
+    public float level8_DamageBonus = 0f;
+    public float level8_AreaIncrease = 0f;
+    public float level8_AngleIncrease = 0f;
+    [Tooltip("Reduces attack cooldown by Percentage.")]
+    public float level8_CooldownReduction = 0f;
+
+    [Header("Level 8 (Projectile Unlock)")]
+    public float level9_DamageBonus = 0f;
+    public float level9_AreaIncrease = 0f;
+    public float level9_AngleIncrease = 0f;
+    [Tooltip("Reduces attack cooldown by Percentage.")]
+    public float level9_CooldownReduction = 0f;
+
+    public int level9_AttacksPerProjectile_Reduce = 0;
+
+    [Header("Projectile Settings")]
+    public int baseAttacksPerProjectile = 5;
     public GameObject projectilePrefab;
-
-    [Tooltip("Damage as a percentage of the base swing (e.g., 0.5 = 50%).")]
     public float projectileDamagePercent = 0.5f;
-
-    [Tooltip("Knockback as a percentage of the base swing (e.g., 0.5 = 50%).")]
     public float projectileKnockbackPercent = 0.5f;
-
-    [Tooltip("How long the projectile lasts in seconds.")]
     public float projectileLifetime = 3f;
-
-    [Tooltip("Adjust this to fit the projectile length to the sword arc (Try 0.5 or 1.0)")]
     public float projectileArcScaleMultiplier = 1.0f;
 }

@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 1388257951032572422}
   - component: {fileID: 5659688682635192673}
   m_Layer: 0
-  m_Name: Missile_Prefab
+  m_Name: Hellfire_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
