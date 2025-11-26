@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 1438286333690674353}
   - component: {fileID: 3299150216306390727}
   - component: {fileID: 8837848207901951227}
-  - component: {fileID: 8567923861046420448}
   - component: {fileID: 1183644463828143860}
   - component: {fileID: 7114234979050921713}
   - component: {fileID: 7050110507231611124}
+  - component: {fileID: 2012941831984802877}
   m_Layer: 0
   m_Name: 4. Goblin
   m_TagString: Enemy
@@ -142,8 +142,51 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!58 &8567923861046420448
-CircleCollider2D:
+--- !u!114 &1183644463828143860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054697985336647317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00fe1b8cc14dcc04b83b41b96f54d057, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 0.5
+  isReverseSprite: 0
+--- !u!114 &7114234979050921713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054697985336647317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCooldown: 0.5
+--- !u!114 &7050110507231611124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054697985336647317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStats: {fileID: 11400000, guid: d0240ac0882e7e84793abc89f5f28ad8, type: 2}
+  currentHP: 0
+  currentMoveSpeed: 0
+  currentDamageMultiplier: 0
+--- !u!61 &2012941831984802877
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -176,47 +219,15 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.15
---- !u!114 &1183644463828143860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3054697985336647317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00fe1b8cc14dcc04b83b41b96f54d057, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mass: 0.5
---- !u!114 &7114234979050921713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3054697985336647317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitCooldown: 0.5
---- !u!114 &7050110507231611124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3054697985336647317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: d0240ac0882e7e84793abc89f5f28ad8, type: 2}
-  currentHP: 0
-  currentMoveSpeed: 0
-  currentDamageMultiplier: 0
+  m_Offset: {x: 0.000000052154064, y: -0.07480222}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.5, y: 1.5}
+    newSize: {x: 1.5, y: 1.5}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.3757012, y: 0.41650236}
+  m_EdgeRadius: 0

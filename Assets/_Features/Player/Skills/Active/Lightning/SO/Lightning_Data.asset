@@ -27,7 +27,7 @@ MonoBehaviour:
   castSound: {fileID: 0}
   hitSound: {fileID: 0}
   chainVisualPrefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
-  thunderStrikePrefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
+  thunderStrikePrefab: {fileID: 8457814466692287673, guid: d6849ffe5038af74797df8d2756f2bbd, type: 3}
   radius_R1: 4
   radius_R2: 7
   radius_R3: 10

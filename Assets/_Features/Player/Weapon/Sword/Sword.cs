@@ -1,17 +1,7 @@
-﻿/*
- * Sword.cs
- * * This script manages the logic for the 'Sword' weapon. It inherits from Weapon.cs.
- * * [V10 Update] Solves the visual/stat sync problem.
- * - Uses 'visualBaselineRadius' (set in Inspector) as the sprite's "natural" length at scale 1.
- * - Uses 'baseAreaRadius' (from SO) as the "target" starting length.
- * - Initialize() now calculates the *initial scale* (target / baseline)
- * to make the visuals match the stats FROM THE START.
- */
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI; // Required for using UI.Image
+using UnityEngine.UI;
 
 public class Sword : Weapon
 {
@@ -27,23 +17,23 @@ public class Sword : Weapon
     public float guidelineAngleMultiplier = 1.0f;
 
     [Header("Visual Sync (V10)")]
-    [Tooltip("Set this to the sword's 'natural' visual length when Pivot scale is (1,1,1)")]
-    public float visualBaselineRadius = 1.5f; // 예: 1.5 유닛
+    public float visualBaselineRadius = 1.5f;
 
-    // --- Private Variables ---
     private SwordDataSO swordData;
     private enum State { Idle, Swinging }
     private State currentState = State.Idle;
     private Vector2 currentAimDirection;
     private float currentSwingDuration;
     private float currentAngle;
-    private float currentAreaRadius; // This is the 'target' radius
+    private float currentAreaRadius;
     private float currentKnockback;
     private List<Collider2D> enemiesHitThisSwing;
     private int attackCount = 0;
+
+    private bool isProjectileUnlocked = false;
+    private int attacksPerProjectile;
     private Transform trailAnchor;
 
-    // (1) Initialization
     public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
     {
         base.Initialize(aimObj, owner, animator);
@@ -51,58 +41,45 @@ public class Sword : Weapon
         if (weaponData is SwordDataSO) { swordData = (SwordDataSO)weaponData; }
         else { Debug.LogError(gameObject.name + " has wrong SO!"); return; }
 
-        // --- [V10] Automatic Setup from SO & Visual Sync ---
+        // Initialize Stats
+        currentAreaRadius = swordData.baseAreaRadius;
+        UpdateVisualScale();
 
-        // 1. Set the 'target' radius to the "desired" start radius from the SO
-        currentAreaRadius = swordData.baseAreaRadius; // (e.g., 2.0)
-
-        // 2. Calculate and apply the *initial* scale factor
-        // (e.g., target 2.0 / baseline 1.5 = 1.333 scale)
-        if (visualBaselineRadius <= 0) visualBaselineRadius = 1f; // Prevent division by zero
-        float startScaleFactor = currentAreaRadius / visualBaselineRadius;
-        pivot.localScale = Vector3.one * startScaleFactor;
-
-        // 3. Find and Position the Trail Anchor
-        if (swordTrail != null)
-        {
-            trailAnchor = swordTrail.transform;
-
-            // Set Trail Anchor's LOCAL position
-            // (It's a child of Pivot, so it scales with Pivot)
-            // [V10 Fix] We use the BASELINE radius here, because the parent (Pivot) is already scaled.
-            trailAnchor.localPosition = new Vector3(visualBaselineRadius / 2f, 0, 0);
-
-            // 4. Set Trail Width
-            // The width should be the final 'target' radius
-            swordTrail.widthMultiplier = currentAreaRadius;
-            swordTrail.emitting = false;
-        }
-        else { Debug.LogError("Sword Trail is not assigned!", this); }
-
-        // --- End of V10 Setup ---
-
-        // Init stats
         currentSwingDuration = swordData.baseSwingDuration;
         currentAngle = swordData.baseAngle;
         currentKnockback = swordData.knockback;
+
+        isProjectileUnlocked = false;
+        attacksPerProjectile = swordData.baseAttacksPerProjectile;
+
         enemiesHitThisSwing = new List<Collider2D>();
 
-        // Init Hitbox
+        if (swordTrail != null)
+        {
+            trailAnchor = swordTrail.transform;
+            trailAnchor.localPosition = new Vector3(visualBaselineRadius / 2f, 0, 0);
+            swordTrail.widthMultiplier = currentAreaRadius;
+            swordTrail.emitting = false;
+        }
+
         if (hitboxCollider != null)
         {
             hitboxCollider.enabled = false;
             SwordHitbox hitbox = hitboxCollider.GetComponent<SwordHitbox>();
             if (hitbox != null) { hitbox.swordController = this; }
-            else { Debug.LogError("Hitbox missing SwordHitbox.cs!", hitboxCollider.gameObject); }
         }
-        else { Debug.LogError("Hitbox Collider not set!", this); }
 
-        // Init Guideline
         if (guidelineContainer != null) { guidelineContainer.SetActive(false); }
-        if (guidelineImage == null) { Debug.LogError("guidelineImage not set!", this); }
     }
 
-    // (2) TryAttack
+    private void UpdateVisualScale()
+    {
+        if (visualBaselineRadius <= 0) visualBaselineRadius = 1f;
+        float scaleFactor = currentAreaRadius / visualBaselineRadius;
+        pivot.localScale = Vector3.one * scaleFactor;
+        if (swordTrail != null) swordTrail.widthMultiplier = currentAreaRadius;
+    }
+
     public override void TryAttack(Vector2 aimDirection)
     {
         this.currentAimDirection = aimDirection;
@@ -111,7 +88,6 @@ public class Sword : Weapon
             lastAttackTime = Time.time;
             StartCoroutine(SwingCoroutine(aimDirection));
 
-            // [NEW] Play Attack Sound
             if (weaponData.attackSound != null)
             {
                 SoundManager.Instance.PlaySFX(weaponData.attackSound, 0.1f);
@@ -119,7 +95,6 @@ public class Sword : Weapon
         }
     }
 
-    // (3) Update (Guideline Logic)
     void Update()
     {
         if (guidelineContainer == null || guidelineImage == null) return;
@@ -134,14 +109,11 @@ public class Sword : Weapon
                 float calibratedAngle = currentAngle * guidelineAngleMultiplier;
                 guidelineImage.fillAmount = calibratedAngle / 360f;
 
-                // [V10] Use currentAreaRadius (the 'target' radius)
                 float canvasScale = guidelineContainer.transform.localScale.x;
                 float diameter = (currentAreaRadius * guidelineRadiusMultiplier * 2f);
                 if (Mathf.Abs(canvasScale) > 0.0001f) { diameter /= canvasScale; }
                 else { diameter /= 0.01f; }
                 guidelineImage.rectTransform.sizeDelta = new Vector2(diameter, diameter);
-
-                // [V8 FIX] Use a POSITIVE offset
                 guidelineImage.rectTransform.localRotation = Quaternion.Euler(0, 0, calibratedAngle / 2f);
             }
             else
@@ -151,10 +123,8 @@ public class Sword : Weapon
         }
     }
 
-    // (4) The Core Swing Logic
     private IEnumerator SwingCoroutine(Vector2 fixedDirection)
     {
-        // --- 1. PREPARE SWING ---
         currentState = State.Swinging;
         enemiesHitThisSwing.Clear();
         playerAnimator.LockFacing(fixedDirection);
@@ -167,11 +137,10 @@ public class Sword : Weapon
             swordTrail.emitting = true;
         }
 
-        // --- 2. CALCULATE ANGLES ---
         float centerAngle = Mathf.Atan2(fixedDirection.y, fixedDirection.x) * Mathf.Rad2Deg;
         float startAngle; float endAngle;
         if (fixedDirection.x < 0)
-        { // [V7] Mirrored swing
+        {
             startAngle = centerAngle - swordData.swingStartOffset;
             endAngle = centerAngle + (currentAngle - swordData.swingStartOffset);
         }
@@ -181,7 +150,6 @@ public class Sword : Weapon
             endAngle = centerAngle - (currentAngle - swordData.swingStartOffset);
         }
 
-        // --- 3. EXECUTE SWING ---
         float swingTimer = 0f;
         while (swingTimer < currentSwingDuration)
         {
@@ -193,7 +161,6 @@ public class Sword : Weapon
             yield return null;
         }
 
-        // --- 4. FINISH SWING ---
         pivot.position = aim.position;
         pivot.rotation = Quaternion.Euler(0, 0, endAngle);
         hitboxCollider.enabled = false;
@@ -204,11 +171,9 @@ public class Sword : Weapon
             swordTrail.emitting = false;
         }
 
-        // --- 5. CHECK PROJECTILE ---
-        CheckLevel5Projectile(fixedDirection);
+        CheckProjectile(fixedDirection);
     }
 
-    // (5) HandleHit
     public void HandleHit(Collider2D enemyCollider)
     {
         if (enemiesHitThisSwing.Contains(enemyCollider)) { return; }
@@ -221,12 +186,14 @@ public class Sword : Weapon
         }
     }
 
-    // (6) CheckLevel5Projectile
-    private void CheckLevel5Projectile(Vector2 direction)
+    private void CheckProjectile(Vector2 direction)
     {
-        if (currentLevel < 5) return;
-        if (swordData.projectilePrefab == null) { /* ... */ return; }
-        if (attackCount >= swordData.level5_AttacksPerProjectile)
+        if (currentLevel < 9) return;
+        if (!isProjectileUnlocked) return;
+
+        if (swordData.projectilePrefab == null) return;
+
+        if (attackCount >= attacksPerProjectile)
         {
             attackCount = 0;
             GameObject projectileObj = PoolManager.Instance.GetFromPool(swordData.projectilePrefab.name);
@@ -236,74 +203,20 @@ public class Sword : Weapon
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             projectileObj.transform.rotation = Quaternion.Euler(0, 0, angle);
 
-            // [V10] Projectile scale is also driven by pivot's scale
-            projectileObj.transform.localScale = pivot.localScale;
+            float arcLength = currentAreaRadius * (currentAngle * Mathf.Deg2Rad);
+            float projectileScaleY = arcLength * swordData.projectileArcScaleMultiplier;
+            projectileObj.transform.localScale = new Vector3(pivot.localScale.x, projectileScaleY, 1f);
 
             Bullet projectileScript = projectileObj.GetComponent<Bullet>();
             if (projectileScript != null)
             {
                 float projDmg = (currentDamage * ownerStats.currentDamageMultiplier) * swordData.projectileDamagePercent;
                 float projKb = currentKnockback * swordData.projectileKnockbackPercent;
-
-                // [MODIFIED] Pass 'weaponData.hitSound'
                 projectileScript.Initialize(projDmg, projKb, true, ownerStats.transform, weaponData.hitSound);
             }
         }
     }
 
-    // (7) ApplyLevelUpStats
-    protected override void ApplyLevelUpStats()
-    {
-        switch (currentLevel)
-        {
-            case 2: // Damage + Speed + Cooldown
-                currentDamage += swordData.level2_DamageBonus;
-
-                // Swing Duration (Animation Speed)
-                currentSwingDuration -= swordData.level2_SpeedIncrease;
-                if (currentSwingDuration < 0.1f) currentSwingDuration = 0.1f;
-
-                // [NEW] Cooldown Reduction (Wait Time)
-                currentAttackCooldown -= swordData.level2_CooldownReduction;
-                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
-                break;
-
-            case 3: // Length (Radius)
-                    // --- [V10] Automatic Scaling ---
-
-                // 1. Update the 'target' radius stat
-                currentAreaRadius += swordData.level3_AreaIncrease;
-
-                // 2. Calculate the new total scale factor
-                float newScaleFactor = currentAreaRadius / visualBaselineRadius;
-
-                // 3. Apply scale to the visual pivot
-                pivot.localScale = Vector3.one * newScaleFactor;
-
-                // 4. Update the trail width to match the new 'target' radius
-                if (swordTrail != null)
-                {
-                    swordTrail.widthMultiplier = currentAreaRadius;
-                }
-                // (TrailAnchor position updates automatically as a child of pivot)
-                // --- End of V10 ---
-                break;
-
-            case 4: // Angle
-                currentAngle += swordData.level4_AngleIncrease;
-                break;
-
-            case 5: // Projectile + Cooldown
-                attackCount = 0;
-
-                // [NEW] Cooldown Reduction
-                currentAttackCooldown -= swordData.level5_CooldownReduction;
-                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
-                break;
-        }
-    }
-
-    // (8) _Attack
     private void _Attack(StatsController enemyStats, Collider2D enemyCollider, float damage, float knockback)
     {
         float finalDamage = damage * ownerStats.currentDamageMultiplier;
@@ -316,16 +229,74 @@ public class Sword : Weapon
             enemyMove.ApplyKnockback(knockbackDirection, knockback, 0.1f);
         }
 
-        // [NEW] Play Hit Sound (Directly)
         if (weaponData.hitSound != null)
         {
             SoundManager.Instance.PlaySFX(weaponData.hitSound, 0.1f);
         }
     }
 
-    // (9) PerformAttack (Empty)
-    protected override void PerformAttack(Vector2 aimDirection)
+    protected override void PerformAttack(Vector2 aimDirection) { }
+
+    // Apply stats for all levels (2~9)
+    protected override void ApplyLevelUpStats()
     {
-        // Intentionally left empty
+        switch (currentLevel)
+        {
+            case 2:
+                ApplyStats(swordData.level2_DamageBonus, swordData.level2_AreaIncrease,
+                           swordData.level2_AngleIncrease, swordData.level2_CooldownReduction);
+                currentSwingDuration -= swordData.level2_SpeedIncrease;
+                break;
+            case 3:
+                ApplyStats(swordData.level3_DamageBonus, swordData.level3_AreaIncrease,
+                           swordData.level3_AngleIncrease, swordData.level3_CooldownReduction);
+                break;
+            case 4:
+                ApplyStats(swordData.level4_DamageBonus, swordData.level4_AreaIncrease,
+                           swordData.level4_AngleIncrease, swordData.level4_CooldownReduction);
+                break;
+            case 5:
+                ApplyStats(swordData.level5_DamageBonus, swordData.level5_AreaIncrease,
+                           swordData.level5_AngleIncrease, swordData.level5_CooldownReduction);
+                break;
+            case 6:
+                ApplyStats(swordData.level6_DamageBonus, swordData.level6_AreaIncrease,
+                           swordData.level6_AngleIncrease, swordData.level6_CooldownReduction);
+                break;
+            case 7:
+                ApplyStats(swordData.level7_DamageBonus, swordData.level7_AreaIncrease,
+                           swordData.level7_AngleIncrease, swordData.level7_CooldownReduction);
+                break;
+            case 8:
+                ApplyStats(swordData.level8_DamageBonus, swordData.level8_AreaIncrease,
+                           swordData.level8_AngleIncrease, swordData.level8_CooldownReduction);
+                break;
+            case 9: // Level 9 (Max)
+                ApplyStats(swordData.level9_DamageBonus, swordData.level9_AreaIncrease,
+                           swordData.level9_AngleIncrease, swordData.level9_CooldownReduction);
+
+                // Unlock Projectile at Level 9
+                isProjectileUnlocked = true;
+                attackCount = 0;
+                attacksPerProjectile -= swordData.level9_AttacksPerProjectile_Reduce;
+                if (attacksPerProjectile < 1) attacksPerProjectile = 1;
+                break;
+        }
+
+        // Safety Checks
+        if (currentSwingDuration < 0.1f) currentSwingDuration = 0.1f;
+        if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
+        UpdateVisualScale();
+    }
+
+    private void ApplyStats(float dmg, float area, float angle, float cooldownPercent)
+    {
+        currentDamage += dmg;
+        currentAreaRadius += area;
+        currentAngle += angle;
+
+        // If current cooldown is 1.0s and input is 10, reduction is 0.1s
+        float reductionAmount = currentAttackCooldown * (cooldownPercent / 100f);
+        currentAttackCooldown -= reductionAmount;
     }
 }
