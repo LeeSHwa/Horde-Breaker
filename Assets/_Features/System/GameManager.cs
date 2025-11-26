@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     public float gameTime = 0f; // Current game time in seconds
     public int currentStage = 1;
+    public int killCount = 0;
 
     [Header("Persistent Data")]
     public GameObject selectedWeaponPrefab; // Weapon selected from the lobby
@@ -34,5 +35,9 @@ public class GameManager : MonoBehaviour
         gameTime += Time.deltaTime;
 
          if (UIManager.Instance != null) UIManager.Instance.UpdateTimeUI(gameTime);
+    }
+    public void AddKillCount()
+    {
+        killCount++;
     }
 }

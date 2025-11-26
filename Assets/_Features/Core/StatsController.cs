@@ -213,8 +213,16 @@ public class StatsController : MonoBehaviour
         if (rb != null) { rb.linearVelocity = Vector2.zero; rb.simulated = false; }
         if (col != null) col.enabled = false;
 
-        // EXP Drop Logic (Enemy-Only)
         if (!gameObject.CompareTag("Player"))
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddKillCount();
+            }
+        }
+
+            // EXP Drop Logic (Enemy-Only)
+            if (!gameObject.CompareTag("Player"))
         {
             // Try to cast baseStats to EnemyStatsSO to get drop value
             EnemyStatsSO enemyStats = baseStats as EnemyStatsSO;
@@ -393,4 +401,8 @@ public class StatsController : MonoBehaviour
         // Example: activeSpeedBuff = 0.5f -> Multiplier is 1.5f
         currentMoveSpeed = speedAfterSlow * (1f + activeSpeedBuff);
     }
+    public int Level => currentLevel;
+    public int CurrentExp => currentExp;
+    public int MaxExp => expNeededForNextLevel;
+    public float MaxHP => runtimeMaxHP;
 }
