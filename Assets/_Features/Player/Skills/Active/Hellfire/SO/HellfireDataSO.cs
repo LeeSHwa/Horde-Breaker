@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewMissileData", menuName = "Stats/Skill Data/Missile Data")]
-public class MissileDataSO : SkillDataSO
+[CreateAssetMenu(fileName = "NewHellfireData", menuName = "Stats/Skill Data/Hellfire Data")]
+public class HellfireDataSO : SkillDataSO
 {
     [Header("Missile Specific")]
     public GameObject missilePrefab;

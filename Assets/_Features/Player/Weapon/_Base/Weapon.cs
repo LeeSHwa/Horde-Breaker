@@ -102,7 +102,7 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
     // (7) [Core API] Level up logic (called by Level Up UI)
     public virtual void LevelUp()
     {
-        if (currentLevel >= 5) return;
+        if (currentLevel >= MaxLevel) return;
 
         currentLevel++;
         ApplyLevelUpStats(); // Call the child's specific logic

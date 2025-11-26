@@ -15,24 +15,60 @@ MonoBehaviour:
   baseDamage: 10
   baseAttackCooldown: 1.5
   knockback: 5
-  weaponName: Weapon
+  weaponName: Sword
   icon: {fileID: 0}
-  maxLevel: 5
-  weaponDescription: Weapon description.
-  levelDescriptions: []
+  maxLevel: 9
+  weaponDescription: LV.0 Sword
+  levelDescriptions:
+  - LV.1 Damage+3
+  - LV.2 Cooldown-10%
+  - LV.3 Damage+10
+  - LV.4 Sword Length Increase
+  - LV.5 Cooldown-10%
+  - LV.6 Damage+10
+  - LV.7 Swing Angle Increase
+  - LV.8 Sword Master
   attackSound: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
   hitSound: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
   baseSwingDuration: 0.1
   baseAngle: 90
   baseAreaRadius: 4
   swingStartOffset: 45
-  level2_DamageBonus: 10
+  level2_DamageBonus: 3
   level2_SpeedIncrease: 0
-  level2_CooldownReduction: 0.5
-  level3_AreaIncrease: 1.5
-  level4_AngleIncrease: 30
-  level5_CooldownReduction: 0.5
-  level5_AttacksPerProjectile: 1
+  level2_CooldownReduction: 0
+  level2_AreaIncrease: 0
+  level2_AngleIncrease: 0
+  level3_DamageBonus: 0
+  level3_AreaIncrease: 0
+  level3_AngleIncrease: 0
+  level3_CooldownReduction: 10
+  level4_DamageBonus: 10
+  level4_AreaIncrease: 0
+  level4_AngleIncrease: 0
+  level4_CooldownReduction: 0
+  level5_DamageBonus: 0
+  level5_AreaIncrease: 1.5
+  level5_AngleIncrease: 0
+  level5_CooldownReduction: 0
+  level6_DamageBonus: 0
+  level6_AreaIncrease: 0
+  level6_AngleIncrease: 0
+  level6_CooldownReduction: 10
+  level7_DamageBonus: 10
+  level7_AreaIncrease: 0
+  level7_AngleIncrease: 0
+  level7_CooldownReduction: 0
+  level8_DamageBonus: 0
+  level8_AreaIncrease: 0
+  level8_AngleIncrease: 30
+  level8_CooldownReduction: 0
+  level9_DamageBonus: 0
+  level9_AreaIncrease: 0
+  level9_AngleIncrease: 0
+  level9_CooldownReduction: 0
+  level9_AttacksPerProjectile_Reduce: 0
+  baseAttacksPerProjectile: 1
   projectilePrefab: {fileID: 6052581829811208905, guid: 5fbd78051597f804c82224e65dd6ea18, type: 3}
   projectileDamagePercent: 0.5
   projectileKnockbackPercent: 0.5

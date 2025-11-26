@@ -12,21 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4950b017278666340b557e112ce5f479, type: 3}
   m_Name: Gun_Data
   m_EditorClassIdentifier: 
-  baseDamage: 50
-  baseAttackCooldown: 0.2
-  knockback: 5
+  baseDamage: 10
+  baseAttackCooldown: 0.3
+  knockback: 0
   weaponName: Gun
   icon: {fileID: 21300000, guid: 95406b6737b66479a80d172766f8bac5, type: 3}
-  maxLevel: 5
-  weaponDescription: Weapon description.
+  maxLevel: 9
+  weaponDescription: LV.0 Gun
   levelDescriptions:
-  - test1
-  - test2
-  - test3
+  - LV.1
+  - LV.2
+  - LV.3
+  - LV.4
+  - LV.5
+  - LV.6
+  - LV.7
+  - LV.8
   attackSound: {fileID: 8300000, guid: 2352822feb4caa14ebdbc0c713289f8d, type: 3}
   hitSound: {fileID: 8300000, guid: eaae8fe8d600e1f459f34aa5757fa3b8, type: 3}
   bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
+  baseProjectileCount: 1
+  multiShotSpread: 5
   level2_DamageBonus: 5
-  level3_ProjectileCount: 2
-  level4_CooldownReduction: 0.25
-  level5_UnlocksPenetration: 1
+  level2_ProjectileCountBonus: 0
+  level2_CooldownReduction: 0
+  level3_DamageBonus: 0
+  level3_ProjectileCountBonus: 0
+  level3_CooldownReduction: 10
+  level4_DamageBonus: 15
+  level4_ProjectileCountBonus: 0
+  level4_CooldownReduction: 0
+  level5_DamageBonus: 0
+  level5_ProjectileCountBonus: 1
+  level5_CooldownReduction: 0
+  level6_DamageBonus: 0
+  level6_ProjectileCountBonus: 0
+  level6_CooldownReduction: 10
+  level7_DamageBonus: 20
+  level7_ProjectileCountBonus: 0
+  level7_CooldownReduction: 0
+  level8_DamageBonus: 0
+  level8_ProjectileCountBonus: 1
+  level8_CooldownReduction: 0
+  level9_DamageBonus: 0
+  level9_ProjectileCountBonus: 0
+  level9_CooldownReduction: 0
+  level9_UnlockPenetration: 1
