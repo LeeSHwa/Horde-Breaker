@@ -16,7 +16,7 @@ MonoBehaviour:
   baseAttackCooldown: 5
   knockback: 0
   skillName: Lightning
-  icon: {fileID: 7989235288497715281, guid: 8b45b3273e0b4a644bae011ab191c8ac, type: 3}
+  icon: {fileID: 7989235288497715281, guid: 10aa7d445ac7e5a498050102fcfcf0c4, type: 3}
   maxLevel: 5
   skillDescription: Lightning strikes a random enemy, causing chain damage.
   levelDescriptions:

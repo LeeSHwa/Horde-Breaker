@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
   m_Name: 11. Hero Knight_stats
   m_EditorClassIdentifier: 
-  baseMaxHealth: 10
-  baseMoveSpeed: 5
+  baseMaxHealth: 120
+  baseMoveSpeed: 10
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 0.5
-  expValue: 1
+  contactDamage: 6
+  expValue: 25

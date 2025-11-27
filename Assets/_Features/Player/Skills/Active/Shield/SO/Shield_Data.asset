@@ -16,7 +16,7 @@ MonoBehaviour:
   baseAttackCooldown: 10
   knockback: 0
   skillName: Shield
-  icon: {fileID: 4941912509069588640, guid: 48b0f55fad1315a4aa5f5aeb9e259a31, type: 3}
+  icon: {fileID: 4941912509069588640, guid: 002643d56099a1b43ae7c9cb453e2415, type: 3}
   maxLevel: 5
   skillDescription: '"Even a broken shield can block it for a while."'
   levelDescriptions:

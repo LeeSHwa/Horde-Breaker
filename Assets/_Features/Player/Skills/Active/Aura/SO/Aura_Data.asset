@@ -16,7 +16,7 @@ MonoBehaviour:
   baseAttackCooldown: 1
   knockback: 0
   skillName: Aura
-  icon: {fileID: 4662751524554112198, guid: 8932db4e8d3425b4084664c8a8fec723, type: 3}
+  icon: {fileID: 4662751524554112198, guid: a6546bf69e9dcbc4c9804d1b6689a5fe, type: 3}
   maxLevel: 5
   skillDescription: Damages surrounding enemies
   levelDescriptions:

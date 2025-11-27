@@ -16,7 +16,7 @@ MonoBehaviour:
   baseAttackCooldown: 3.6
   knockback: 0
   skillName: Moon
-  icon: {fileID: 2273202081559884391, guid: a85923eb08b670f468a454332f4fb7b1, type: 3}
+  icon: {fileID: -4499063955938224111, guid: 5f4a6fb6526a79b4f98303688468207c, type: 3}
   maxLevel: 5
   skillDescription: Get 1 orbiting Moon
   levelDescriptions:

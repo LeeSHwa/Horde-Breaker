@@ -16,7 +16,7 @@ MonoBehaviour:
   baseAttackCooldown: 5
   knockback: 3
   skillName: Hellfire
-  icon: {fileID: -7139488364972308601, guid: 4f8a17eef0e3a5c4d9a5aa440ff78773, type: 3}
+  icon: {fileID: -7139488364972308601, guid: d40c33c4526ea584baf9b2b7985f23ea, type: 3}
   maxLevel: 5
   skillDescription: Tracks the nearest enemy
   levelDescriptions:
