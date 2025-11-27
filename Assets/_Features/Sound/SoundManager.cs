@@ -27,11 +27,21 @@ public class SoundManager : MonoBehaviour
     [Tooltip("If true, the playlist will loop indefinitely. If false, it stops after the last track.")]
     public bool loopPlaylist = true; // [NEW] Loop toggle
 
+    [Header("Ducking Settings")]
+    [Tooltip("Volume multiplier when game is paused (0.3 = 30% volume)")]
+    public float duckingVolume = 0.3f;
+
+    [Header("Event BGM Settings")]
+    public AudioClip levelUpBGM;
+
     [Header("Pooling Settings")]
     public int sfxPoolSize = 20; // Max number of simultaneous SFX
 
     // AudioSource for BGM (Only one needed)
     private AudioSource bgmSource;
+
+    // AudioSource for UI/Event BGM(Level Up, Game Over etc.)
+    private AudioSource uiSource;
 
     // Pool of AudioSources for SFX (Reused)
     private List<AudioSource> sfxSources;
@@ -73,7 +83,8 @@ public class SoundManager : MonoBehaviour
         {
             if (!isPausedByTimeScale)
             {
-                if (bgmSource.isPlaying) bgmSource.Pause(); // Physically pause the audio
+                //if (bgmSource.isPlaying) bgmSource.Pause(); // Physically pause the audio
+                bgmSource.volume = bgmVolume * masterVolume * duckingVolume;
                 isPausedByTimeScale = true;
             }
             return; // Stop timer update
@@ -82,7 +93,10 @@ public class SoundManager : MonoBehaviour
         {
             if (isPausedByTimeScale)
             {
-                bgmSource.UnPause(); // Resume audio
+                if (!isCrossfading)
+                {
+                    bgmSource.volume = bgmVolume * masterVolume;
+                }
                 isPausedByTimeScale = false;
             }
         }
@@ -112,7 +126,14 @@ public class SoundManager : MonoBehaviour
         bgmSource = bgmObj.AddComponent<AudioSource>();
         bgmSource.loop = true; // Loop is true, but we will switch clip manually
 
-        // 2. Create SFX Source Pool
+        // 2. Create UI BGM Source
+        GameObject uiObj = new GameObject("UI_Source");
+        uiObj.transform.SetParent(transform);
+        uiSource = uiObj.AddComponent<AudioSource>();
+        uiSource.loop = false; 
+        uiSource.ignoreListenerPause = true; 
+
+        // 3. Create SFX Source Pool
         GameObject sfxContainer = new GameObject("SFX_Pool_Container");
         sfxContainer.transform.SetParent(transform);
         sfxSources = new List<AudioSource>();
@@ -128,6 +149,25 @@ public class SoundManager : MonoBehaviour
     }
 
     // --- BGM Playlist Logic ---
+
+    // --- Level Up BGM Control Functions ---
+    public void PlayLevelUpBGM()
+    {
+        if (levelUpBGM == null) return;
+
+        uiSource.volume = bgmVolume * masterVolume;
+        uiSource.clip = levelUpBGM;
+        uiSource.Play();
+
+    }
+
+    public void StopLevelUpBGM()
+    {
+        if (uiSource.isPlaying)
+        {
+            uiSource.Stop();
+        }
+    }
 
     public void PlayNextTrack()
     {

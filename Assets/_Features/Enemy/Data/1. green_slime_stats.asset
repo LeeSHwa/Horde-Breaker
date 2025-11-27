@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1. green_slime_stats
   m_EditorClassIdentifier: 
   baseMaxHealth: 10
-  baseMoveSpeed: 3
+  baseMoveSpeed: 5
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
   contactDamage: 0.3

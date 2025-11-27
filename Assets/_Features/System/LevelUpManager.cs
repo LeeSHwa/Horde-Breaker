@@ -146,6 +146,9 @@ public class LevelUpManager : MonoBehaviour
         {
             // No more levels -> Close UI and Resume Game
             if (levelUpPanel != null) { levelUpPanel.SetActive(false); }
+
+            SoundManager.Instance.StopLevelUpBGM();
+
             Time.timeScale = 1f;
         }
     }
@@ -155,6 +158,8 @@ public class LevelUpManager : MonoBehaviour
     {
         Time.timeScale = 0f; // Pause Game
         if (levelUpPanel != null) { levelUpPanel.SetActive(true); }
+
+        SoundManager.Instance.PlayLevelUpBGM();
 
         List<UpgradeChoice> choicePool = new List<UpgradeChoice>();
 

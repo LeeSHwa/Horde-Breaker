@@ -3,10 +3,14 @@ using System.Collections.Generic;
 
 public class EnemySpawnerTemp : MonoBehaviour
 {
+    public static EnemySpawnerTemp Instance { get; private set; }
+
     [Header("Settings")]
     public List<WaveData> waves;    // List of WaveData assets to use
     public Transform enemyContainer; // Parent transform to organize spawned enemies
     public float spawnPadding = 2f;  // Padding distance outside the camera view
+
+    private Dictionary<string, Queue<GameObject>> enemyPools = new Dictionary<string, Queue<GameObject>>();
 
     // Internal variables
     private WaveData currentWave;
@@ -14,20 +18,64 @@ public class EnemySpawnerTemp : MonoBehaviour
     private List<float> ruleTimers; // Timers for each spawn rule
     private Camera mainCamera;
 
-    void Start()
+    void Awake()
     {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+
         mainCamera = Camera.main;
         ruleTimers = new List<float>();
 
-        // 1. Sort waves by start time to prevent ordering errors
         waves.Sort((a, b) => a.startTime.CompareTo(b.startTime));
 
-        // 2. Initialize the first wave
+        InitializeEnemyPools();
+    }
+
+    void Start()
+    {
         if (waves.Count > 0)
         {
             SetWave(waves[0]);
         }
     }
+
+    private void InitializeEnemyPools()
+    {
+        foreach (var wave in waves)
+        {
+            if (wave.spawnRules == null) continue;
+
+            foreach (var rule in wave.spawnRules)
+            {
+                if (rule.prefab == null) continue;
+
+                string key = rule.prefab.name;
+
+                if (!enemyPools.ContainsKey(key))
+                {
+                    enemyPools.Add(key, new Queue<GameObject>());
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        CreateNewEnemy(rule.prefab, key);
+                    }
+                }
+            }
+        }
+        Debug.Log("Enemy Pools Auto-Initialized!");
+    }
+
+    private GameObject CreateNewEnemy(GameObject prefab, string key)
+    {
+        GameObject obj = Instantiate(prefab, enemyContainer);
+        obj.name = key;
+        obj.SetActive(false);
+
+        enemyPools[key].Enqueue(obj);
+        return obj;
+    }
+
+
 
     void Update()
     {
@@ -42,7 +90,6 @@ public class EnemySpawnerTemp : MonoBehaviour
         HandleSpawning();
     }
 
-    // --- [Logic 1] Wave Management ---
     private void CheckNextWave(float time)
     {
         // Return if there are no more waves
@@ -74,7 +121,6 @@ public class EnemySpawnerTemp : MonoBehaviour
         Debug.Log($"[Wave Changed] {currentWave.waveName} started at {currentWave.startTime}s");
     }
 
-    // --- [Logic 2] Multi-Rule Spawning ---
     private void HandleSpawning()
     {
         if (currentWave == null || currentWave.spawnRules == null) return;
@@ -94,18 +140,56 @@ public class EnemySpawnerTemp : MonoBehaviour
                 // Trigger spawn
                 if (Random.value <= rule.chance) // Check spawn probability
                 {
-                    SpawnEnemy(rule.prefab);
+                    SpawnEnemyFromPool(rule.prefab);
                 }
                 ruleTimers[i] = 0f; // Reset timer for this rule
             }
         }
     }
 
-    private void SpawnEnemy(GameObject prefab)
+    private void SpawnEnemyFromPool(GameObject prefab)
     {
-        Vector2 spawnPos = GetRandomPositionOutsideCamera();
-        Instantiate(prefab, spawnPos, Quaternion.identity, enemyContainer);
+        string key = prefab.name;
+
+        if (!enemyPools.ContainsKey(key))
+        {
+            enemyPools.Add(key, new Queue<GameObject>());
+        }
+
+        GameObject enemyObj = null;
+
+        if (enemyPools[key].Count > 0)
+        {
+            enemyObj = enemyPools[key].Dequeue();
+        }
+        else
+        {
+            enemyObj = CreateNewEnemy(prefab, key);
+            enemyPools[key].Dequeue();
+        }
+
+        enemyObj.transform.position = GetRandomPositionOutsideCamera();
+        enemyObj.SetActive(true);
+
     }
+
+    public void ReturnEnemy(GameObject enemy)
+    {
+        string key = enemy.name;
+
+        enemy.SetActive(false);
+
+        if (enemyPools.ContainsKey(key))
+        {
+            enemyPools[key].Enqueue(enemy);
+        }
+        else
+        {
+            Destroy(enemy);
+        }
+    }
+
+
 
     // --- [Logic 3] Calculate Position Outside Camera ---
     private Vector2 GetRandomPositionOutsideCamera()

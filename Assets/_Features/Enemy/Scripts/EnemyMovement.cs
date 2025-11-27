@@ -7,6 +7,9 @@ public class EnemyMovement : MonoBehaviour
     [Header("Weight")] // Name to Display in Inspector Tab
     public float mass = 0.5f; // Weight of the enemy
 
+    [Header("Optimization")]
+    public float despawnDistance = 40f; // Distance to disable/return enemy
+
     public bool isReverseSprite = false;
 
     private StatsController stats; // Load CharacterStats script
@@ -16,54 +19,89 @@ public class EnemyMovement : MonoBehaviour
 
     private bool canMove = true;
 
-    // --- [Modified] 1. Add SpriteRenderer variable ---
     private SpriteRenderer spriteRenderer;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); // Load Physics Engine(Rigidbody2D)
-        rb.mass = mass; // Set the weight of the enemy(from Hearder "Weight")
-        rb.gravityScale = 0; // Top Down 2D game(no gravity)
-
         stats = GetComponent<StatsController>(); // Get the CharacterStats component
-
-        // --- [Modified] 2. Get the SpriteRenderer component ---
         spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player"); // Finding "player" tag
+    // [NEW] Reset state when respawning from the pool
+    void OnEnable()
+    {
+        canMove = true; // Ensure movement is enabled
+
+        // Reset Physics
+        if (rb != null)
+        {
+            rb.mass = mass;
+            rb.gravityScale = 0;
+            rb.linearVelocity = Vector2.zero; // Stop previous momentum
+        }
+
+        // Find Player again (in case player object changed or for safety)
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
-            player = playerObject.transform; // Load the player's Transform component
+            player = playerObject.transform;
         }
     }
 
     void FixedUpdate()
     {
+        // 1. Optimization: Return to pool if too far from player
+        if (player != null)
+        {
+            float distance = Vector2.Distance(transform.position, player.position);
+            if (distance > despawnDistance)
+            {
+                // Return to pool instead of Destroy
+                if (EnemySpawnerTemp.Instance != null)
+                {
+                    EnemySpawnerTemp.Instance.ReturnEnemy(this.gameObject);
+                }
+                else
+                {
+                    gameObject.SetActive(false); // Fallback
+                }
+                return; // Stop execution
+            }
+        }
+
+        // 2. Movement Logic
         if (canMove)
         {
             if (player == null) { rb.linearVelocity = Vector3.zero; return; }
 
             Vector2 direction = (player.position - transform.position).normalized;
+
+            // Move using Physics
             rb.linearVelocity = direction * stats.currentMoveSpeed;
 
-            if (direction.x > 0) 
+            // Sprite Flip Logic
+            if (direction.x > 0)
             {
                 spriteRenderer.flipX = isReverseSprite;
             }
-            else if (direction.x < 0) 
+            else if (direction.x < 0)
             {
                 spriteRenderer.flipX = !isReverseSprite;
             }
         }
     }
-    // --- KNOCKBACK FIX ---
-    // A public function that can be called by other scripts (like MeleeWeapon).
 
+    // A public function that can be called by other scripts (like MeleeWeapon).
     public void ApplyKnockback(Vector2 direction, float force, float duration)
     {
         // Stop the coroutine if it's already running to reset the knockback.
         StopAllCoroutines();
-        StartCoroutine(KnockbackCoroutine(direction, force, duration));
+        // Check if object is active before starting coroutine (prevents errors)
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(KnockbackCoroutine(direction, force, duration));
+        }
     }
 
     private IEnumerator KnockbackCoroutine(Vector2 direction, float force, float duration)
