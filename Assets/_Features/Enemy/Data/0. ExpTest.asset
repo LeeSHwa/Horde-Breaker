@@ -17,4 +17,4 @@ MonoBehaviour:
   baseDamageMultiplier: 0.01
   deathAnimationLength: 0.5
   contactDamage: 10
-  expValue: 20
+  expValue: 100

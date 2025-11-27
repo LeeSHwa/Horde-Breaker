@@ -215,23 +215,19 @@ public class StatsController : MonoBehaviour
 
         if (!gameObject.CompareTag("Player"))
         {
+            EnemyStatsSO enemyStats = baseStats as EnemyStatsSO;
+
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.AddKillCount();
             }
-        }
 
-            // EXP Drop Logic (Enemy-Only)
-            if (!gameObject.CompareTag("Player"))
-        {
-            // Try to cast baseStats to EnemyStatsSO to get drop value
-            EnemyStatsSO enemyStats = baseStats as EnemyStatsSO;
-
-            // If cast is successful (it's an enemy) and it has EXP to drop
             if (enemyStats != null)
             {
                 SpawnExpOrb(enemyStats.expValue);
             }
+
+
         }
 
         StartCoroutine(DieAndDisable(baseStats.deathAnimationLength));
@@ -240,7 +236,25 @@ public class StatsController : MonoBehaviour
     private IEnumerator DieAndDisable(float delay)
     {
         yield return new WaitForSeconds(delay);
-        gameObject.SetActive(false);
+
+        if (!gameObject.CompareTag("Player"))
+        {
+
+            if (EnemySpawnerTemp.Instance != null)
+            {
+                EnemySpawnerTemp.Instance.ReturnEnemy(this.gameObject);
+            }
+        }
+        else
+        {
+            // Player: Trigger Game Over
+            if (GameManager.Instance != null)
+            {
+                gameObject.SetActive(false);
+                GameManager.Instance.GameOver();
+            }
+        }
+
     }
 
     private void SpawnExpOrb(int expAmount)

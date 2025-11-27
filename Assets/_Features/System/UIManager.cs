@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; // [Required] For scene loading
 
 public class UIManager : MonoBehaviour
 {
@@ -24,6 +25,15 @@ public class UIManager : MonoBehaviour
     public Transform dashContainer;
     public GameObject dashSlotPrefab;
     private List<Image> dashFillImages = new List<Image>();
+
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI resultTimeText;
+    public TextMeshProUGUI resultKillText;
+
+    [Header("Scene Management")]
+    [Tooltip("Enter the exact name of your Lobby Scene file")]
+    public string lobbySceneName = "LobbyScene"; // [NEW] Set this in Inspector!
 
     void Awake()
     {
@@ -48,12 +58,6 @@ public class UIManager : MonoBehaviour
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
     }
-
-
-    //public void UpdateStageUI(int currentStage)
-    //{
-    //    stageText.text = "Stage " + currentStage;
-    //}
 
     public void UpdateHP(float currentHP, float maxHP)
     {
@@ -120,4 +124,42 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowGameOver(float finalTime, int finalKills)
+    {
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true); // Show the panel
+        }
+
+        // Format time to MM:SS
+        int minutes = Mathf.FloorToInt(finalTime / 60);
+        int seconds = Mathf.FloorToInt(finalTime % 60);
+
+        if (resultTimeText != null)
+        {
+            // [English String] Display Survival Time
+            resultTimeText.text = $"Survival Time : {minutes:00}:{seconds:00}";
+        }
+
+        if (resultKillText != null)
+        {
+            // [English String] Display Kill Count
+            resultKillText.text = $"Enemies Killed : {finalKills}";
+        }
+    }
+
+    // Function for the 'Retry' (Restart) button
+    public void RetryGame()
+    {
+        Time.timeScale = 1f; // Resume game time
+        // Reload the current scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // [NEW] Function for the 'Lobby' button
+    public void GoToLobby()
+    {
+        Time.timeScale = 1f; // Resume time is crucial before leaving!
+        SceneManager.LoadScene(lobbySceneName);
+    }
 }
