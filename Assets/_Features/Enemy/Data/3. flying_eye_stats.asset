@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
   m_Name: 3. flying_eye_stats
   m_EditorClassIdentifier: 
-  baseMaxHealth: 10
-  baseMoveSpeed: 5
+  baseMaxHealth: 20
+  baseMoveSpeed: 6
   baseDamageMultiplier: 1
-  damageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 10
-  expValue: 1
+  contactDamage: 0.6
+  expValue: 2

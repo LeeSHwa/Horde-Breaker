@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
   m_Name: 7. skeleton_stats
   m_EditorClassIdentifier: 
-  baseMaxHealth: 100
+  baseMaxHealth: 40
   baseMoveSpeed: 5
   baseDamageMultiplier: 1
-  damageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 0.5
+  contactDamage: 2.4
+  expValue: 8

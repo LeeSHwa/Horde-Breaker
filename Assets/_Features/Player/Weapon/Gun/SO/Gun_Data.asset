@@ -16,18 +16,18 @@ MonoBehaviour:
   baseAttackCooldown: 0.3
   knockback: 0
   weaponName: Gun
-  icon: {fileID: 21300000, guid: 95406b6737b66479a80d172766f8bac5, type: 3}
+  icon: {fileID: 1355517345105888652, guid: 775974ecee16e934fb08f24c9b02eae0, type: 3}
   maxLevel: 9
   weaponDescription: LV.0 Gun
   levelDescriptions:
-  - LV.1
-  - LV.2
-  - LV.3
-  - LV.4
-  - LV.5
-  - LV.6
-  - LV.7
-  - LV.8
+  - LV.1 Damage+5
+  - LV.2 Cooldown-10%
+  - LV.3 Damage+10
+  - LV.4 Double Shot
+  - LV.5 Cooldown-10%
+  - LV.6 Damage+20
+  - LV.7 Triple Shot
+  - LV.MAX The Piercer
   attackSound: {fileID: 8300000, guid: 2352822feb4caa14ebdbc0c713289f8d, type: 3}
   hitSound: {fileID: 8300000, guid: eaae8fe8d600e1f459f34aa5757fa3b8, type: 3}
   bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}

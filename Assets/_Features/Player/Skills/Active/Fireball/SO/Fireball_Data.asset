@@ -16,7 +16,7 @@ MonoBehaviour:
   baseAttackCooldown: 5
   knockback: 0
   skillName: Fireball
-  icon: {fileID: -6106694002393148830, guid: 0217dede9b8e52a46ac0302837722d76, type: 3}
+  icon: {fileID: -6106694002393148830, guid: 9bf0b1678dae5eb4aa76c50448f12f6b, type: 3}
   maxLevel: 5
   skillDescription: Fires in a random direction
   levelDescriptions:
