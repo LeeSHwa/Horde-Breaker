@@ -15,10 +15,10 @@ MonoBehaviour:
   baseDamage: 10
   baseAttackCooldown: 0.7
   knockback: 5
-  weaponName: Weapon
+  weaponName: Ricochet
   icon: {fileID: 0}
   maxLevel: 5
-  weaponDescription: Weapon description.
+  weaponDescription: LV.0 Ricochet
   levelDescriptions: []
   attackSound: {fileID: 8300000, guid: 323e15cfe809e114ab92c9f4b25e8bc2, type: 3}
   hitSound: {fileID: 8300000, guid: 023ea3ddeaa8dd146b7633a0800e5a0e, type: 3}

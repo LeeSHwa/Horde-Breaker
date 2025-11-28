@@ -1,18 +1,47 @@
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class LobbyWeaponSelector : MonoBehaviour
+public class LobbyWeaponSelector : MonoBehaviour, IPointerClickHandler
 {
+    [Header("Data & Prefab")]
+    public WeaponDataSO weaponData; 
+
     public GameObject weaponPrefab;
 
-    public void SelectWeapon()
+    [Header("Visual Components")]
+    public Image borderImage;
+
+    private WeaponLoadoutUI _manager;
+
+    public void Init(WeaponLoadoutUI manager)
     {
-        if (GameManager.Instance != null)
+        _manager = manager;
+        UpdateVisual(false);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (_manager != null)
         {
-            GameManager.Instance.selectedWeaponPrefab = weaponPrefab;
+            _manager.SelectWeapon(this);
+        }
+    }
+
+    public void UpdateVisual(bool isSelected)
+    {
+        if (isSelected)
+        {
+
+            if (borderImage != null) borderImage.color = Color.white;
+
+            transform.localScale = Vector3.one * 1.1f;
         }
         else
         {
-            Debug.LogError("GameManager is not in scene!");
+            if (borderImage != null) borderImage.color = Color.gray;
+
+            transform.localScale = Vector3.one;
         }
     }
 }
