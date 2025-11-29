@@ -6,7 +6,7 @@ public class MainMenuController : MonoBehaviour
     [Header("Panels")]
     public GameObject controlPanel;
     public GameObject weaponPanel;
-    public GameObject shopPanel;   
+    public GameObject settingPanel;   
     public GameObject upgradePanel;
 
     [Header("Etc")]
@@ -43,14 +43,14 @@ public class MainMenuController : MonoBehaviour
         weaponPanel.SetActive(false);
     }
 
-    public void OpenShopPanel()
+    public void OpenSettingPanel()
     {
-        shopPanel.SetActive(true);
+        settingPanel.SetActive(true);
     }
 
-    public void CloseShopPanel()
+    public void CloseSettingPanel()
     {
-        shopPanel.SetActive(false);
+        settingPanel.SetActive(false);
     }
 
     public void OpenUpgradePanel()
@@ -61,10 +61,5 @@ public class MainMenuController : MonoBehaviour
     public void CloseUpgradePanel()
     {
         upgradePanel.SetActive(false);
-    }
-
-    public void StratGun()
-    {
-        gunImage.SetActive(true);
     }
 }
