@@ -15,5 +15,5 @@ MonoBehaviour:
   type: 1
   value: 50
   upgradeName: HP Up
-  icon: {fileID: 2229681161047128923, guid: 6d4f6a36c178bcc4a860e411cb4a8a62, type: 3}
+  icon: {fileID: -1148780759594644325, guid: 025195d21107efa43b8505b2caea172a, type: 3}
   description: HP Up!
