@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8851462600876830387}
   - component: {fileID: 569732385824989914}
   - component: {fileID: 2080087892882479405}
+  - component: {fileID: 7635674733528600420}
   m_Layer: 0
   m_Name: 1_1. GreenSlimeBoss1
   m_TagString: Enemy
@@ -266,5 +267,31 @@ MonoBehaviour:
   chargeColor: {r: 1, g: 0, b: 0, a: 1}
   animChargeTrigger: doCharge
   animDashTrigger: doDash
+  animIdleTrigger: doIdle
+  animMoveBool: isMoving
+--- !u!114 &7635674733528600420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8068589428734277748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe8272457c33b514f8303f125aaefdc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minionPrefabs:
+  - {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
+  - {fileID: 8171226546246630872, guid: cb5b27ab1c178924ba02bd694d583b33, type: 3}
+  - {fileID: 6033797287192625791, guid: 3644074e1a011804b96fb3af2781e6a2, type: 3}
+  summonCount: 10
+  spawnRadius: 20
+  triggerRange: 30
+  castTime: 1
+  skillCooldown: 10
+  useColorChange: 1
+  castColor: {r: 1, g: 0, b: 1, a: 1}
+  animSummonTrigger: doSummon
   animIdleTrigger: doIdle
   animMoveBool: isMoving
