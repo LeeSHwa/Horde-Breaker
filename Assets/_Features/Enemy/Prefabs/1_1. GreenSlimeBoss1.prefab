@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe1b8cc14dcc04b83b41b96f54d057, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 0.5
+  mass: 10000
   despawnDistance: 40
   isReverseSprite: 0
 --- !u!114 &1033783065703509946
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 454c5dcf4f4cee14482d8901419ceda7, type: 2}
+  baseStats: {fileID: 11400000, guid: 4e352f78850ed4548817921b956e9807, type: 2}
   currentHP: 0
   currentMoveSpeed: 0
   currentDamageMultiplier: 0
@@ -256,9 +256,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 501e1def8d8ecef449399343dd6b3ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerRange: 5
+  triggerRange: 30
   chargeTime: 2
   dashSpeed: 20
-  dashDuration: 0.3
+  dashDuration: 1.5
+  restTime: 1
   skillCooldown: 5
+  useColorChange: 1
   chargeColor: {r: 1, g: 0, b: 0, a: 1}
+  animChargeTrigger: doCharge
+  animDashTrigger: doDash
+  animIdleTrigger: doIdle
+  animMoveBool: isMoving

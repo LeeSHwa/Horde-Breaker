@@ -2,25 +2,36 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(EnemyMovement))] // 반드시 EnemyMovement와 함께 있어야 함
+[RequireComponent(typeof(EnemyMovement))]
 public class EnemyDashSkill : MonoBehaviour
 {
     [Header("Skill Settings")]
-    public float triggerRange = 5f;    // 돌진을 시도할 거리
-    public float chargeTime = 0.5f;    // 돌진 전 준비 시간 (웅크리기)
-    public float dashSpeed = 20f;      // 돌진 속도
-    public float dashDuration = 0.3f;  // 돌진 지속 시간
-    public float skillCooldown = 5.0f; // 스킬 재사용 대기시간
+    public float triggerRange = 5f;
+    public float chargeTime = 0.5f;
+    public float dashSpeed = 20f;
+    public float dashDuration = 0.3f;
+    public float restTime = 1.0f;
+    public float skillCooldown = 5.0f;
 
-    [Header("Visuals (Optional)")]
-    public Color chargeColor = Color.red; // 차징 중 색상 변경 예시
-    private Color originalColor;
+    [Header("Visual Settings")]
+    [Tooltip("If true, the sprite turns color during charge. Disable if using animations.")]
+    public bool useColorChange = true; // [NEW] 색상 변경 사용 여부 토글
+    public Color chargeColor = Color.red;
 
-    // 내부 변수
+    [Header("Animation Settings")]
+    public string animChargeTrigger = "doCharge";
+    public string animDashTrigger = "doDash";
+    public string animIdleTrigger = "doIdle";
+    public string animMoveBool = "isMoving";
+
+    // Components
     private EnemyMovement movementScript;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    private Animator anim;
     private Transform playerTarget;
+    private Color originalColor;
+
     private bool isSkillAvailable = true;
     private bool isDashing = false;
 
@@ -29,6 +40,9 @@ public class EnemyDashSkill : MonoBehaviour
         movementScript = GetComponent<EnemyMovement>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+
+        // 색상 변경을 쓸 때만 원래 색상을 저장
         if (sr != null) originalColor = sr.color;
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -40,13 +54,10 @@ public class EnemyDashSkill : MonoBehaviour
 
     void Update()
     {
-        // 쿨타임 중이거나 이미 돌진 중이면 무시
         if (!isSkillAvailable || isDashing || playerTarget == null) return;
 
-        // 플레이어와의 거리 계산
         float distance = Vector2.Distance(transform.position, playerTarget.position);
 
-        // 사정거리 안에 들어오면 스킬 발동
         if (distance <= triggerRange)
         {
             StartCoroutine(DashRoutine());
@@ -58,36 +69,60 @@ public class EnemyDashSkill : MonoBehaviour
         isDashing = true;
         isSkillAvailable = false;
 
-        // 1. [제어권 가져오기] 기존 이동 AI 끄기
-        movementScript.enabled = false;
-
-        // 정지 (관성 제거)
+        // 1. [제어권 가져오기]
+        if (movementScript != null) movementScript.enabled = false;
         rb.linearVelocity = Vector2.zero;
 
-        // 2. [차징] 준비 동작 (예: 색상 변경, 애니메이션 트리거 등)
-        if (sr != null) sr.color = chargeColor;
-        // if (anim != null) anim.SetTrigger("Charge"); 
+        // 2. [차징]
+        if (anim != null)
+        {
+            anim.SetBool(animMoveBool, false);
+            anim.SetTrigger(animChargeTrigger);
+        }
+
+        // [MODIFIED] 토글이 켜져 있을 때만 색상 변경
+        if (useColorChange && sr != null)
+        {
+            sr.color = chargeColor;
+        }
 
         yield return new WaitForSeconds(chargeTime);
 
-        // 3. [돌진] 목표 방향 계산 및 발사
-        Vector2 direction = (playerTarget.position - transform.position).normalized;
-        rb.AddForce(direction * dashSpeed, ForceMode2D.Impulse);
+        // 3. [돌진]
+        Vector2 direction;
+        if (playerTarget != null)
+            direction = (playerTarget.position - transform.position).normalized;
+        else
+            direction = transform.right;
 
-        // (선택) 돌진 중 색상 복구 또는 대시 이펙트
-        // if (sr != null) sr.color = originalColor;
+        if (anim != null) anim.SetTrigger(animDashTrigger);
 
-        yield return new WaitForSeconds(dashDuration);
+        float timer = 0f;
+        while (timer < dashDuration)
+        {
+            rb.linearVelocity = direction * dashSpeed;
+            timer += Time.deltaTime;
+            yield return null;
+        }
 
-        // 4. [복구] 미끄러짐 방지를 위해 속도 줄이기 (선택)
+        // 4. [휴식]
         rb.linearVelocity = Vector2.zero;
-        if (sr != null) sr.color = originalColor;
 
-        // 5. [제어권 반납] 기존 이동 AI 다시 켜기
-        movementScript.enabled = true;
+        // [MODIFIED] 토글이 켜져 있을 때만 색상 복구
+        if (useColorChange && sr != null)
+        {
+            sr.color = originalColor;
+        }
+
+        if (anim != null) anim.SetTrigger(animIdleTrigger);
+
+        yield return new WaitForSeconds(restTime);
+
+        // 5. [복귀]
+        if (movementScript != null) movementScript.enabled = true;
         isDashing = false;
 
-        // 6. [쿨타임] 대기
+        // 6. [쿨타임]
         yield return new WaitForSeconds(skillCooldown);
         isSkillAvailable = true;
     }
