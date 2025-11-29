@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 10
   value: 1
+  maxLevel: 5
+  rarityWeight: 1
   upgradeName: Revival
   icon: {fileID: -8125774475627718875, guid: 2e82282d2cfb77847a27a3601f060a66, type: 3}
   description: Revives once with 50% HP.

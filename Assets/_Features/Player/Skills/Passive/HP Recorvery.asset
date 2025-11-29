@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 8
   value: 0.5
+  maxLevel: 8
+  rarityWeight: 10
   upgradeName: HP Recorvery
   icon: {fileID: 5606467149528682979, guid: 93aeb3664c2c7954f9db8fb6f68da3c8, type: 3}
   description: Recovers 0.5 HP per second

@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 4
   value: 1
+  maxLevel: 5
+  rarityWeight: 1
   upgradeName: Increases amount of projectiles by 1.
   icon: {fileID: -6942802416177915674, guid: 7753c463d46b30644a8a140ef0c38d18, type: 3}
   description: Increases amount of projectiles by 1.

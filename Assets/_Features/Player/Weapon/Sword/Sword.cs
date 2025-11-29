@@ -130,11 +130,6 @@ public class Sword : Weapon
         hitboxCollider.enabled = true;
         if (guidelineContainer != null) guidelineContainer.SetActive(false);
         attackCount++;
-        if (swordTrail != null)
-        {
-            swordTrail.Clear();
-            swordTrail.emitting = true;
-        }
 
         float centerAngle = Mathf.Atan2(fixedDirection.y, fixedDirection.x) * Mathf.Rad2Deg;
         float startAngle; float endAngle;
@@ -149,12 +144,23 @@ public class Sword : Weapon
             endAngle = centerAngle - (currentAngle - swordData.swingStartOffset);
         }
 
+        pivot.position = aim.position;
+        pivot.rotation = Quaternion.Euler(0, 0, startAngle);
+
+        if (swordTrail != null)
+        {
+            swordTrail.Clear();
+            swordTrail.emitting = true;
+        }
+
         float swingTimer = 0f;
         while (swingTimer < currentSwingDuration)
         {
             swingTimer += Time.deltaTime;
             float t = swingTimer / currentSwingDuration;
+
             float currentSwingAngle = Mathf.Lerp(startAngle, endAngle, t);
+
             pivot.position = aim.position;
             pivot.rotation = Quaternion.Euler(0, 0, currentSwingAngle);
             yield return null;
@@ -165,6 +171,7 @@ public class Sword : Weapon
         hitboxCollider.enabled = false;
         playerAnimator.UnlockFacing();
         currentState = State.Idle;
+
         if (swordTrail != null)
         {
             swordTrail.emitting = false;
@@ -172,7 +179,6 @@ public class Sword : Weapon
 
         CheckProjectile(fixedDirection);
     }
-
     public void HandleHit(Collider2D enemyCollider)
     {
         if (enemiesHitThisSwing.Contains(enemyCollider)) { return; }

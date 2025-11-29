@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   value: 0.1
+  maxLevel: 8
+  rarityWeight: 2
   upgradeName: CriticalDamage
   icon: {fileID: -6129411126467350805, guid: b9a033addc89ba24cad9ba872cfa590c, type: 3}
   description: Increases Critical Damage by 10%.

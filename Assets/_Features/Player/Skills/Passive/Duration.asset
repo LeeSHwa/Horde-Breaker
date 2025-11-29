@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   value: 0.1
+  maxLevel: 8
+  rarityWeight: 10
   upgradeName: Duration
   icon: {fileID: -1100526289406979421, guid: dcbd4c0146b9b2a49ad4ff25bc3b3131, type: 3}
   description: Increases weapon duration by 10%.

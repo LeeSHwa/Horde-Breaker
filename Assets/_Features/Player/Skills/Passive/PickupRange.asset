@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 7
   value: 1
+  maxLevel: 5
+  rarityWeight: 7
   upgradeName: PickupRange
   icon: {fileID: 6895809729096931729, guid: 42da1ab1402234c499733564de0b6375, type: 3}
   description: Increases pickup range of items.

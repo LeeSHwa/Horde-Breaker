@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 11
   value: 0.1
+  maxLevel: 8
+  rarityWeight: 6
   upgradeName: ExpGain
   icon: {fileID: -1555658285895252246, guid: 5dc05b69b60d29f4a942493962a5e932, type: 3}
   description: Gains 10% more experience.

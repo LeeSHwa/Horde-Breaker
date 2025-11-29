@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   value: 2
+  maxLevel: 5
+  rarityWeight: 5
   upgradeName: Move Speed Up
   icon: {fileID: -2678394577819576460, guid: f983831c76977e94c8acb0e23bd0401f, type: 3}
   description: Speed +2 Up!

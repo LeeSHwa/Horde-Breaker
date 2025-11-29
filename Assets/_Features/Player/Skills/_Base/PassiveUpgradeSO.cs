@@ -15,7 +15,7 @@ public class PassiveUpgradeSO : ScriptableObject
     public float value;
 
     [Header("Level Settings")]
-    public int maxLevel = 5;
+    public int maxLevel = 8;
 
     [Header("Spawn Settings")]
     [Tooltip("Higher value = More frequent appearance. (Standard: 20, Rare: 5)")]

@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   value: 0.07
+  maxLevel: 8
+  rarityWeight: 7
   upgradeName: Critical Chance
   icon: {fileID: 48231364345088982, guid: f0d8a4bd7623aa5439d401f7a7fd9400, type: 3}
   description: Increases Critical Chance by 7%.

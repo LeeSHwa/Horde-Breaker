@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 9
   value: 1
+  maxLevel: 8
+  rarityWeight: 10
   upgradeName: Armor
   icon: {fileID: 7116004456955076645, guid: 41b5060febc162545a6151b7a9a897b9, type: 3}
   description: Reduces incoming damage by 1.
