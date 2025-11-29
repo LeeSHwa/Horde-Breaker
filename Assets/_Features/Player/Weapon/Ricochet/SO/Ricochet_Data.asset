@@ -15,13 +15,14 @@ MonoBehaviour:
   baseDamage: 10
   baseAttackCooldown: 0.7
   knockback: 5
-  weaponName: Ricochet
-  icon: {fileID: 0}
+  weaponName: EnergyBall
+  icon: {fileID: -7585660988095454295, guid: 121067652fb50a44ab7005770846bc7a, type: 3}
   maxLevel: 5
-  weaponDescription: LV.0 Ricochet
+  weaponDescription: LV.0 EnergyBall
   levelDescriptions: []
   attackSound: {fileID: 8300000, guid: 323e15cfe809e114ab92c9f4b25e8bc2, type: 3}
   hitSound: {fileID: 8300000, guid: 023ea3ddeaa8dd146b7633a0800e5a0e, type: 3}
+  damageVariance: 0.1
   projectilePrefab: {fileID: 5562750625780970372, guid: f6927456b7174b149b0920b48e9a5d87, type: 3}
   projectileSpeed: 20
   maxBounces: 5

@@ -1,8 +1,8 @@
+using System; // [new-for-ShieldSkill] Added for Func
 using System.Collections;
 using System.Collections.Generic; // Added for using List
 using System.Linq; // Added for using LINQ functions like .Min(), .FirstOrDefault()
 using UnityEngine;
-using System; // [new-for-ShieldSkill] Added for Func
 
 public class StatsController : MonoBehaviour
 {
@@ -110,66 +110,54 @@ public class StatsController : MonoBehaviour
     {
         if (baseStats == null)
         {
-            // (This might be the *other* cause, see Error 2 fix)
             Debug.LogError(gameObject.name + " is missing BaseStats SO!");
-            return; // Stop here if baseStats is null
+            return;
         }
 
         runtimeMaxHP = baseStats.baseMaxHealth;
         currentHP = runtimeMaxHP;
-
         currentMoveSpeed = baseStats.baseMoveSpeed;
         currentDamageMultiplier = baseStats.baseDamageMultiplier;
 
-        // Initialize Critical Stats
-        currentCritChance = baseStats.baseCritChance;
-        currentCritMultiplier = baseStats.baseCritMultiplier;
-
-        // --- Slow Logic Initialization ---
-        baseMoveSpeed = baseStats.baseMoveSpeed; // Store the original speed
-        activeSpeedModifiers.Clear(); // Remove all slow effects
-
-        // --- [new-for-ShieldSkill] Reset Speed Buff ---
+        baseMoveSpeed = baseStats.baseMoveSpeed;
+        activeSpeedModifiers.Clear();
         activeSpeedBuff = 0f;
-        // ----------------------------------------------
-
-        needsSpeedRecalculation = true; // Set flag to restore speed to base on OnEnable
-        // ---
+        needsSpeedRecalculation = true;
 
         if (gameObject.CompareTag("Player"))
         {
-            // Cast to PlayerStatsSO
             playerStats = baseStats as PlayerStatsSO;
-            if (playerStats == null)
+
+            if (playerStats != null)
+            {
+                currentCritChance = playerStats.baseCritChance;
+                currentCritMultiplier = playerStats.baseCritMultiplier;
+
+                currentLevel = 1;
+                currentExp = 0;
+                UpdateExpNeeded();
+
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
+                    UIManager.Instance.UpdateExp(currentExp, expNeededForNextLevel);
+                    UIManager.Instance.UpdateLevel(currentLevel);
+                }
+
+                if (playerPickup != null)
+                {
+                    playerPickup.InitializeRadius(playerStats.basePickupRadius);
+                }
+            }
+            else
             {
                 Debug.LogError("Player's StatsController is NOT using a PlayerStatsSO!");
-            }
-
-            // Init Level & Exp
-            currentLevel = 1;
-            currentExp = 0;
-            UpdateExpNeeded();
-
-            // Init UI
-            if (UIManager.Instance != null)
-            {
-                UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
-                UIManager.Instance.UpdateExp(currentExp, expNeededForNextLevel);
-                UIManager.Instance.UpdateLevel(currentLevel);
-            }
-
-            // Init Pickup Radius using SO data
-            if (playerPickup != null && playerStats != null)
-            {
-                playerPickup.InitializeRadius(playerStats.basePickupRadius);
             }
         }
         else
         {
-            playerStats = null; // Ensure this is null for enemies
+            playerStats = null;
         }
-
-
     }
 
     public void TakeDamage(float damage, bool isCritical = false)

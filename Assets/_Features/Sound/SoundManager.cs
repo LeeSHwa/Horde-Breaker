@@ -60,7 +60,12 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+        {   
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
         else Destroy(gameObject);
 
         InitializeAudioSources();
@@ -84,7 +89,7 @@ public class SoundManager : MonoBehaviour
             if (!isPausedByTimeScale)
             {
                 //if (bgmSource.isPlaying) bgmSource.Pause(); // Physically pause the audio
-                bgmSource.volume = bgmVolume * masterVolume * duckingVolume;
+                if (bgmSource != null) bgmSource.volume = bgmVolume * masterVolume * duckingVolume;
                 isPausedByTimeScale = true;
             }
             return; // Stop timer update
@@ -93,7 +98,7 @@ public class SoundManager : MonoBehaviour
         {
             if (isPausedByTimeScale)
             {
-                if (!isCrossfading)
+                if (!isCrossfading && bgmSource != null)
                 {
                     bgmSource.volume = bgmVolume * masterVolume;
                 }
@@ -106,7 +111,7 @@ public class SoundManager : MonoBehaviour
         if (isCrossfading) return;
 
         // BGM Timer Logic
-        if (bgmSource.isPlaying)
+        if (bgmSource != null && bgmSource.isPlaying)
         {
             bgmTimer += Time.deltaTime;
 
@@ -130,8 +135,8 @@ public class SoundManager : MonoBehaviour
         GameObject uiObj = new GameObject("UI_Source");
         uiObj.transform.SetParent(transform);
         uiSource = uiObj.AddComponent<AudioSource>();
-        uiSource.loop = false; 
-        uiSource.ignoreListenerPause = true; 
+        uiSource.loop = false;
+        uiSource.ignoreListenerPause = true;
 
         // 3. Create SFX Source Pool
         GameObject sfxContainer = new GameObject("SFX_Pool_Container");
@@ -263,7 +268,6 @@ public class SoundManager : MonoBehaviour
         if (clip == null) return;
 
         // 1. [Throttling] Prevent sound overlap
-        // If less than 0.05s passed since the last play of this clip, skip it.
         if (lastPlayedTimes.ContainsKey(clip))
         {
             float lastTime = lastPlayedTimes[clip];
@@ -306,18 +310,39 @@ public class SoundManager : MonoBehaviour
                 return source;
             }
         }
-        // If all sources are busy
-        // Do not play.
         return null;
     }
 
-    // fix error in setting master volume during bgm fading
     public void SetMasterVolume(float volume)
     {
         masterVolume = volume;
-        if (!isCrossfading) // Only update immediately if not fading
+
+        if (!isCrossfading && bgmSource != null)
         {
             bgmSource.volume = bgmVolume * masterVolume;
         }
+        if (uiSource != null)
+        {
+            uiSource.volume = bgmVolume * masterVolume;
+        }
+    }
+
+    public void SetBGMVolume(float volume)
+    {
+        bgmVolume = volume;
+
+        if (!isCrossfading && bgmSource != null)
+        {
+            bgmSource.volume = bgmVolume * masterVolume;
+        }
+        if (uiSource != null)
+        {
+            uiSource.volume = bgmVolume * masterVolume;
+        }
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        sfxVolume = volume;
     }
 }
