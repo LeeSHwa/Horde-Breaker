@@ -109,13 +109,22 @@ public class EnemySpawnerTemp : MonoBehaviour
     {
         currentWave = newWave;
 
-        // Prepare timers for the new wave's rules (all start at 0)
+        // Prepare timers for the new wave's rules
         ruleTimers.Clear();
         if (currentWave.spawnRules != null)
         {
             foreach (var rule in currentWave.spawnRules)
             {
-                ruleTimers.Add(0f);
+                // [NEW] Boss Logic: If interval is 0 or less, spawn ONCE immediately
+                if (rule.interval <= 0)
+                {
+                    SpawnEnemyFromPool(rule.prefab); // Spawn Immediately
+                    ruleTimers.Add(-1f); // Mark as ignored (-1) for the Update loop
+                }
+                else
+                {
+                    ruleTimers.Add(0f); // Normal repeating spawn starts at 0
+                }
             }
         }
         Debug.Log($"[Wave Changed] {currentWave.waveName} started at {currentWave.startTime}s");
@@ -130,7 +139,10 @@ public class EnemySpawnerTemp : MonoBehaviour
         {
             SpawnRule rule = currentWave.spawnRules[i];
 
-            // Skip if interval is 0 or less (e.g., one-time Boss spawn)
+            // [Modified] Skip one-time spawns (marked as -1f)
+            if (ruleTimers[i] < 0f) continue;
+
+            // Skip if interval is 0 or less (Double check safety)
             if (rule.interval <= 0) continue;
 
             ruleTimers[i] += Time.deltaTime;

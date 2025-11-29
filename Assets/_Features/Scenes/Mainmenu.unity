@@ -2063,7 +2063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1159387688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2667,15 +2667,15 @@ RectTransform:
   m_GameObject: {fileID: 1405048627}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1548236434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1007.7316, y: -116.0051}
-  m_SizeDelta: {x: 243.09265, y: 232.0102}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1405048629
 MonoBehaviour:
@@ -2697,7 +2697,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2159065795798256927, guid: 986a1197619128a479007b073825d7d9, type: 3}
+  m_Sprite: {fileID: -7585660988095454295, guid: 121067652fb50a44ab7005770846bc7a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3035,8 +3035,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000047684, y: 135}
-  m_SizeDelta: {x: 1129.278, y: 232.0102}
+  m_AnchoredPosition: {x: -10, y: 146}
+  m_SizeDelta: {x: 967.7291, y: 232.0102}
   m_Pivot: {x: 0.49999997, y: 0.49999994}
 --- !u!114 &1548236435
 MonoBehaviour:
@@ -3231,10 +3231,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1548236434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 564.639, y: -116.0051}
-  m_SizeDelta: {x: 243.09265, y: 232.0102}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1646095411
 MonoBehaviour:
@@ -3256,7 +3256,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -5017938385125269112, guid: f6ac5dffa9e9d6a45b753f7d9be5bc79, type: 3}
+  m_Sprite: {fileID: -4726053861337558831, guid: 921fa9745ce2ac645ade89c945d5ca10, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3930,10 +3930,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1548236434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 121.54634, y: -116.005104}
-  m_SizeDelta: {x: 243.09265, y: 232.0102}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.50000006, y: 0.49999997}
 --- !u!114 &1908754873
 MonoBehaviour:
@@ -3955,7 +3955,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 259199379051447609, guid: 08d49b408f3cdb045a092a272f54cecc, type: 3}
+  m_Sprite: {fileID: 1355517345105888652, guid: 775974ecee16e934fb08f24c9b02eae0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4593,6 +4593,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1734128266}
     m_Modifications:
+    - target: {fileID: 11170216084673090, guid: c58cba46947b08d46b1545d69b7a4876, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162403369030679938, guid: c58cba46947b08d46b1545d69b7a4876, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3008353502707712870, guid: c58cba46947b08d46b1545d69b7a4876, type: 3}
       propertyPath: m_Name
       value: Setting_Panel
@@ -4680,6 +4688,10 @@ PrefabInstance:
     - target: {fileID: 4886422354752419564, guid: c58cba46947b08d46b1545d69b7a4876, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902999873170509929, guid: c58cba46947b08d46b1545d69b7a4876, type: 3}
+      propertyPath: m_Value
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
