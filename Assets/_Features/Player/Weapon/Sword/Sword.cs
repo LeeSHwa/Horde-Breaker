@@ -41,7 +41,6 @@ public class Sword : Weapon
         if (weaponData is SwordDataSO) { swordData = (SwordDataSO)weaponData; }
         else { Debug.LogError(gameObject.name + " has wrong SO!"); return; }
 
-        // Initialize Stats
         currentAreaRadius = swordData.baseAreaRadius;
         UpdateVisualScale();
 
@@ -210,17 +209,25 @@ public class Sword : Weapon
             Bullet projectileScript = projectileObj.GetComponent<Bullet>();
             if (projectileScript != null)
             {
-                float projDmg = (currentDamage * ownerStats.currentDamageMultiplier) * swordData.projectileDamagePercent;
+                // [MODIFIED] Use GetFinalDamage()
+                float baseDamage = GetFinalDamage(out bool isCrit);
+                float projDmg = baseDamage * swordData.projectileDamagePercent;
                 float projKb = currentKnockback * swordData.projectileKnockbackPercent;
-                projectileScript.Initialize(projDmg, projKb, true, ownerStats.transform, weaponData.hitSound);
+
+                // [MODIFIED] Pass isCrit
+                projectileScript.Initialize(projDmg, projKb, true, ownerStats.transform, weaponData.hitSound, isCrit);
             }
         }
     }
 
     private void _Attack(StatsController enemyStats, Collider2D enemyCollider, float damage, float knockback)
     {
-        float finalDamage = damage * ownerStats.currentDamageMultiplier;
-        enemyStats.TakeDamage(finalDamage);
+        // [MODIFIED] Use GetFinalDamage() directly (ignores passed 'damage' arg which is base)
+        float finalDamage = GetFinalDamage(out bool isCrit);
+
+        // [MODIFIED] Pass isCrit
+        enemyStats.TakeDamage(finalDamage, isCrit);
+
         EnemyMovement enemyMove = enemyCollider.GetComponent<EnemyMovement>();
         if (enemyMove != null)
         {
@@ -237,7 +244,6 @@ public class Sword : Weapon
 
     protected override void PerformAttack(Vector2 aimDirection) { }
 
-    // Apply stats for all levels (2~9)
     protected override void ApplyLevelUpStats()
     {
         switch (currentLevel)
@@ -275,7 +281,6 @@ public class Sword : Weapon
                 ApplyStats(swordData.level9_DamageBonus, swordData.level9_AreaIncrease,
                            swordData.level9_AngleIncrease, swordData.level9_CooldownReduction);
 
-                // Unlock Projectile at Level 9
                 isProjectileUnlocked = true;
                 attackCount = 0;
                 attacksPerProjectile -= swordData.level9_AttacksPerProjectile_Reduce;
@@ -283,7 +288,6 @@ public class Sword : Weapon
                 break;
         }
 
-        // Safety Checks
         if (currentSwingDuration < 0.1f) currentSwingDuration = 0.1f;
         if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
         UpdateVisualScale();
@@ -295,7 +299,6 @@ public class Sword : Weapon
         currentAreaRadius += area;
         currentAngle += angle;
 
-        // If current cooldown is 1.0s and input is 10, reduction is 0.1s
         float reductionAmount = currentAttackCooldown * (cooldownPercent / 100f);
         currentAttackCooldown -= reductionAmount;
     }

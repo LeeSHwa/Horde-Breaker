@@ -18,7 +18,11 @@ public class StatsController : MonoBehaviour
     public float currentMoveSpeed;
     public float currentDamageMultiplier;
 
-    // --- [new-for-ShieldSkill] Added Event for Damage Interception ---
+    // Critical Stats
+    public float currentCritChance;
+    public float currentCritMultiplier;
+
+    // --- [for-ShieldSkill] Added Event for Damage Interception ---
     // Returns true if the damage was blocked by a skill (like Shield)
     public Func<float, bool> OnDamageProcess;
     // ---------------------------------------------------------------
@@ -117,6 +121,10 @@ public class StatsController : MonoBehaviour
         currentMoveSpeed = baseStats.baseMoveSpeed;
         currentDamageMultiplier = baseStats.baseDamageMultiplier;
 
+        // Initialize Critical Stats
+        currentCritChance = baseStats.baseCritChance;
+        currentCritMultiplier = baseStats.baseCritMultiplier;
+
         // --- Slow Logic Initialization ---
         baseMoveSpeed = baseStats.baseMoveSpeed; // Store the original speed
         activeSpeedModifiers.Clear(); // Remove all slow effects
@@ -164,18 +172,15 @@ public class StatsController : MonoBehaviour
 
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool isCritical = false)
     {
         if (isDead || damage < 0) return;
 
-        // --- [new-for-ShieldSkill] Intercept Damage ---
-        // If a listener (ShieldSkill) returns true, the damage is blocked.
         if (OnDamageProcess != null)
         {
             bool isBlocked = OnDamageProcess.Invoke(damage);
-            if (isBlocked) return; // Stop here, do not apply damage
+            if (isBlocked) return;
         }
-        // ---------------------------------------------
 
         currentHP -= damage;
 
@@ -187,11 +192,12 @@ public class StatsController : MonoBehaviour
             DamagePopup dp = popup.GetComponent<DamagePopup>();
             if (dp != null)
             {
-                dp.Setup(damage, false); // false = isCritical (dummy for now)
+                // [MODIFIED] Pass isCritical flag to Popup
+                dp.Setup(damage, isCritical);
             }
         }
 
-        Debug.Log(transform.name + " takes " + damage + " damage.");
+        Debug.Log(transform.name + " takes " + damage + " damage (Crit: " + isCritical + ")");
 
         if (gameObject.CompareTag("Player"))
         {
@@ -206,6 +212,12 @@ public class StatsController : MonoBehaviour
         }
     }
 
+    // Helper to boost Crit Stats (for Passive Items)
+    public void ApplyCritStats(float chanceBonus, float multiplierBonus)
+    {
+        currentCritChance += chanceBonus;
+        currentCritMultiplier += multiplierBonus;
+    }
 
     private void Die()
     {
@@ -226,8 +238,6 @@ public class StatsController : MonoBehaviour
             {
                 SpawnExpOrb(enemyStats.expValue);
             }
-
-
         }
 
         StartCoroutine(DieAndDisable(baseStats.deathAnimationLength));
@@ -239,7 +249,6 @@ public class StatsController : MonoBehaviour
 
         if (!gameObject.CompareTag("Player"))
         {
-
             if (EnemySpawnerTemp.Instance != null)
             {
                 EnemySpawnerTemp.Instance.ReturnEnemy(this.gameObject);
@@ -247,14 +256,12 @@ public class StatsController : MonoBehaviour
         }
         else
         {
-            // Player: Trigger Game Over
             if (GameManager.Instance != null)
             {
                 gameObject.SetActive(false);
                 GameManager.Instance.GameOver();
             }
         }
-
     }
 
     private void SpawnExpOrb(int expAmount)
@@ -297,12 +304,9 @@ public class StatsController : MonoBehaviour
         currentLevel++;
         Debug.Log($"LEVEL UP! New Level: {currentLevel}");
 
-        // --- [CRITICAL MODIFICATION] ---
-        // Notify the LevelUpManager that a level-up occurred
         OnPlayerLevelUp?.Invoke();
-        // ---------------------------------
 
-        UpdateExpNeeded(); // Get EXP for the *next* level
+        UpdateExpNeeded();
 
         if (UIManager.Instance != null)
         {
@@ -327,7 +331,6 @@ public class StatsController : MonoBehaviour
         }
         else
         {
-            // Max level reached, use last value
             expNeededForNextLevel = playerStats.expToNextLevel[playerStats.expToNextLevel.Length - 1];
         }
     }
@@ -344,7 +347,7 @@ public class StatsController : MonoBehaviour
     public void ApplyMaxHealth(float healthBonus)
     {
         runtimeMaxHP += healthBonus;
-        currentHP += healthBonus; // Also heal for the same amount
+        currentHP += healthBonus;
 
         if (UIManager.Instance != null)
         {
@@ -352,16 +355,12 @@ public class StatsController : MonoBehaviour
         }
     }
 
-
-    // --- [New] Function to Apply Slow Effect (called by ZoneLogic.cs) ---
     public void ApplySpeedModifier(object source, float percentage)
     {
-        // Check if this effect is already active
         var existingMod = activeSpeedModifiers.FirstOrDefault(m => m.Source == source);
 
         if (existingMod != null)
         {
-            // If the effect exists, just update its value (accounts for per-frame calls)
             if (existingMod.SpeedPercentage != percentage)
             {
                 existingMod.SpeedPercentage = percentage;
@@ -370,39 +369,31 @@ public class StatsController : MonoBehaviour
         }
         else
         {
-            // Add the new effect
             activeSpeedModifiers.Add(new SpeedModifier { Source = source, SpeedPercentage = percentage });
             needsSpeedRecalculation = true;
         }
     }
 
-    // --- [New] Function to Remove Slow Effect (called by ZoneLogic.cs) ---
     public void RemoveSpeedModifier(object source)
     {
-        // Remove all effects registered by this 'source'
         int removedCount = activeSpeedModifiers.RemoveAll(m => m.Source == source);
         if (removedCount > 0)
         {
-            needsSpeedRecalculation = true; // Need to recalculate speed if an effect was removed
+            needsSpeedRecalculation = true;
         }
     }
 
-    // --- [new-for-ShieldSkill] Speed Buff Logic ---
     public void SetSpeedBuff(float buffPercent)
     {
-        // Only recalculate if the value actually changes
         if (activeSpeedBuff != buffPercent)
         {
             activeSpeedBuff = buffPercent;
             needsSpeedRecalculation = true;
         }
     }
-    // ----------------------------------------------
 
-    // --- [New] Speed Recalculation Function ---
     private void RecalculateSpeed()
     {
-        // 1. Calculate Base * Slow Modifiers
         float speedAfterSlow = baseMoveSpeed;
 
         if (activeSpeedModifiers.Count > 0)
@@ -411,8 +402,6 @@ public class StatsController : MonoBehaviour
             speedAfterSlow = baseMoveSpeed * (slowestPercentage / 100f);
         }
 
-        // 2. [new-for-ShieldSkill] Apply Speed Buff (Ghost Mode, etc.)
-        // Example: activeSpeedBuff = 0.5f -> Multiplier is 1.5f
         currentMoveSpeed = speedAfterSlow * (1f + activeSpeedBuff);
     }
     public int Level => currentLevel;

@@ -9,14 +9,10 @@ public class Gun : Weapon
     private bool currentProjectilePenetration = false;
 
     // (1) [INITIALIZATION] [MODIFIED] Added 'PlayerAnimator animator' parameter
-    // Replaces Awake() for dependency injection and data casting
     public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
     {
-        // MUST call base.Initialize first to set up common references (aim, ownerStats)
-        // Pass 'animator' to the base method
         base.Initialize(aimObj, owner, animator);
 
-        // Cast the generic 'weaponData' (from base class) into our specific 'gunData'.
         if (weaponData is GunDataSO)
         {
             gunData = (GunDataSO)weaponData;
@@ -26,23 +22,22 @@ public class Gun : Weapon
             Debug.LogError(gameObject.name + " has the wrong WeaponDataSO assigned. Expected GunDataSO.");
         }
 
-        // Initialize Gun-specific stats
         currentProjectilePenetration = false;
 
         // Use base count from SO if available, otherwise default to 1
         currentProjectileCount = gunData.baseProjectileCount > 0 ? gunData.baseProjectileCount : 1;
     }
 
-    // PerformAttack (Now uses passed 'aimDirection' for accuracy, though aim.rotation is likely synced)
+    // PerformAttack
     protected override void PerformAttack(Vector2 aimDirection)
     {
-        // Get the prefab from 'gunData' (our specific SO)
+        // [Core] Get the prefab from 'gunData' (our specific SO)
         if (gunData.bulletPrefab == null) return;
 
-        // Calculate base angle from aim direction
+        // [MODIFIED] Calculate base angle from aim direction
         float baseAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
 
-        // Calculate start angle for spread (centered)
+        // [MODIFIED] Calculate start angle for spread (centered)
         float startAngle = baseAngle;
         if (currentProjectileCount > 1)
         {
@@ -57,14 +52,15 @@ public class Gun : Weapon
 
             bulletObject.transform.position = aim.position;
 
-            // Apply spread angle
+            // [MODIFIED] Apply spread angle
             float currentAngle = startAngle + (i * gunData.multiShotSpread);
             bulletObject.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
             Bullet bullet = bulletObject.GetComponent<Bullet>();
             if (bullet != null)
             {
-                float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
+                // [MODIFIED] Get Final Damage & Crit status
+                float finalDamage = GetFinalDamage(out bool isCrit);
 
                 // Initialize the bullet
                 bullet.Initialize(
@@ -72,7 +68,8 @@ public class Gun : Weapon
                     weaponData.knockback, // 'knockback' is a common stat from base 'weaponData'
                     currentProjectilePenetration, // 'penetration' is a Gun-specific runtime stat
                     ownerStats.transform, // Pass the owner's transform as the attack source
-                    weaponData.hitSound // [NEW] Pass hit sound
+                    weaponData.hitSound, // [NEW] Pass hit sound
+                    isCrit // [NEW] Pass crit flag
                 );
             }
         }
@@ -81,7 +78,6 @@ public class Gun : Weapon
     // [Core Logic] Implement the level-up logic
     protected override void ApplyLevelUpStats()
     {
-        // 'currentLevel' was already incremented by the base Weapon class
         switch (currentLevel)
         {
             case 2:

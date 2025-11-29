@@ -20,11 +20,15 @@ public class WeaponDataSO : ScriptableObject
     // A list to hold descriptions for levels 2, 3, 4, 5+
     public List<string> levelDescriptions;
 
-    // [NEW] Audio Section
+    // Audio Section
     [Header("Audio")]
     [Tooltip("Sound played when attacking (Firing/Swinging)")]
     public AudioClip attackSound;
 
     [Tooltip("Sound played when the projectile hits an enemy")]
     public AudioClip hitSound;
+
+    // Random Damage Variance
+    [Tooltip("Random damage variance percentage (+/-). e.g., 0.1 means +/- 10%")]
+    public float damageVariance = 0.1f;
 }
