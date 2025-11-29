@@ -16,8 +16,9 @@ GameObject:
   - component: {fileID: 1033783065703509946}
   - component: {fileID: 8851462600876830387}
   - component: {fileID: 569732385824989914}
+  - component: {fileID: 2080087892882479405}
   m_Layer: 0
-  m_Name: 1. GreenSlime
+  m_Name: 1_1. GreenSlimeBoss1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -243,3 +244,21 @@ PolygonCollider2D:
       - {x: 0.5980332, y: -0.2267591}
       - {x: 0.40133306, y: 0.1243663}
   m_UseDelaunayMesh: 0
+--- !u!114 &2080087892882479405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8068589428734277748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 501e1def8d8ecef449399343dd6b3ddd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerRange: 5
+  chargeTime: 2
+  dashSpeed: 20
+  dashDuration: 0.3
+  skillCooldown: 5
+  chargeColor: {r: 1, g: 0, b: 0, a: 1}
