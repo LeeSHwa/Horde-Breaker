@@ -7,6 +7,9 @@ public class Bullet : MonoBehaviour
     private float knockback;
     private bool penetration; // Does this bullet penetrate?
 
+    // [NEW] Is this a critical hit?
+    private bool isCritical;
+
     // [New] Variable to store the attack's source (the player)
     private Transform attackSource;
 
@@ -19,8 +22,8 @@ public class Bullet : MonoBehaviour
     private float lifetimeTimer;
 
     // [Modified] Added 'Transform source' parameter to Initialize method
-    // [MODIFIED] Added 'AudioClip sound' parameter
-    public void Initialize(float dmg, float kb, bool pen, Transform source, AudioClip sound = null)
+    // [MODIFIED] Added 'AudioClip sound' & 'bool isCrit' parameter
+    public void Initialize(float dmg, float kb, bool pen, Transform source, AudioClip sound = null, bool isCrit = false)
     {
         this.damage = dmg;
         this.knockback = kb;
@@ -28,6 +31,7 @@ public class Bullet : MonoBehaviour
         this.attackSource = source; // Store the attacker's info
         this.lifetimeTimer = lifetime; // Reset lifetime
         this.hitSound = sound; // [NEW] Store the hit sound
+        this.isCritical = isCrit; // [NEW] Store crit status
     }
 
     void Update()
@@ -50,8 +54,9 @@ public class Bullet : MonoBehaviour
             StatsController enemyStats = other.GetComponent<StatsController>();
             if (enemyStats != null)
             {
-                // (3) Attack with the injected damage.
-                enemyStats.TakeDamage(damage);
+                // (3) Attack with the injected damage & crit status.
+                enemyStats.TakeDamage(damage, isCritical); // [MODIFIED] Pass isCritical
+
                 EnemyMovement enemyMove = other.GetComponent<EnemyMovement>();
                 if (enemyMove != null)
                 {
@@ -95,9 +100,5 @@ public class Bullet : MonoBehaviour
     {
         // Reset the lifetime timer every time it's fired.
         lifetimeTimer = lifetime;
-
-        // (Optional) Reset attackSource to null to prevent errors
-        // attackSource = null; 
-        // -> Not recommended to reset in OnEnable, as Initialize overwrites it every time.
     }
 }

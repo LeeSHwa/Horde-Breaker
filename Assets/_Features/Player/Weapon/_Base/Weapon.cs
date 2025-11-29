@@ -30,12 +30,10 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
 
     public string GetName()
     {
-        // Example: Get name from the Scriptable Object
         return weaponData.weaponName;
     }
     public string GetNextLevelDescription()
     {
-        // currentLevel starts at 1. Level 2 description is at index 0.
         int index = currentLevel - 1;
         if (weaponData.levelDescriptions != null && index < weaponData.levelDescriptions.Count)
         {
@@ -46,7 +44,6 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
 
     public Sprite GetIcon()
     {
-        // Example: Get icon from the Scriptable Object
         return weaponData.icon;
     }
 
@@ -110,4 +107,36 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
 
     // (8) [ABSTRACT] The child MUST implement this specific upgrade logic
     protected abstract void ApplyLevelUpStats();
+
+    // Helper function to calculate final damage with Critical & Variance
+    // Returns: Damage amount AND sets isCritical flag
+    protected float GetFinalDamage(out bool isCritical)
+    {
+        float damage = currentDamage * ownerStats.currentDamageMultiplier;
+        isCritical = false;
+
+        // 1. Critical Hit Check
+        // Random.value returns 0.0 to 1.0. If currentCritChance is 0.05, we have 5% chance.
+        if (Random.value <= ownerStats.currentCritChance)
+        {
+            damage *= ownerStats.currentCritMultiplier;
+            isCritical = true;
+        }
+
+        // 2. Percentage Variance
+        // e.g. damageVariance = 0.1 (10%) -> Random range: 0.9 ~ 1.1
+        if (weaponData.damageVariance > 0)
+        {
+            float min = 1f - weaponData.damageVariance;
+            float max = 1f + weaponData.damageVariance;
+            float varianceMultiplier = Random.Range(min, max);
+
+            damage *= varianceMultiplier;
+        }
+
+        // Prevent negative damage
+        if (damage < 0) damage = 0;
+
+        return damage;
+    }
 }
