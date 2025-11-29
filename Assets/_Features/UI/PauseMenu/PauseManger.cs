@@ -5,7 +5,8 @@ using TMPro;
 public class PauseManager : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject pausePanel;
+    public GameObject pausePanel;       // The main pause menu background
+    public GameObject settingPanel;     // The settings panel (Drag your Setting_Panel here)
 
     [Header("Status Text UI")]
     public TextMeshProUGUI levelText;
@@ -15,8 +16,8 @@ public class PauseManager : MonoBehaviour
     public TextMeshProUGUI speedText;
 
     [Header("Session Info UI")]
-    public TextMeshProUGUI timeText; 
-    public TextMeshProUGUI killText; 
+    public TextMeshProUGUI timeText;
+    public TextMeshProUGUI killText;
 
     [Header("Scene Names")]
     public string mainMenuSceneName = "MainMenu";
@@ -31,13 +32,26 @@ public class PauseManager : MonoBehaviour
         {
             playerStats = player.GetComponent<StatsController>();
         }
+
+        // Ensure panels are closed on start
+        if (pausePanel != null) pausePanel.SetActive(false);
+        if (settingPanel != null) settingPanel.SetActive(false);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePause();
+            // If Settings is open, close only Settings (Go back to Pause Menu)
+            if (settingPanel != null && settingPanel.activeSelf)
+            {
+                OnClickCloseSetting();
+            }
+            // If Settings is closed, toggle the Pause Menu
+            else
+            {
+                TogglePause();
+            }
         }
     }
 
@@ -47,16 +61,37 @@ public class PauseManager : MonoBehaviour
 
         if (isPaused)
         {
+            // Pause Game
             Time.timeScale = 0f;
-            pausePanel.SetActive(true);
-            UpdateStatusUI(); 
+            if (pausePanel != null) pausePanel.SetActive(true);
+
+            // Ensure settings is closed when first opening pause menu
+            if (settingPanel != null) settingPanel.SetActive(false);
+
+            UpdateStatusUI();
         }
         else
         {
+            // Resume Game
             Time.timeScale = 1f;
-            pausePanel.SetActive(false);
+            if (pausePanel != null) pausePanel.SetActive(false);
+            if (settingPanel != null) settingPanel.SetActive(false);
         }
     }
+
+    // --- Settings Panel Control ---
+
+    public void OnClickOpenSetting()
+    {
+        if (settingPanel != null) settingPanel.SetActive(true);
+    }
+
+    public void OnClickCloseSetting()
+    {
+        if (settingPanel != null) settingPanel.SetActive(false);
+    }
+
+    // ------------------------------
 
     private void UpdateStatusUI()
     {
@@ -98,7 +133,8 @@ public class PauseManager : MonoBehaviour
     {
         isPaused = false;
         Time.timeScale = 1f;
-        pausePanel.SetActive(false);
+        if (pausePanel != null) pausePanel.SetActive(false);
+        if (settingPanel != null) settingPanel.SetActive(false);
     }
 
     public void OnClickRestart()
