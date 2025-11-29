@@ -1,9 +1,7 @@
 using UnityEngine;
 
-// [MODIFIED] Class name changed from GroundZoneSkill to AuraSkill
-public class AuraSkill : Skills // Inherits from Skills
+public class AuraSkill : Skills
 {
-    // [MODIFIED] Changed type from GroundZoneDataSO to AuraDataSO
     private AuraDataSO zoneData;
 
     // Runtime stats
@@ -11,38 +9,24 @@ public class AuraSkill : Skills // Inherits from Skills
     protected float currentArea;
     protected float currentDebuffPercent;
 
-    protected override void Awake()
+    public override void Initialize(StatsController owner)
     {
-        base.Awake(); // This now ONLY sets ownerStats
+        base.Initialize(owner);
 
-        // Cast the generic 'skillData' into our specific 'zoneData'
-        // [MODIFIED] Now casts to AuraDataSO
         if (skillData is AuraDataSO)
         {
             zoneData = (AuraDataSO)skillData;
         }
         else
         {
-            // [MODIFIED] Error message updated
             Debug.LogError(gameObject.name + " has the wrong SkillDataSO assigned. Expected AuraDataSO.");
+            return;
         }
 
-        // [MOVED] Call InitializeStats() AFTER the 'zoneData' variable is set.
-        InitializeStats();
-    }
-
-    protected override void InitializeStats()
-    {
-        base.InitializeStats(); // Initializes baseDamage, baseAttackCooldown
-
-        // This is now safe because 'zoneData' is no longer null
         currentDuration = zoneData.baseDuration;
         currentArea = zoneData.baseArea;
-        // [MODIFIED] Set DebuffPercent based on the SO data (likely 0 if Lvl 4 adds it)
         currentDebuffPercent = zoneData.speedDebuffPercentage;
     }
-
-    // ... (ApplyLevelUpStats is updated as per recent logic)
 
     protected override void PerformAttack()
     {
@@ -50,49 +34,45 @@ public class AuraSkill : Skills // Inherits from Skills
         if (zoneObject == null) return;
         zoneObject.transform.position = ownerStats.transform.position;
 
-        // [MODIFIED] GetComponent call changed from ZoneLogic to AuraLogic
         AuraLogic logic = zoneObject.GetComponent<AuraLogic>();
 
         if (logic != null)
         {
             float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
 
-            // [MODIFIED] Pass 'zoneData.slowHitSound' as the last argument
+            // Apply area bonus from passives
+            float finalArea = currentArea + ownerStats.bonusArea;
+
+            // Apply duration bonus from passives
+            float finalDuration = currentDuration * (1f + ownerStats.bonusDuration);
+
             logic.Initialize(
                 finalDamage,
-                currentDuration,
-                currentArea,
+                finalDuration,
+                finalArea,
                 currentDebuffPercent,
                 ownerStats.transform,
-                zoneData.slowHitSound // [NEW] Pass the sound clip
+                zoneData.slowHitSound
             );
         }
     }
 
-    // [MOD..."ApplyLevelUpStats" METHOD FULLY REPLACED]...
     protected override void ApplyLevelUpStats()
     {
-        // [NEW] This function's logic is updated for the new Level 4 (Slow) and Level 5 (Mastery) design.
         switch (currentLevel)
         {
-            case 2: // Level 2: Damage Increase (Unchanged)
+            case 2:
                 currentDamage += zoneData.level2_DamageIncrease;
                 break;
-            case 3: // Level 3: Area Increase (Unchanged)
+            case 3:
                 currentArea += zoneData.level3_AreaIncrease;
                 break;
-            case 4: // Level 4: [NEW] Apply Slow Effect
-                // Set the slow percentage directly from the SO's new 'level4_SlowValue' field.
+            case 4:
                 currentDebuffPercent = zoneData.level4_SlowValue;
                 break;
-            case 5: // Level 5: [NEW] Apply Mastery (All stats up)
-                // Apply Lvl 2 effect (Damage) again
+            case 5:
                 currentDamage += zoneData.level5_DamageIncrease;
-
-                // Apply Lvl 3 effect (Area) again
                 currentArea += zoneData.level5_AreaIncrease;
-
-                // Apply Lvl 4 effect (Slow) again (adds a negative value)
                 currentDebuffPercent += zoneData.level5_DebuffIncrease;
                 break;
         }

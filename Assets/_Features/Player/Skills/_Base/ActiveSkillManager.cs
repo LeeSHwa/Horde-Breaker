@@ -4,7 +4,7 @@ using System.Linq;
 
 public class ActiveSkillManager : MonoBehaviour
 {
-    // [Modified] Variable to link the 'SKill' container object, not 'Hero'
+    // Variable to link the 'SKill' container object, not 'Hero'
     [Tooltip("The 'SKill' container object that holds passive skills (Moon, Aura, etc.) as children")]
     public Transform skillContainerTransform;
 
@@ -17,21 +17,31 @@ public class ActiveSkillManager : MonoBehaviour
         ownerStats = GetComponentInParent<StatsController>();
         if (ownerStats == null)
         {
-            Debug.LogError("PassiveSkillManager: Cannot find StatsController in parent!");
+            Debug.LogError("ActiveSkillManager: Cannot find StatsController in parent!");
         }
+        // Initialize list here
+        activeSkills = new List<Skills>();
     }
+
     void Start()
     {
         if (skillContainerTransform == null)
         {
-            Debug.LogError("PassiveSkillManager is missing the 'SKill' container object reference!");
+            Debug.LogError("ActiveSkillManager is missing the 'SKill' container object reference!");
             return;
         }
 
-        // [Modified] Find all 'Skills' components in the children of
-        // 'skillContainerTransform' (not 'Hero') and add them to the list.
-        // (This will find Aura, Moon, etc.)
-        activeSkills = skillContainerTransform.GetComponentsInChildren<Skills>().ToList();
+        // Find and initialize pre-placed skills
+        var prePlacedSkills = skillContainerTransform.GetComponentsInChildren<Skills>();
+        foreach (var skill in prePlacedSkills)
+        {
+            if (!activeSkills.Contains(skill))
+            {
+                // Inject dependency immediately
+                skill.Initialize(ownerStats);
+                activeSkills.Add(skill);
+            }
+        }
     }
 
     void Update()
@@ -66,8 +76,8 @@ public class ActiveSkillManager : MonoBehaviour
 
         if (newSkill != null)
         {
-            // The 'Skills' abstract class should find its own StatsController in Awake/Start
-            // newSkill.Initialize(stats); // (If manual initialization is needed)
+            // Inject dependency immediately (Initialize Pattern)
+            newSkill.Initialize(ownerStats);
             activeSkills.Add(newSkill);
         }
     }
