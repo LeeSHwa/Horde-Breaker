@@ -130,11 +130,6 @@ public class Sword : Weapon
         hitboxCollider.enabled = true;
         if (guidelineContainer != null) guidelineContainer.SetActive(false);
         attackCount++;
-        if (swordTrail != null)
-        {
-            swordTrail.Clear();
-            swordTrail.emitting = true;
-        }
 
         float centerAngle = Mathf.Atan2(fixedDirection.y, fixedDirection.x) * Mathf.Rad2Deg;
         float startAngle; float endAngle;
@@ -149,12 +144,23 @@ public class Sword : Weapon
             endAngle = centerAngle - (currentAngle - swordData.swingStartOffset);
         }
 
+        pivot.position = aim.position;
+        pivot.rotation = Quaternion.Euler(0, 0, startAngle);
+
+        if (swordTrail != null)
+        {
+            swordTrail.Clear();
+            swordTrail.emitting = true;
+        }
+
         float swingTimer = 0f;
         while (swingTimer < currentSwingDuration)
         {
             swingTimer += Time.deltaTime;
             float t = swingTimer / currentSwingDuration;
+
             float currentSwingAngle = Mathf.Lerp(startAngle, endAngle, t);
+
             pivot.position = aim.position;
             pivot.rotation = Quaternion.Euler(0, 0, currentSwingAngle);
             yield return null;
@@ -165,6 +171,7 @@ public class Sword : Weapon
         hitboxCollider.enabled = false;
         playerAnimator.UnlockFacing();
         currentState = State.Idle;
+
         if (swordTrail != null)
         {
             swordTrail.emitting = false;
@@ -172,7 +179,6 @@ public class Sword : Weapon
 
         CheckProjectile(fixedDirection);
     }
-
     public void HandleHit(Collider2D enemyCollider)
     {
         if (enemiesHitThisSwing.Contains(enemyCollider)) { return; }
@@ -189,7 +195,6 @@ public class Sword : Weapon
     {
         if (currentLevel < 9) return;
         if (!isProjectileUnlocked) return;
-
         if (swordData.projectilePrefab == null) return;
 
         if (attackCount >= attacksPerProjectile)
@@ -204,18 +209,30 @@ public class Sword : Weapon
 
             float arcLength = currentAreaRadius * (currentAngle * Mathf.Deg2Rad);
             float projectileScaleY = arcLength * swordData.projectileArcScaleMultiplier;
-            projectileObj.transform.localScale = new Vector3(pivot.localScale.x, projectileScaleY, 1f);
+
+            Vector3 finalScale = new Vector3(pivot.localScale.x, projectileScaleY, 1f);
+
 
             Bullet projectileScript = projectileObj.GetComponent<Bullet>();
             if (projectileScript != null)
             {
-                // [MODIFIED] Use GetFinalDamage()
                 float baseDamage = GetFinalDamage(out bool isCrit);
                 float projDmg = baseDamage * swordData.projectileDamagePercent;
                 float projKb = currentKnockback * swordData.projectileKnockbackPercent;
 
-                // [MODIFIED] Pass isCrit
-                projectileScript.Initialize(projDmg, projKb, true, ownerStats.transform, weaponData.hitSound, isCrit);
+                float baseLifetime = 3.0f;
+                float finalLifetime = GetFinalDuration(baseLifetime);
+
+                projectileScript.Initialize(
+                    projDmg,
+                    projKb,
+                    true,
+                    ownerStats.transform,
+                    finalScale,
+                    finalLifetime,
+                    weaponData.hitSound,
+                    isCrit
+                );
             }
         }
     }

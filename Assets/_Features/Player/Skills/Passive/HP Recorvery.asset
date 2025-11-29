@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
-  m_Name: Speed
+  m_Name: HP Recorvery
   m_EditorClassIdentifier: 
-  type: 2
-  value: 2
-  maxLevel: 5
-  rarityWeight: 5
-  upgradeName: Move Speed Up
-  icon: {fileID: -2678394577819576460, guid: f983831c76977e94c8acb0e23bd0401f, type: 3}
-  description: Speed +2 Up!
+  type: 8
+  value: 0.5
+  maxLevel: 8
+  rarityWeight: 10
+  upgradeName: HP Recorvery
+  icon: {fileID: 5606467149528682979, guid: 93aeb3664c2c7954f9db8fb6f68da3c8, type: 3}
+  description: Recovers 0.5 HP per second

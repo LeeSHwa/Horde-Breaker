@@ -79,7 +79,7 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
     // (5) TryAttack logic is common (cooldown check)
     public virtual void TryAttack(Vector2 aimDirection)
     {
-        if (Time.time >= lastAttackTime + currentAttackCooldown)
+        if (Time.time >= lastAttackTime + GetFinalCooldown())
         {
             PerformAttack(aimDirection);
             lastAttackTime = Time.time;
@@ -110,33 +110,53 @@ public abstract class Weapon : MonoBehaviour, AttackInterface
 
     // Helper function to calculate final damage with Critical & Variance
     // Returns: Damage amount AND sets isCritical flag
+
+    protected float GetFinalCooldown()
+    {
+        if (ownerStats == null) return currentAttackCooldown;
+
+        float reduction = Mathf.Clamp(ownerStats.bonusCooldownReduction, 0f, 0.8f);
+        return currentAttackCooldown * (1f - reduction);
+    }
+
+    protected int GetFinalProjectileCount()
+    {
+        if (ownerStats == null) return currentProjectileCount;
+        return currentProjectileCount + ownerStats.bonusProjectileCount;
+    }
+
+
     protected float GetFinalDamage(out bool isCritical)
     {
         float damage = currentDamage * ownerStats.currentDamageMultiplier;
         isCritical = false;
 
-        // 1. Critical Hit Check
-        // Random.value returns 0.0 to 1.0. If currentCritChance is 0.05, we have 5% chance.
         if (Random.value <= ownerStats.currentCritChance)
         {
             damage *= ownerStats.currentCritMultiplier;
             isCritical = true;
         }
 
-        // 2. Percentage Variance
-        // e.g. damageVariance = 0.1 (10%) -> Random range: 0.9 ~ 1.1
         if (weaponData.damageVariance > 0)
         {
-            float min = 1f - weaponData.damageVariance;
-            float max = 1f + weaponData.damageVariance;
-            float varianceMultiplier = Random.Range(min, max);
-
-            damage *= varianceMultiplier;
+            float variance = Random.Range(1f - weaponData.damageVariance, 1f + weaponData.damageVariance);
+            damage *= variance;
         }
 
-        // Prevent negative damage
-        if (damage < 0) damage = 0;
-
-        return damage;
+        return Mathf.Max(0, damage);
     }
+
+    protected float GetFinalAreaScale()
+    {
+        if (ownerStats == null) return 1f;
+        return 1f + ownerStats.bonusArea;
+    }
+
+    protected float GetFinalDuration(float baseDuration)
+    {
+        if (ownerStats == null) return baseDuration;
+        return baseDuration * (1f + ownerStats.bonusDuration);
+    }
+
+
 }

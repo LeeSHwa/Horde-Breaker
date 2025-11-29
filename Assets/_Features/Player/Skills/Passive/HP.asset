@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: HP
   m_EditorClassIdentifier: 
   type: 1
-  value: 50
-  upgradeName: HP Up
+  value: 30
+  maxLevel: 8
+  rarityWeight: 10
+  upgradeName: MAX HP
   icon: {fileID: -1148780759594644325, guid: 025195d21107efa43b8505b2caea172a, type: 3}
-  description: HP Up!
+  description: MAX HP +30

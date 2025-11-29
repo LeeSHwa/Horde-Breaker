@@ -34,43 +34,47 @@ public class Gun : Weapon
         // [Core] Get the prefab from 'gunData' (our specific SO)
         if (gunData.bulletPrefab == null) return;
 
-        // [MODIFIED] Calculate base angle from aim direction
+        int count = GetFinalProjectileCount();
+
         float baseAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
 
-        // [MODIFIED] Calculate start angle for spread (centered)
         float startAngle = baseAngle;
-        if (currentProjectileCount > 1)
+
+
+        if (count > 1)
         {
-            float totalSpread = (currentProjectileCount - 1) * gunData.multiShotSpread;
+            float totalSpread = (count - 1) * gunData.multiShotSpread;
             startAngle = baseAngle - (totalSpread / 2f);
         }
 
-        for (int i = 0; i < currentProjectileCount; i++)
+        for (int i = 0; i < count; i++)
         {
             GameObject bulletObject = PoolManager.Instance.GetFromPool(gunData.bulletPrefab.name);
             if (bulletObject == null) continue;
 
             bulletObject.transform.position = aim.position;
 
-            // [MODIFIED] Apply spread angle
             float currentAngle = startAngle + (i * gunData.multiShotSpread);
             bulletObject.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
             Bullet bullet = bulletObject.GetComponent<Bullet>();
             if (bullet != null)
             {
-                // [MODIFIED] Get Final Damage & Crit status
                 float finalDamage = GetFinalDamage(out bool isCrit);
+                Vector3 finalScaleVector = Vector3.one * GetFinalAreaScale();
 
-                // Initialize the bullet
+                float finalDuration = GetFinalDuration(bullet.lifetime);
+
                 bullet.Initialize(
-                    finalDamage,
-                    weaponData.knockback, // 'knockback' is a common stat from base 'weaponData'
-                    currentProjectilePenetration, // 'penetration' is a Gun-specific runtime stat
-                    ownerStats.transform, // Pass the owner's transform as the attack source
-                    weaponData.hitSound, // [NEW] Pass hit sound
-                    isCrit // [NEW] Pass crit flag
-                );
+                                finalDamage,
+                                weaponData.knockback,
+                                currentProjectilePenetration,
+                                ownerStats.transform,
+                                finalScaleVector,
+                                finalDuration,
+                                weaponData.hitSound,
+                                isCrit
+                                );
             }
         }
     }

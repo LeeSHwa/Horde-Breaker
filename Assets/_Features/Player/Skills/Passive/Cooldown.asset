@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
-  m_Name: Speed
+  m_Name: Cooldown
   m_EditorClassIdentifier: 
-  type: 2
-  value: 2
-  maxLevel: 5
+  type: 3
+  value: 0.05
+  maxLevel: 8
   rarityWeight: 5
-  upgradeName: Move Speed Up
-  icon: {fileID: -2678394577819576460, guid: f983831c76977e94c8acb0e23bd0401f, type: 3}
-  description: Speed +2 Up!
+  upgradeName: Cooldown
+  icon: {fileID: -1850965007507406829, guid: d411d5c0a1a42b3439e40414e743ebff, type: 3}
+  description: Reduces weapon cooldown by 5%.
