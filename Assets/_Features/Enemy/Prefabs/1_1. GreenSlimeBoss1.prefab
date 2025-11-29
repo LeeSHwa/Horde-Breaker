@@ -16,8 +16,9 @@ GameObject:
   - component: {fileID: 1033783065703509946}
   - component: {fileID: 8851462600876830387}
   - component: {fileID: 569732385824989914}
+  - component: {fileID: 2080087892882479405}
   m_Layer: 0
-  m_Name: 1. GreenSlime
+  m_Name: 1_1. GreenSlimeBoss1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -154,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fe1b8cc14dcc04b83b41b96f54d057, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mass: 0.5
+  mass: 10000
   despawnDistance: 40
   isReverseSprite: 0
 --- !u!114 &1033783065703509946
@@ -169,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 454c5dcf4f4cee14482d8901419ceda7, type: 2}
+  baseStats: {fileID: 11400000, guid: 4e352f78850ed4548817921b956e9807, type: 2}
   currentHP: 0
   currentMoveSpeed: 0
   currentDamageMultiplier: 0
@@ -243,3 +244,27 @@ PolygonCollider2D:
       - {x: 0.5980332, y: -0.2267591}
       - {x: 0.40133306, y: 0.1243663}
   m_UseDelaunayMesh: 0
+--- !u!114 &2080087892882479405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8068589428734277748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 501e1def8d8ecef449399343dd6b3ddd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerRange: 30
+  chargeTime: 2
+  dashSpeed: 20
+  dashDuration: 1.5
+  restTime: 1
+  skillCooldown: 5
+  useColorChange: 1
+  chargeColor: {r: 1, g: 0, b: 0, a: 1}
+  animChargeTrigger: doCharge
+  animDashTrigger: doDash
+  animIdleTrigger: doIdle
+  animMoveBool: isMoving
