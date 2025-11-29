@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
-  m_Name: HP
+  m_Name: Duration
   m_EditorClassIdentifier: 
-  type: 1
-  value: 30
-  upgradeName: MAX HP
-  icon: {fileID: -1148780759594644325, guid: 025195d21107efa43b8505b2caea172a, type: 3}
-  description: MAX HP +30
+  type: 0
+  value: 0.1
+  upgradeName: Duration
+  icon: {fileID: -1100526289406979421, guid: dcbd4c0146b9b2a49ad4ff25bc3b3131, type: 3}
+  description: Increases weapon duration by 10%.

@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq; // Required for .OrderBy() and .Take()
+using System.Linq; // Required for .Any()
 
 public class LevelUpManager : MonoBehaviour
 {
@@ -28,11 +28,13 @@ public class LevelUpManager : MonoBehaviour
 
     [Header("Settings")]
     public int maxLevel = 99; // Max Level Cap
+    public int maxActiveSlots = 4;  // Limit for active skills (Weapon + Skills)
+    public int maxPassiveSlots = 4; // Limit for passive items
 
-    // Used for shuffling
+    // Random Number Generator
     private System.Random rng = new System.Random();
 
-    // [NEW] Counter for pending level-ups to handle multiple level-ups at once
+    // Counter for pending level-ups to handle multiple level-ups at once
     private int pendingLevelUps = 0;
 
     // --- [Helper Class to manage upgrade types] ---
@@ -47,10 +49,43 @@ public class LevelUpManager : MonoBehaviour
         // 3. For passive stat boosts
         public PassiveUpgradeSO passiveUpgrade;
 
+        // Probability weight for RNG
+        public int weight = 10;
+
+        // Flag to identify if this is a new item or an upgrade
+        public bool isNew = false;
+
         // --- Constructors ---
-        public UpgradeChoice(AttackInterface item) { itemToUpgrade = item; }
-        public UpgradeChoice(GameObject prefab) { newSkillPrefab = prefab; }
-        public UpgradeChoice(PassiveUpgradeSO passive) { passiveUpgrade = passive; }
+
+        // Constructor 1: For Upgrades (Weapon or Active Skill)
+        public UpgradeChoice(AttackInterface item)
+        {
+            itemToUpgrade = item;
+            isNew = false; // It's an upgrade, so not new
+
+            // Logic: Weapons are powerful, so make their upgrades rare
+            if (item is Weapon) weight = 2;
+            else weight = 10;
+        }
+
+        // Constructor 2: For NEW Active Skills
+        public UpgradeChoice(GameObject prefab)
+        {
+            newSkillPrefab = prefab;
+            isNew = true; // It's a new skill
+            weight = 8; // Standard weight for new skills
+        }
+
+        // Constructor 3: For Passive Upgrades
+        public UpgradeChoice(PassiveUpgradeSO passive, bool _isNew)
+        {
+            passiveUpgrade = passive;
+            isNew = _isNew;
+
+            // Use the weight defined in the Scriptable Object (Data-Driven)
+            // Ensure PassiveUpgradeSO has 'rarityWeight' field
+            weight = passive.rarityWeight;
+        }
 
         // --- UI Helper Functions (Called by UI Card) ---
         public string GetName()
@@ -104,8 +139,7 @@ public class LevelUpManager : MonoBehaviour
 
     void Start()
     {
-        // [CHANGED] Bind to 'RegisterLevelUp' instead of showing UI immediately
-        if (playerStats != null) { playerStats.OnPlayerLevelUp += RegisterLevelUp; } 
+        if (playerStats != null) { playerStats.OnPlayerLevelUp += RegisterLevelUp; }
         else { Debug.LogError("LevelUpManager: playerStats is not assigned!"); }
 
         if (playerController == null) Debug.LogError("LevelUpManager: playerController is not assigned!");
@@ -116,31 +150,28 @@ public class LevelUpManager : MonoBehaviour
 
     void OnDestroy()
     {
-        // [CHANGED] Unsubscribe correctly
+        // Unsubscribe to prevent memory leaks
         if (playerStats != null) { playerStats.OnPlayerLevelUp -= RegisterLevelUp; }
     }
 
-    // [NEW] 1. Entry Point: Receives level-up event and queues it
+    // 1. Entry Point: Receives level-up event and queues it
     private void RegisterLevelUp()
     {
-        // Increment queue
         pendingLevelUps++;
-        
-        // If the UI is NOT active, start the process.
-        // If UI IS active, this level-up sits in 'pendingLevelUps' waiting for its turn.
+
+        // If the UI is NOT active, start the process immediately.
         if (!levelUpPanel.activeSelf)
         {
             ProcessNextLevelUp();
         }
     }
 
-    // [NEW] 2. Manager: Decides whether to show UI or resume game
+    // 2. Manager: Decides whether to show UI or resume game
     private void ProcessNextLevelUp()
     {
         if (pendingLevelUps > 0)
         {
-            // Still have levels to process -> Show UI
-            ShowUpgradeOptions(); 
+            ShowUpgradeOptions();
         }
         else
         {
@@ -153,7 +184,7 @@ public class LevelUpManager : MonoBehaviour
         }
     }
 
-    // [MOVED] 3. Worker: Prepares and displays the cards (Logic only)
+    // 3. Worker: Prepares and displays the cards (Main Logic)
     private void ShowUpgradeOptions()
     {
         Time.timeScale = 0f; // Pause Game
@@ -163,71 +194,116 @@ public class LevelUpManager : MonoBehaviour
 
         List<UpgradeChoice> choicePool = new List<UpgradeChoice>();
 
-        // --- A. Gather Choices ---
+        // --------------------------------------------------------
+        // A. Collect Candidates (With Slot Limits & Upgrade Checks)
+        // --------------------------------------------------------
 
-        // 1. Weapon upgrade
+        // 1. Existing Weapon Upgrade (High Priority check, Low Weight)
         Weapon weapon = playerController.GetCurrentWeapon();
         if (weapon != null && weapon.CurrentLevel < weapon.MaxLevel)
         {
             choicePool.Add(new UpgradeChoice(weapon));
         }
 
-        // 2. Equipped Skill upgrades
-        List<Skills> skills = skillManager.GetEquippedSkills();
-        foreach (Skills skill in skills)
+        // 2. Existing Active Skill Upgrades
+        List<Skills> activeSkills = skillManager.GetEquippedSkills();
+        foreach (Skills skill in activeSkills)
         {
-            if (skill != null && skill.CurrentLevel < skill.MaxLevel)
+            if (skill.CurrentLevel < skill.MaxLevel)
             {
                 choicePool.Add(new UpgradeChoice(skill as AttackInterface));
             }
         }
 
-        // 3. New Skills
-        if (skills.Count < 6) // Max 6 skills
-        {
-            List<GameObject> availableNewSkills = new List<GameObject>();
-            foreach (var skillPrefab in newSkillPrefabs)
-            {
-                string prefabName = skillPrefab.name;
-                bool isEquipped = false;
-                foreach (var equippedSkill in skills)
-                {
-                    // Check name (handling (Clone))
-                    if (equippedSkill.gameObject.name.Contains(prefabName))
-                    {
-                        isEquipped = true;
-                        break;
-                    }
-                }
-                if (!isEquipped)
-                {
-                    availableNewSkills.Add(skillPrefab);
-                }
-            }
+        // 3. Passive Upgrades (Existing Upgrades + New Passives)
 
-            foreach (var newSkill in availableNewSkills)
-            {
-                choicePool.Add(new UpgradeChoice(newSkill));
-            }
+        // First, count how many passives the player currently owns
+        int myPassiveCount = 0;
+        foreach (var p in passiveUpgrades)
+        {
+            if (playerStats.GetPassiveLevel(p.upgradeName) > 0) myPassiveCount++;
         }
 
-        // 4. Passive Stats
         foreach (var passive in passiveUpgrades)
         {
-            // Add logic here if passives have max limits
-            choicePool.Add(new UpgradeChoice(passive));
+            int currentLvl = playerStats.GetPassiveLevel(passive.upgradeName);
+            bool hasPassive = currentLvl > 0;
+
+            if (hasPassive)
+            {
+                // If owned: Add to pool if not max level (isNew = false)
+                if (currentLvl < passive.maxLevel)
+                    choicePool.Add(new UpgradeChoice(passive, false));
+            }
+            else
+            {
+                // If NOT owned: Add only if slot is available (isNew = true)
+                if (myPassiveCount < maxPassiveSlots)
+                    choicePool.Add(new UpgradeChoice(passive, true));
+            }
         }
 
-        // --- B. Select Random 3 ---
-        int countToTake = Mathf.Min(3, choicePool.Count);
-        var randomChoices = choicePool.OrderBy(x => rng.Next()).Take(countToTake).ToList();
+        // 4. New Active Skills (Check Active Slot Limit)
+        if (activeSkills.Count < maxActiveSlots)
+        {
+            foreach (var skillPrefab in newSkillPrefabs)
+            {
+                // Check if already equipped by name (handling clones)
+                bool isEquipped = activeSkills.Any(s => s.skillData.skillName == skillPrefab.GetComponent<Skills>().skillData.skillName);
 
-        // --- C. Update UI ---
+                if (!isEquipped)
+                {
+                    choicePool.Add(new UpgradeChoice(skillPrefab));
+                }
+            }
+        }
+
+        // --------------------------------------------------------
+        // B. Weighted Random Selection
+        // --------------------------------------------------------
+        List<UpgradeChoice> selectedChoices = new List<UpgradeChoice>();
+        int countToSelect = Mathf.Min(3, choicePool.Count);
+
+        for (int i = 0; i < countToSelect; i++)
+        {
+            if (choicePool.Count == 0) break;
+
+            // 1. Calculate Total Weight
+            int totalWeight = 0;
+            foreach (var c in choicePool) totalWeight += c.weight;
+
+            // 2. Pick a random value
+            int randomValue = rng.Next(0, totalWeight);
+
+            // 3. Find the winner based on weight
+            int currentSum = 0;
+            UpgradeChoice picked = null;
+            foreach (var c in choicePool)
+            {
+                currentSum += c.weight;
+                if (randomValue < currentSum)
+                {
+                    picked = c;
+                    break;
+                }
+            }
+
+            // 4. Add to result and remove from pool to prevent duplicates
+            if (picked != null)
+            {
+                selectedChoices.Add(picked);
+                choicePool.Remove(picked);
+            }
+        }
+
+        // --------------------------------------------------------
+        // C. Update UI
+        // --------------------------------------------------------
         for (int i = 0; i < uiCards.Length; i++)
         {
-            if (i < randomChoices.Count)
+            if (i < selectedChoices.Count)
             {
-                uiCards[i].Display(randomChoices[i]);
+                uiCards[i].Display(selectedChoices[i]);
                 uiCards[i].gameObject.SetActive(true);
             }
             else
@@ -237,7 +313,7 @@ public class LevelUpManager : MonoBehaviour
         }
     }
 
-    // [NEW] 4. Exit Point: Called by UI Button
+    // 4. Exit Point: Called by UI Button
     public void OnUpgradeSelected(UpgradeChoice chosenUpgrade)
     {
         if (chosenUpgrade == null) return;

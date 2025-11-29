@@ -16,4 +16,4 @@ MonoBehaviour:
   value: 0.1
   upgradeName: Damage
   icon: {fileID: 370836429328893637, guid: 54736194089854240a65e032c8d18c9a, type: 3}
-  description: Damage Up!
+  description: Damage + 10%

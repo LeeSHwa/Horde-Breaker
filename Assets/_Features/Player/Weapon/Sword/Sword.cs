@@ -189,7 +189,6 @@ public class Sword : Weapon
     {
         if (currentLevel < 9) return;
         if (!isProjectileUnlocked) return;
-
         if (swordData.projectilePrefab == null) return;
 
         if (attackCount >= attacksPerProjectile)
@@ -204,18 +203,30 @@ public class Sword : Weapon
 
             float arcLength = currentAreaRadius * (currentAngle * Mathf.Deg2Rad);
             float projectileScaleY = arcLength * swordData.projectileArcScaleMultiplier;
-            projectileObj.transform.localScale = new Vector3(pivot.localScale.x, projectileScaleY, 1f);
+
+            Vector3 finalScale = new Vector3(pivot.localScale.x, projectileScaleY, 1f);
+
 
             Bullet projectileScript = projectileObj.GetComponent<Bullet>();
             if (projectileScript != null)
             {
-                // [MODIFIED] Use GetFinalDamage()
                 float baseDamage = GetFinalDamage(out bool isCrit);
                 float projDmg = baseDamage * swordData.projectileDamagePercent;
                 float projKb = currentKnockback * swordData.projectileKnockbackPercent;
 
-                // [MODIFIED] Pass isCrit
-                projectileScript.Initialize(projDmg, projKb, true, ownerStats.transform, weaponData.hitSound, isCrit);
+                float baseLifetime = 3.0f;
+                float finalLifetime = GetFinalDuration(baseLifetime);
+
+                projectileScript.Initialize(
+                    projDmg,
+                    projKb,
+                    true,
+                    ownerStats.transform,
+                    finalScale,
+                    finalLifetime,
+                    weaponData.hitSound,
+                    isCrit
+                );
             }
         }
     }

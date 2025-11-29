@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
-  m_Name: HP
+  m_Name: Critical Chance
   m_EditorClassIdentifier: 
-  type: 1
-  value: 30
-  upgradeName: MAX HP
-  icon: {fileID: -1148780759594644325, guid: 025195d21107efa43b8505b2caea172a, type: 3}
-  description: MAX HP +30
+  type: 0
+  value: 0.07
+  upgradeName: Critical Chance
+  icon: {fileID: 48231364345088982, guid: f0d8a4bd7623aa5439d401f7a7fd9400, type: 3}
+  description: Increases Critical Chance by 7%.

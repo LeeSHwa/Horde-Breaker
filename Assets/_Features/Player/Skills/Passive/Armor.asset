@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
-  m_Name: HP
+  m_Name: Armor
   m_EditorClassIdentifier: 
-  type: 1
-  value: 30
-  upgradeName: MAX HP
-  icon: {fileID: -1148780759594644325, guid: 025195d21107efa43b8505b2caea172a, type: 3}
-  description: MAX HP +30
+  type: 9
+  value: 1
+  upgradeName: Armor
+  icon: {fileID: 7116004456955076645, guid: 41b5060febc162545a6151b7a9a897b9, type: 3}
+  description: Reduces incoming damage by 1.

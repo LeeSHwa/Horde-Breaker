@@ -7,7 +7,6 @@ public class Bullet : MonoBehaviour
     private float knockback;
     private bool penetration; // Does this bullet penetrate?
 
-    // [NEW] Is this a critical hit?
     private bool isCritical;
 
     // [New] Variable to store the attack's source (the player)
@@ -21,17 +20,20 @@ public class Bullet : MonoBehaviour
     public float lifetime = 2f; // Auto-deactivates after 2 seconds
     private float lifetimeTimer;
 
-    // [Modified] Added 'Transform source' parameter to Initialize method
-    // [MODIFIED] Added 'AudioClip sound' & 'bool isCrit' parameter
-    public void Initialize(float dmg, float kb, bool pen, Transform source, AudioClip sound = null, bool isCrit = false)
+    public void Initialize(float dmg, float kb, bool pen, Transform source, Vector3 scale, float newLifetime, AudioClip sound = null, bool isCrit = false)
     {
         this.damage = dmg;
         this.knockback = kb;
         this.penetration = pen;
-        this.attackSource = source; // Store the attacker's info
-        this.lifetimeTimer = lifetime; // Reset lifetime
-        this.hitSound = sound; // [NEW] Store the hit sound
-        this.isCritical = isCrit; // [NEW] Store crit status
+        this.attackSource = source;
+
+        transform.localScale = scale;
+
+        this.lifetime = newLifetime;
+        this.lifetimeTimer = this.lifetime;
+
+        this.hitSound = sound;
+        this.isCritical = isCrit;
     }
 
     void Update()
