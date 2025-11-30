@@ -22,6 +22,8 @@ public class Sword : Weapon
     private SwordDataSO swordData;
     private enum State { Idle, Swinging }
     private State currentState = State.Idle;
+
+    // Runtime State
     private Vector2 currentAimDirection;
     private float currentSwingDuration;
     private float currentAngle;
@@ -34,24 +36,29 @@ public class Sword : Weapon
     private int attacksPerProjectile;
     private Transform trailAnchor;
 
+    // Initialize Override
     public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
     {
         base.Initialize(aimObj, owner, animator);
 
+        // 1. Data Casting
         if (weaponData is SwordDataSO) { swordData = (SwordDataSO)weaponData; }
-        else { Debug.LogError(gameObject.name + " has wrong SO!"); return; }
+        else { Debug.LogError("Sword: Wrong DataSO!"); return; }
 
+        // 2. Stats Init
         currentAreaRadius = swordData.baseAreaRadius;
-        UpdateVisualScale();
-
         currentSwingDuration = swordData.baseSwingDuration;
         currentAngle = swordData.baseAngle;
         currentKnockback = swordData.knockback;
 
+        // 3. Projectile Init
         isProjectileUnlocked = false;
         attacksPerProjectile = swordData.baseAttacksPerProjectile;
 
         enemiesHitThisSwing = new List<Collider2D>();
+
+        // 4. Component Setup
+        UpdateVisualScale();
 
         if (swordTrail != null)
         {
@@ -94,8 +101,9 @@ public class Sword : Weapon
         }
     }
 
-    void Update()
+    private void Update()
     {
+        // Guideline Logic (Only when Idle)
         if (guidelineContainer == null || guidelineImage == null) return;
         if (currentState == State.Idle)
         {
@@ -126,7 +134,10 @@ public class Sword : Weapon
     {
         currentState = State.Swinging;
         enemiesHitThisSwing.Clear();
-        playerAnimator.LockFacing(fixedDirection);
+
+        // Lock facing to aim direction
+        if (playerAnimator != null) playerAnimator.LockFacing(fixedDirection);
+
         hitboxCollider.enabled = true;
         if (guidelineContainer != null) guidelineContainer.SetActive(false);
         attackCount++;
@@ -169,7 +180,9 @@ public class Sword : Weapon
         pivot.position = aim.position;
         pivot.rotation = Quaternion.Euler(0, 0, endAngle);
         hitboxCollider.enabled = false;
-        playerAnimator.UnlockFacing();
+
+        if (playerAnimator != null) playerAnimator.UnlockFacing();
+
         currentState = State.Idle;
 
         if (swordTrail != null)
@@ -179,6 +192,7 @@ public class Sword : Weapon
 
         CheckProjectile(fixedDirection);
     }
+
     public void HandleHit(Collider2D enemyCollider)
     {
         if (enemiesHitThisSwing.Contains(enemyCollider)) { return; }
@@ -191,6 +205,35 @@ public class Sword : Weapon
         }
     }
 
+    // Core Attack Logic : Multi-Hit Implementation
+    private void _Attack(StatsController enemyStats, Collider2D enemyCollider, float damage, float knockback)
+    {
+        // 1. Get total hit count from Projectile Count stats
+        int hitCount = GetFinalProjectileCount();
+
+        // 2. Multi-Hit Loop
+        for (int i = 0; i < hitCount; i++)
+        {
+            float finalDamage = GetFinalDamage(out bool isCrit);
+            enemyStats.TakeDamage(finalDamage, isCrit);
+        }
+
+        // 3. Apply Knockback (Once)
+        EnemyMovement enemyMove = enemyCollider.GetComponent<EnemyMovement>();
+        if (enemyMove != null)
+        {
+            Vector2 knockbackDirection = (enemyCollider.transform.position - ownerStats.transform.position).normalized;
+            if (knockbackDirection == Vector2.zero) { knockbackDirection = pivot.right; }
+            enemyMove.ApplyKnockback(knockbackDirection, knockback, 0.1f);
+        }
+
+        // 4. Play Sound (Once)
+        if (weaponData.hitSound != null)
+        {
+            SoundManager.Instance.PlaySFX(weaponData.hitSound, 0.1f);
+        }
+    }
+
     private void CheckProjectile(Vector2 direction)
     {
         if (currentLevel < 9) return;
@@ -200,62 +243,55 @@ public class Sword : Weapon
         if (attackCount >= attacksPerProjectile)
         {
             attackCount = 0;
-            GameObject projectileObj = PoolManager.Instance.GetFromPool(swordData.projectilePrefab.name);
-            if (projectileObj == null) return;
 
-            projectileObj.transform.position = aim.position;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            projectileObj.transform.rotation = Quaternion.Euler(0, 0, angle);
+            // Spawn multiple projectiles based on stats
+            int count = GetFinalProjectileCount();
 
-            float arcLength = currentAreaRadius * (currentAngle * Mathf.Deg2Rad);
-            float projectileScaleY = arcLength * swordData.projectileArcScaleMultiplier;
+            float baseAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            float startAngle = baseAngle;
+            float spreadAngle = 15f;
 
-            Vector3 finalScale = new Vector3(pivot.localScale.x, projectileScaleY, 1f);
-
-
-            Bullet projectileScript = projectileObj.GetComponent<Bullet>();
-            if (projectileScript != null)
+            if (count > 1)
             {
-                float baseDamage = GetFinalDamage(out bool isCrit);
-                float projDmg = baseDamage * swordData.projectileDamagePercent;
-                float projKb = currentKnockback * swordData.projectileKnockbackPercent;
-
-                float baseLifetime = 3.0f;
-                float finalLifetime = GetFinalDuration(baseLifetime);
-
-                projectileScript.Initialize(
-                    projDmg,
-                    projKb,
-                    true,
-                    ownerStats.transform,
-                    finalScale,
-                    finalLifetime,
-                    weaponData.hitSound,
-                    isCrit
-                );
+                float totalSpread = (count - 1) * spreadAngle;
+                startAngle = baseAngle - (totalSpread / 2f);
             }
-        }
-    }
 
-    private void _Attack(StatsController enemyStats, Collider2D enemyCollider, float damage, float knockback)
-    {
-        // [MODIFIED] Use GetFinalDamage() directly (ignores passed 'damage' arg which is base)
-        float finalDamage = GetFinalDamage(out bool isCrit);
+            for (int i = 0; i < count; i++)
+            {
+                GameObject projectileObj = PoolManager.Instance.GetFromPool(swordData.projectilePrefab.name);
+                if (projectileObj == null) continue;
 
-        // [MODIFIED] Pass isCrit
-        enemyStats.TakeDamage(finalDamage, isCrit);
+                projectileObj.transform.position = aim.position;
 
-        EnemyMovement enemyMove = enemyCollider.GetComponent<EnemyMovement>();
-        if (enemyMove != null)
-        {
-            Vector2 knockbackDirection = (enemyCollider.transform.position - ownerStats.transform.position).normalized;
-            if (knockbackDirection == Vector2.zero) { knockbackDirection = pivot.right; }
-            enemyMove.ApplyKnockback(knockbackDirection, knockback, 0.1f);
-        }
+                float currentAngle = startAngle + (i * spreadAngle);
+                projectileObj.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
-        if (weaponData.hitSound != null)
-        {
-            SoundManager.Instance.PlaySFX(weaponData.hitSound, 0.1f);
+                float arcLength = currentAreaRadius * (this.currentAngle * Mathf.Deg2Rad);
+                float projectileScaleY = arcLength * swordData.projectileArcScaleMultiplier;
+                Vector3 finalScale = new Vector3(pivot.localScale.x, projectileScaleY, 1f);
+
+                Bullet projectileScript = projectileObj.GetComponent<Bullet>();
+                if (projectileScript != null)
+                {
+                    float baseDamage = GetFinalDamage(out bool isCrit);
+                    float projDmg = baseDamage * swordData.projectileDamagePercent;
+                    float projKb = currentKnockback * swordData.projectileKnockbackPercent;
+                    float baseLifetime = 3.0f;
+                    float finalLifetime = GetFinalDuration(baseLifetime);
+
+                    projectileScript.Initialize(
+                        projDmg,
+                        projKb,
+                        true,
+                        ownerStats.transform,
+                        finalScale,
+                        finalLifetime,
+                        weaponData.hitSound,
+                        isCrit
+                    );
+                }
+            }
         }
     }
 
@@ -294,7 +330,7 @@ public class Sword : Weapon
                 ApplyStats(swordData.level8_DamageBonus, swordData.level8_AreaIncrease,
                            swordData.level8_AngleIncrease, swordData.level8_CooldownReduction);
                 break;
-            case 9: // Level 9 (Max)
+            case 9:
                 ApplyStats(swordData.level9_DamageBonus, swordData.level9_AreaIncrease,
                            swordData.level9_AngleIncrease, swordData.level9_CooldownReduction);
 

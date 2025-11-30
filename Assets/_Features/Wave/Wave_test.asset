@@ -16,7 +16,7 @@ MonoBehaviour:
   startTime: 0
   spawnRules:
   - note: 
-    prefab: {fileID: 8068589428734277748, guid: a1d6c7cdf2f0d18449cb96b0175be3d6, type: 3}
-    interval: 0
-    chance: 0
-  isBossWave: 1
+    prefab: {fileID: 8068589428734277748, guid: dd3df5769be3ef5419754df006966971, type: 3}
+    interval: 0.5
+    chance: 1
+  isBossWave: 0

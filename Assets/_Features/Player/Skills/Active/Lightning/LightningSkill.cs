@@ -19,9 +19,9 @@ public class LightningSkill : Skills
     // Tracks how many branches each source has emitted (Source -> Count)
     private Dictionary<Transform, int> branchCounts = new Dictionary<Transform, int>();
 
-    protected override void Awake()
+    public override void Initialize(StatsController owner)
     {
-        base.Awake();
+        base.Initialize(owner);
 
         if (skillData is LightningDataSO)
         {
@@ -30,14 +30,8 @@ public class LightningSkill : Skills
         else
         {
             Debug.LogError("LightningSkill: Wrong DataSO assigned!");
+            return;
         }
-
-        InitializeStats();
-    }
-
-    protected override void InitializeStats()
-    {
-        base.InitializeStats(); // Init base damage, cooldown
 
         // Reset Tiers based on Level 1 state
         isTier2Unlocked = false;
@@ -47,6 +41,18 @@ public class LightningSkill : Skills
 
     protected override void PerformAttack()
     {
+        // Calculate total strikes based on passive stats
+        int totalStrikes = currentProjectileCount + ownerStats.bonusProjectileCount;
+
+        // Repeat the lightning strike logic for each count
+        for (int i = 0; i < totalStrikes; i++)
+        {
+            PerformSingleStrike();
+        }
+    }
+
+    private void PerformSingleStrike()
+    {
         // 1. Find a random Pivot (Lightning Rod) inside the screen bounds
         Transform pivot = GetRandomEnemyOnScreen();
         if (pivot == null) return; // No enemies on screen
@@ -55,17 +61,17 @@ public class LightningSkill : Skills
         float baseDmg = currentDamage * ownerStats.currentDamageMultiplier;
         ApplyDamage(pivot, baseDmg);
 
-        // [NEW] Play Thunder Strike Sound (��!)
+        // Play Thunder Strike Sound
         if (lightningData.thunderStrikeSound != null)
         {
             SoundManager.Instance.PlaySFX(lightningData.thunderStrikeSound, 0.2f);
         }
 
-        // [MODIFIED] Spawn Sky->Pivot Thunder Strike Visual
+        // Spawn Sky->Pivot Thunder Strike Visual
         Vector2 skyPos = (Vector2)pivot.position + new Vector2(0, 10f); // 10 units above enemy
         SpawnStrikeVisual(skyPos, pivot.position);
 
-        // 3. Find all potential targets in Max Range (Optimization: OverlapCircle once)
+        // 3. Find all potential targets in Max Range
         float maxScanRange = isTier3Unlocked ? lightningData.radius_R3 :
                              (isTier2Unlocked ? lightningData.radius_R2 : lightningData.radius_R1);
 
@@ -98,7 +104,6 @@ public class LightningSkill : Skills
         }
 
         // --- Step 1: Pivot -> Group A ---
-        // [Logic] If Group A is empty, the chain breaks here (Option 1).
         if (groupA.Count == 0) return;
 
         float dmgA = baseDmg * lightningData.ratio_A;
@@ -114,41 +119,33 @@ public class LightningSkill : Skills
         // --- Step 2: Group A -> Group B ---
         if (isTier2Unlocked && groupB.Count > 0)
         {
-            // Connect using Greedy Algorithm (B chooses closest A)
-            // Returns list of B's that were successfully hit (to become sources for C)
             List<Transform> hitTargetsB = ConnectTiers(groupA, groupB, baseDmg * lightningData.ratio_B);
 
             // --- Step 3: Group B -> Group C ---
             if (isTier3Unlocked && groupC.Count > 0 && hitTargetsB.Count > 0)
             {
-                // Reset branch counts for the new sources (B's)
                 foreach (var sourceB in hitTargetsB) branchCounts[sourceB] = 0;
-
                 ConnectTiers(hitTargetsB, groupC, baseDmg * lightningData.ratio_C);
             }
         }
     }
 
-    // Helper: Connects a list of Potential Sources to Targets using Greedy Logic
     private List<Transform> ConnectTiers(List<Transform> sources, List<Transform> targets, float damage)
     {
         List<Transform> successfulHits = new List<Transform>();
 
         if (lightningData.chainSound != null)
         {
-            // Small pitch variation for electric buzz
             SoundManager.Instance.PlaySFX(lightningData.chainSound, 0.1f);
         }
 
         foreach (Transform target in targets)
         {
-            // Find the best source: Closest one that hasn't reached max branches
             Transform bestSource = null;
             float closestDist = Mathf.Infinity;
 
             foreach (Transform source in sources)
             {
-                // Skip if source is full
                 if (branchCounts.ContainsKey(source) && branchCounts[source] >= currentMaxBranches)
                     continue;
 
@@ -160,15 +157,11 @@ public class LightningSkill : Skills
                 }
             }
 
-            // If we found a valid source, connect them
             if (bestSource != null)
             {
-                // Apply Logic
                 ApplyDamage(target, damage);
                 SpawnChainVisual(bestSource.position, target.position);
-                branchCounts[bestSource]++; // Increment branch count
-
-                // Add to list for next tier
+                branchCounts[bestSource]++;
                 successfulHits.Add(target);
             }
         }
@@ -201,7 +194,6 @@ public class LightningSkill : Skills
 
     private void SpawnStrikeVisual(Vector2 start, Vector2 end)
     {
-        // If specific strike prefab is missing, fallback to chain prefab
         GameObject prefabToUse = lightningData.thunderStrikePrefab != null ?
                                  lightningData.thunderStrikePrefab : lightningData.chainVisualPrefab;
 
@@ -217,11 +209,9 @@ public class LightningSkill : Skills
 
     private Transform GetRandomEnemyOnScreen()
     {
-        // Use CameraBoundsController bounds
         Vector2 min = CameraBoundsController.MinBounds;
         Vector2 max = CameraBoundsController.MaxBounds;
 
-        // Find all colliders in screen area
         Collider2D[] cols = Physics2D.OverlapAreaAll(min, max);
 
         List<Transform> enemies = new List<Transform>();
@@ -244,17 +234,17 @@ public class LightningSkill : Skills
     {
         switch (currentLevel)
         {
-            case 2: // Damage Increase
+            case 2:
                 currentDamage += lightningData.level2_DamageIncrease;
                 break;
-            case 3: // Unlock Tier 2 (R2)
+            case 3:
                 isTier2Unlocked = lightningData.level3_UnlockTier2;
                 break;
-            case 4: // Cooldown Reduction
+            case 4:
                 currentAttackCooldown -= lightningData.level4_CooldownReduction;
                 if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
                 break;
-            case 5: // Unlock Tier 3 (R3) + Bonus Damage
+            case 5:
                 isTier3Unlocked = lightningData.level5_UnlockTier3;
                 currentDamage += lightningData.level5_BonusDamage;
                 break;

@@ -1,4 +1,3 @@
-// RicochetWeapon.cs
 using UnityEngine;
 
 // This script manages the weapon itself.
@@ -10,69 +9,127 @@ public class RicochetWeapon : Weapon
 
     // The *current* number of [Enemy] bounces, which can be modified by level-ups.
     private int currentMaxBounces;
-    // (Wall bounce logic is no longer managed by the weapon)
 
-    // Called when the weapon is first created or equipped.
+    // Initialize override to setup specific data
     public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
     {
-        // Call base.Initialize() to set up common properties
-        // like the owner, damage, cooldown, etc.
         base.Initialize(aimObj, owner, animator);
 
-        // Cast the parent class's 'weaponData' to the specific
-        // 'RicochetDataSO' type to access its unique stats.
-        ricochetData = (RicochetDataSO)weaponData;
+        if (weaponData is RicochetDataSO)
+        {
+            ricochetData = (RicochetDataSO)weaponData;
+        }
+        else
+        {
+            Debug.LogError("[RicochetWeapon] Wrong DataSO assigned!");
+            return;
+        }
 
-        // Set the weapon's starting bounce count
-        // based on the data from the ScriptableObject.
-        this.currentMaxBounces = ricochetData.maxBounces;
+        // Initialize Ricochet specific stats
+        this.currentMaxBounces = ricochetData.baseBounces;
+
+        // Ensure projectile count starts at 1 (or value from SO if added)
+        this.currentProjectileCount = 1;
     }
 
     // This function is called by the parent 'Weapon' class when the attack timer is ready.
     protected override void PerformAttack(Vector2 aimDirection)
     {
-        // Get a recycled projectile from the object pool instead of creating a new one.
-        GameObject projectileObj = PoolManager.Instance.GetFromPool(ricochetData.projectilePrefab.name);
+        if (ricochetData.projectilePrefab == null) return;
 
-        // Set the projectile's position to the 'aim' transform (e.g., player's hand or gun muzzle).
-        projectileObj.transform.position = aim.position;
-        // Rotate the projectile to face the direction the player is aiming.
-        projectileObj.transform.rotation = aim.rotation;
+        // Get total projectile count (Base + Passive + Level Up)
+        int count = GetFinalProjectileCount();
 
-        // Get the script component from the projectile object we just spawned.
-        RicochetProjectile projectile = projectileObj.GetComponent<RicochetProjectile>();
+        // Calculate spread logic for multi-shot (Fan shape)
+        float baseAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+        float startAngle = baseAngle;
+        float spreadAngle = 15f; // Angle between projectiles
 
-        // If the script was found successfully, pass all necessary stats to it.
-        if (projectile != null)
+        if (count > 1)
         {
-            // Call the projectile's Initialize method to set it up.
-            // Only stats related to enemy bounces are needed now, not wall bounces.
-            projectile.Initialize(
-                currentDamage,          // The final calculated damage (from the base Weapon class)
-                ricochetData.projectileSpeed,
-                currentMaxBounces,      // The current (potentially leveled-up) enemy bounce count
-                ricochetData.bounceRange,
-                ricochetData.lifetime,
-                ownerStats.transform,    // Pass the player (owner) as the attack source
-                weaponData.hitSound // [NEW] Pass hit sound
-            );
+            float totalSpread = (count - 1) * spreadAngle;
+            startAngle = baseAngle - (totalSpread / 2f);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            // Get a recycled projectile from the object pool instead of creating a new one.
+            GameObject projectileObj = PoolManager.Instance.GetFromPool(ricochetData.projectilePrefab.name);
+            if (projectileObj == null) continue;
+
+            // Set the projectile's position to the 'aim' transform (e.g., player's hand or gun muzzle).
+            projectileObj.transform.position = aim.position;
+
+            // Set rotation based on spread
+            float currentAngle = startAngle + (i * spreadAngle);
+            projectileObj.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+
+            // Get the script component from the projectile object we just spawned.
+            RicochetProjectile projectile = projectileObj.GetComponent<RicochetProjectile>();
+
+            // If the script was found successfully, pass all necessary stats to it.
+            if (projectile != null)
+            {
+                // Calculate final stats with passives
+                float finalDamage = GetFinalDamage(out bool isCrit);
+                float finalLifetime = GetFinalDuration(ricochetData.lifetime);
+
+                // Call the projectile's Initialize method to set it up.
+                projectile.Initialize(
+                    finalDamage,
+                    ricochetData.projectileSpeed,
+                    currentMaxBounces,
+                    ricochetData.bounceRange,
+                    finalLifetime,
+                    ownerStats.transform,    // Pass the player (owner) as the attack source
+                    weaponData.hitSound,     // Pass hit sound
+                    isCrit                   // Pass crit status
+                );
+            }
         }
     }
 
     // Called by the parent 'Weapon' class when the weapon levels up.
     protected override void ApplyLevelUpStats()
     {
-        // In this game's logic, "bounce count" now only refers to "enemy" bounce count.
         switch (currentLevel)
         {
-            case 2:
-                // As a level 2 bonus, increase the number of times it can bounce between enemies.
-                currentMaxBounces += 1;
+            case 2: // Damage +2
+                currentDamage += ricochetData.level2_DamageBonus;
                 break;
-            case 4:
-                // As a level 4 bonus, increase the weapon's damage.
-                currentDamage *= 1.1f; // Example: 10% damage increase
+            case 3: // Cooldown -10%, Bounce +1
+                ApplyCooldownReduction(ricochetData.level3_CooldownReduction);
+                currentMaxBounces += ricochetData.level3_BounceIncrease;
+                break;
+            case 4: // Damage +4
+                currentDamage += ricochetData.level4_DamageBonus;
+                break;
+            case 5: // Projectile +1
+                currentProjectileCount += ricochetData.level5_ProjectileCountIncrease;
+                break;
+            case 6: // Cooldown -10%, Bounce +1
+                ApplyCooldownReduction(ricochetData.level6_CooldownReduction);
+                currentMaxBounces += ricochetData.level6_BounceIncrease;
+                break;
+            case 7: // Damage +10
+                currentDamage += ricochetData.level7_DamageBonus;
+                break;
+            case 8: // Projectile +1
+                currentProjectileCount += ricochetData.level8_ProjectileCountIncrease;
+                break;
+            case 9: // Projectile +1
+                currentProjectileCount += ricochetData.level9_ProjectileCountIncrease;
                 break;
         }
+
+        // Safety cap for cooldown
+        if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
+    }
+
+    // Helper for percentage cooldown reduction
+    private void ApplyCooldownReduction(float percent)
+    {
+        float reduction = currentAttackCooldown * (percent / 100f);
+        currentAttackCooldown -= reduction;
     }
 }

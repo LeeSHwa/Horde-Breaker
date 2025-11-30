@@ -3,7 +3,6 @@ using UnityEngine;
 public abstract class Skills : MonoBehaviour, AttackInterface
 {
     [Header("Data Source")]
-
     public SkillDataSO skillData;
 
     [Header("Runtime Stats")]
@@ -13,6 +12,7 @@ public abstract class Skills : MonoBehaviour, AttackInterface
     protected int currentProjectileCount = 1;
     protected float lastAttackTime;
 
+    // Reference injected via Initialize()
     protected StatsController ownerStats;
 
     public int CurrentLevel { get { return currentLevel; } }
@@ -41,28 +41,27 @@ public abstract class Skills : MonoBehaviour, AttackInterface
         return skillData.icon;
     }
 
+    // Removed Awake logic to prevent dependency issues.
+    // protected virtual void Awake() { ... }
 
-    protected virtual void Awake()
+    // Initialize method to inject dependencies (StatsController)
+    public virtual void Initialize(StatsController owner)
     {
-        ownerStats = GetComponentInParent<StatsController>();
-        if (ownerStats == null)
-        {
-            Debug.LogError("Skill cannot find StatsController in parent!");
-        }
-
-        // [MODIFIED] Do NOT call InitializeStats() here.
-        // The child script must call it after setting up its specific data.
-        // InitializeStats(); // [REMOVED]
+        this.ownerStats = owner;
+        InitializeStats();
     }
 
     public virtual void TryAttack()
     {
+        // Safety check
+        if (ownerStats == null) return;
+
         if (Time.time >= lastAttackTime + currentAttackCooldown)
         {
             PerformAttack();
             lastAttackTime = Time.time;
 
-            // [NEW] Cast Sound Logic
+            // Cast Sound Logic
             if (skillData.castSound != null)
             {
                 SoundManager.Instance.PlaySFX(skillData.castSound, 0.1f);
@@ -88,6 +87,6 @@ public abstract class Skills : MonoBehaviour, AttackInterface
         currentDamage = skillData.baseDamage;
         currentAttackCooldown = skillData.baseAttackCooldown;
         currentProjectileCount = 1;
-        lastAttackTime = 0;
+        lastAttackTime = -999f; // Set to allow immediate attack
     }
 }

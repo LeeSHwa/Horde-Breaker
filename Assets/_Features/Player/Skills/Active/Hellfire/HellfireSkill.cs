@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-// Class name changed from MissileSkill to HellfireSkill
 public class HellfireSkill : Skills
 {
     private HellfireDataSO hellfireData;
@@ -10,11 +9,10 @@ public class HellfireSkill : Skills
     private float currentSearchRadius;
     private float currentSpeed;
 
-    protected override void Awake()
+    public override void Initialize(StatsController owner)
     {
-        base.Awake();
+        base.Initialize(owner);
 
-        // Cast to HellfireDataSO
         if (skillData is HellfireDataSO)
         {
             hellfireData = (HellfireDataSO)skillData;
@@ -22,14 +20,9 @@ public class HellfireSkill : Skills
         else
         {
             Debug.LogError("HellfireSkill has wrong DataSO! Expected HellfireDataSO.");
+            return;
         }
 
-        InitializeStats();
-    }
-
-    protected override void InitializeStats()
-    {
-        base.InitializeStats();
         currentSearchRadius = hellfireData.searchRadius;
         currentSpeed = hellfireData.missileSpeed;
     }
@@ -41,7 +34,10 @@ public class HellfireSkill : Skills
 
     private IEnumerator FireRoutine()
     {
-        for (int i = 0; i < currentProjectileCount; i++)
+        // Calculate total count including passives
+        int totalCount = currentProjectileCount + ownerStats.bonusProjectileCount;
+
+        for (int i = 0; i < totalCount; i++)
         {
             SpawnProjectile();
             yield return new WaitForSeconds(0.1f);
@@ -50,14 +46,12 @@ public class HellfireSkill : Skills
 
     private void SpawnProjectile()
     {
-        // Make sure the prefab name in PoolManager matches
         GameObject obj = PoolManager.Instance.GetFromPool(hellfireData.missilePrefab.name);
         if (obj == null) return;
 
         obj.transform.position = transform.position;
         obj.transform.rotation = Quaternion.identity;
 
-        // Get HellfireLogic component
         HellfireLogic logic = obj.GetComponent<HellfireLogic>();
         if (logic != null)
         {

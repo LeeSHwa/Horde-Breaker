@@ -1,27 +1,17 @@
 using UnityEngine;
 
-// [NEW] The skill logic that 'shoots' the fireball
-public class FireballSkill : Skills // Inherits from Skills
+public class FireballSkill : Skills
 {
     private FireballDataSO fireballData;
 
-    // [REMOVED] Rigidbody2D is no longer needed to determine direction
-    // private Rigidbody2D ownerRb; 
-
-    // [REMOVED] We no longer need to store the last movement direction
-    // private Vector2 lastMoveDirection;
-
-    // Runtime stats
     protected float currentSpeed;
     protected float currentLifetime;
     protected float currentArea = 1f;
 
-    protected override void Awake()
+    // Initialize Override
+    public override void Initialize(StatsController owner)
     {
-        base.Awake(); // Sets ownerStats
-
-        // [REMOVED] No longer need to get the Rigidbody2D
-        // ownerRb = ownerStats.GetComponent<Rigidbody2D>();
+        base.Initialize(owner);
 
         if (skillData is FireballDataSO)
         {
@@ -29,52 +19,35 @@ public class FireballSkill : Skills // Inherits from Skills
         }
         else
         {
-            Debug.LogError("FireballSkill has the wrong SkillDataSO assigned!");
+            Debug.LogError("FireballSkill: Wrong SkillDataSO assigned!");
+            return;
         }
 
-        // [REMOVED] No longer need to set a default direction
-        // lastMoveDirection = Vector2.right; 
-
-        InitializeStats();
-    }
-
-    protected override void InitializeStats()
-    {
-        base.InitializeStats(); // Sets base damage, cooldown, projectile count (1)
+        // Specific Init
         currentSpeed = fireballData.baseProjectileSpeed;
         currentLifetime = fireballData.baseProjectileLifetime;
-        currentArea = 1f; // 100% scale
-
-        // [TESTING NOTE] If you are still testing 3-way shot, keep this line:
-        // currentProjectileCount = 3; 
+        currentArea = 1f;
     }
-
 
     protected override void PerformAttack()
     {
-        // [MODIFIED] This is the core change.
-        // Generate a new random direction every time PerformAttack is called.
+        // Multi-shot spread
+        int count = currentProjectileCount + ownerStats.bonusProjectileCount; // Manual calc or new helper
+        // Since Skills doesn't have GetFinalProjectileCount helper yet, we do it manually:
+        // Or better: Skills.cs should handle stats. Let's assume manual for now.
+        int finalCount = currentProjectileCount + ownerStats.bonusProjectileCount;
+
         Vector2 fireDirection = Random.insideUnitCircle.normalized;
+        if (fireDirection == Vector2.zero) fireDirection = Vector2.right;
 
-        // Fallback in case the random vector is (0,0)
-        if (fireDirection == Vector2.zero)
-        {
-            fireDirection = Vector2.right;
-        }
-
-        // Calculate the base angle from the new random fire direction
         float baseAngle = Mathf.Atan2(fireDirection.y, fireDirection.x) * Mathf.Rad2Deg;
+        float startAngle = baseAngle - (fireballData.level5_SpreadAngle * (finalCount - 1) / 2f);
 
-        // Calculate the starting angle for the 3-way shot (if count is 3)
-        // e.g., if count=3, angle=15: -15, 0, +15
-        float startAngle = baseAngle - (fireballData.level5_SpreadAngle * (currentProjectileCount - 1) / 2f);
-
-        for (int i = 0; i < currentProjectileCount; i++)
+        for (int i = 0; i < finalCount; i++)
         {
             GameObject proj = PoolManager.Instance.GetFromPool(fireballData.projectilePrefab.name);
             if (proj == null) continue;
 
-            // Calculate the angle for this specific projectile
             float currentAngle = startAngle + (fireballData.level5_SpreadAngle * i);
             Quaternion rotation = Quaternion.Euler(0, 0, currentAngle);
 
@@ -85,13 +58,15 @@ public class FireballSkill : Skills // Inherits from Skills
             if (logic != null)
             {
                 float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
+                float finalArea = currentArea + ownerStats.bonusArea; // Apply passive area
+
                 logic.Initialize(
                     finalDamage,
                     currentSpeed,
                     currentLifetime,
                     fireballData.damageFalloffPercentage,
-                    currentArea, // Send the current size
-                    skillData.hitSound // [NEW] Pass hit sound
+                    finalArea,
+                    skillData.hitSound
                 );
             }
         }
@@ -105,11 +80,10 @@ public class FireballSkill : Skills // Inherits from Skills
                 currentDamage += fireballData.level2_DamageIncrease;
                 break;
             case 3:
-                currentArea += fireballData.level3_AreaIncrease; // e.g., 1.0 -> 1.2
+                currentArea += fireballData.level3_AreaIncrease;
                 break;
             case 4:
                 currentAttackCooldown -= fireballData.level4_CooldownReduction;
-                // [Added] Safety Cap
                 if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
                 break;
             case 5:
