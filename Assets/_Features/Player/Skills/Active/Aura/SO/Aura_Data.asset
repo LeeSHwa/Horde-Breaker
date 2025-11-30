@@ -33,7 +33,7 @@ MonoBehaviour:
   zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
   baseDuration: 1
   baseArea: 4
-  baseSpeedDebuffPercentage: 70
+  baseSpeedDebuffPercentage: 100
   slowHitSound: {fileID: 0}
   level2_DamageBonus: 1
   level2_AreaBonus: 0
@@ -50,7 +50,7 @@ MonoBehaviour:
   level5_DamageBonus: 0
   level5_AreaBonus: 0
   level5_DurationBonus: 0
-  level5_DebuffBonus: 20
+  level5_DebuffBonus: -20
   level6_DamageBonus: 0
   level6_AreaBonus: 1
   level6_DurationBonus: 0
@@ -66,4 +66,4 @@ MonoBehaviour:
   level9_DamageBonus: 5
   level9_AreaBonus: 0
   level9_DurationBonus: 0
-  level9_DebuffBonus: 40
+  level9_DebuffBonus: -40
