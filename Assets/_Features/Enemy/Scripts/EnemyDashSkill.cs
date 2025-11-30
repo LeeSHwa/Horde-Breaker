@@ -15,16 +15,17 @@ public class EnemyDashSkill : MonoBehaviour
 
     [Header("Visual Settings")]
     [Tooltip("If true, the sprite turns color during charge. Disable if using animations.")]
-    public bool useColorChange = true; // [NEW] 색상 변경 사용 여부 토글
+    public bool useColorChange = true;
     public Color chargeColor = Color.red;
 
     [Header("Animation Settings")]
     public string animChargeTrigger = "doCharge";
-    public string animDashTrigger = "doDash";
+
+    public string animDashBool = "isDashing";
+
     public string animIdleTrigger = "doIdle";
     public string animMoveBool = "isMoving";
 
-    // Components
     private EnemyMovement movementScript;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
@@ -42,7 +43,6 @@ public class EnemyDashSkill : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        // 색상 변경을 쓸 때만 원래 색상을 저장
         if (sr != null) originalColor = sr.color;
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -69,33 +69,27 @@ public class EnemyDashSkill : MonoBehaviour
         isDashing = true;
         isSkillAvailable = false;
 
-        // 1. [제어권 가져오기]
         if (movementScript != null) movementScript.enabled = false;
         rb.linearVelocity = Vector2.zero;
 
-        // 2. [차징]
         if (anim != null)
         {
             anim.SetBool(animMoveBool, false);
             anim.SetTrigger(animChargeTrigger);
         }
 
-        // [MODIFIED] 토글이 켜져 있을 때만 색상 변경
-        if (useColorChange && sr != null)
-        {
-            sr.color = chargeColor;
-        }
+        if (useColorChange && sr != null) sr.color = chargeColor;
 
         yield return new WaitForSeconds(chargeTime);
 
-        // 3. [돌진]
+        if (anim != null) anim.SetBool(animDashBool, true);
+
         Vector2 direction;
         if (playerTarget != null)
             direction = (playerTarget.position - transform.position).normalized;
         else
             direction = transform.right;
 
-        if (anim != null) anim.SetTrigger(animDashTrigger);
 
         float timer = 0f;
         while (timer < dashDuration)
@@ -105,24 +99,19 @@ public class EnemyDashSkill : MonoBehaviour
             yield return null;
         }
 
-        // 4. [휴식]
+        if (anim != null) anim.SetBool(animDashBool, false);
+
         rb.linearVelocity = Vector2.zero;
 
-        // [MODIFIED] 토글이 켜져 있을 때만 색상 복구
-        if (useColorChange && sr != null)
-        {
-            sr.color = originalColor;
-        }
+        if (useColorChange && sr != null) sr.color = originalColor;
 
         if (anim != null) anim.SetTrigger(animIdleTrigger);
 
         yield return new WaitForSeconds(restTime);
 
-        // 5. [복귀]
         if (movementScript != null) movementScript.enabled = true;
         isDashing = false;
 
-        // 6. [쿨타임]
         yield return new WaitForSeconds(skillCooldown);
         isSkillAvailable = true;
     }

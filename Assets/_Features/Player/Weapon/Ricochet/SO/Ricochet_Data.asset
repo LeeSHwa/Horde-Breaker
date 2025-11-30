@@ -17,17 +17,17 @@ MonoBehaviour:
   knockback: 5
   weaponName: EnergyBall
   icon: {fileID: -7585660988095454295, guid: 121067652fb50a44ab7005770846bc7a, type: 3}
-  maxLevel: 5
+  maxLevel: 9
   weaponDescription: LV.0 EnergyBall
   levelDescriptions:
-  - LV.1 Damage+2
-  - LV.2 Cooldown-10%, Bounce+1
-  - LV.3 Damage+4
-  - LV.4 Shot+1
-  - LV.5 Cooldown-10%, Bounce+1
-  - LV.6 Damage+10
-  - LV.7 Shot+1
-  - LV.8 Shot+2
+  - Damage+2
+  - Cooldown-10%, Bounce+1
+  - Damage+4
+  - Shot+1
+  - Cooldown-10%, Bounce+1
+  - Damage+10
+  - Shot+1
+  - Shot+2
   attackSound: {fileID: 8300000, guid: 323e15cfe809e114ab92c9f4b25e8bc2, type: 3}
   hitSound: {fileID: 8300000, guid: 023ea3ddeaa8dd146b7633a0800e5a0e, type: 3}
   damageVariance: 0.1

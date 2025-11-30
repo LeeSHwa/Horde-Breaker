@@ -75,6 +75,7 @@ public class AuraSkill : Skills
 
     private void ApplyStats(float dmg, float area, float duration, float debuff)
     {
+        // All stats are applied as flat values
         currentDamage += dmg;
         currentArea += area;
         currentDuration += duration;

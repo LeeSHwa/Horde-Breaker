@@ -17,23 +17,53 @@ MonoBehaviour:
   knockback: 0
   skillName: Aura
   icon: {fileID: 4662751524554112198, guid: a6546bf69e9dcbc4c9804d1b6689a5fe, type: 3}
-  maxLevel: 5
+  maxLevel: 9
   skillDescription: Damages surrounding enemies
   levelDescriptions:
-  - LV.2 Damage up
-  - LV.3 Increased Area
-  - LV.4 Slowing effect on Aura
-  - 'LV.MAX Master of Aura: Upgrade All'
+  - Damage+1
+  - Area+0.5
+  - Damage+2
+  - Slow+20%
+  - Area+1
+  - Damage+3
+  - Area+1
+  - Damage+5, Slow+40%
   castSound: {fileID: 0}
   hitSound: {fileID: 0}
   zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
   baseDuration: 1
   baseArea: 4
-  speedDebuffPercentage: 100
-  level2_DamageIncrease: 3
-  level3_AreaIncrease: 1
-  level4_SlowValue: 60
-  level5_DamageIncrease: 3
-  level5_AreaIncrease: 2
-  level5_DebuffIncrease: -30
+  baseSpeedDebuffPercentage: 70
   slowHitSound: {fileID: 0}
+  level2_DamageBonus: 1
+  level2_AreaBonus: 0
+  level2_DurationBonus: 0
+  level2_DebuffBonus: 0
+  level3_DamageBonus: 0
+  level3_AreaBonus: 0.5
+  level3_DurationBonus: 0
+  level3_DebuffBonus: 0
+  level4_DamageBonus: 2
+  level4_AreaBonus: 0
+  level4_DurationBonus: 0
+  level4_DebuffBonus: 0
+  level5_DamageBonus: 0
+  level5_AreaBonus: 0
+  level5_DurationBonus: 0
+  level5_DebuffBonus: 20
+  level6_DamageBonus: 0
+  level6_AreaBonus: 1
+  level6_DurationBonus: 0
+  level6_DebuffBonus: 0
+  level7_DamageBonus: 3
+  level7_AreaBonus: 0
+  level7_DurationBonus: 0
+  level7_DebuffBonus: 0
+  level8_DamageBonus: 0
+  level8_AreaBonus: 1
+  level8_DurationBonus: 0
+  level8_DebuffBonus: 0
+  level9_DamageBonus: 5
+  level9_AreaBonus: 0
+  level9_DurationBonus: 0
+  level9_DebuffBonus: 40

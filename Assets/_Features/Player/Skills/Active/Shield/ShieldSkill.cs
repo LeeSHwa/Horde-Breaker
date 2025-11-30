@@ -202,6 +202,7 @@ public class ShieldSkill : Skills
 
     private void ApplyStats(float cooldown, float invuln, int stack, bool ghost, float speed)
     {
+        // All stats are applied as flat values
         currentAttackCooldown -= cooldown;
         currentInvulnTime += invuln;
         baseMaxStacks += stack;
