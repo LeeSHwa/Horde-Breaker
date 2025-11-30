@@ -16,7 +16,7 @@ public class LightningSkill : Skills
     private List<Transform> groupB = new List<Transform>();
     private List<Transform> groupC = new List<Transform>();
 
-    // Tracks how many branches each source has emitted (Source -> Count)
+    // Tracks how many branches each source has emitted
     private Dictionary<Transform, int> branchCounts = new Dictionary<Transform, int>();
 
     public override void Initialize(StatsController owner)
@@ -45,6 +45,7 @@ public class LightningSkill : Skills
         int totalStrikes = currentProjectileCount + ownerStats.bonusProjectileCount;
 
         // Repeat the lightning strike logic for each count
+        // Duplicate hits are allowed as per design choice
         for (int i = 0; i < totalStrikes; i++)
         {
             PerformSingleStrike();
@@ -55,7 +56,7 @@ public class LightningSkill : Skills
     {
         // 1. Find a random Pivot (Lightning Rod) inside the screen bounds
         Transform pivot = GetRandomEnemyOnScreen();
-        if (pivot == null) return; // No enemies on screen
+        if (pivot == null) return;
 
         // 2. Apply Damage to Pivot (100%)
         float baseDmg = currentDamage * ownerStats.currentDamageMultiplier;
@@ -68,10 +69,10 @@ public class LightningSkill : Skills
         }
 
         // Spawn Sky->Pivot Thunder Strike Visual
-        Vector2 skyPos = (Vector2)pivot.position + new Vector2(0, 10f); // 10 units above enemy
+        Vector2 skyPos = (Vector2)pivot.position + new Vector2(0, 10f);
         SpawnStrikeVisual(skyPos, pivot.position);
 
-        // 3. Find all potential targets in Max Range
+        // 3. Find all potential targets in Max Range (Optimization: OverlapCircle once)
         float maxScanRange = isTier3Unlocked ? lightningData.radius_R3 :
                              (isTier2Unlocked ? lightningData.radius_R2 : lightningData.radius_R1);
 
@@ -146,6 +147,7 @@ public class LightningSkill : Skills
 
             foreach (Transform source in sources)
             {
+                // Skip if source is full
                 if (branchCounts.ContainsKey(source) && branchCounts[source] >= currentMaxBranches)
                     continue;
 
@@ -234,20 +236,25 @@ public class LightningSkill : Skills
     {
         switch (currentLevel)
         {
-            case 2:
-                currentDamage += lightningData.level2_DamageIncrease;
-                break;
-            case 3:
-                isTier2Unlocked = lightningData.level3_UnlockTier2;
-                break;
-            case 4:
-                currentAttackCooldown -= lightningData.level4_CooldownReduction;
-                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
-                break;
-            case 5:
-                isTier3Unlocked = lightningData.level5_UnlockTier3;
-                currentDamage += lightningData.level5_BonusDamage;
-                break;
+            case 2: ApplyStats(lightningData.level2_DamageBonus, lightningData.level2_CooldownReduction, lightningData.level2_BranchIncrease, lightningData.level2_UnlockTier2, lightningData.level2_UnlockTier3); break;
+            case 3: ApplyStats(lightningData.level3_DamageBonus, lightningData.level3_CooldownReduction, lightningData.level3_BranchIncrease, lightningData.level3_UnlockTier2, lightningData.level3_UnlockTier3); break;
+            case 4: ApplyStats(lightningData.level4_DamageBonus, lightningData.level4_CooldownReduction, lightningData.level4_BranchIncrease, lightningData.level4_UnlockTier2, lightningData.level4_UnlockTier3); break;
+            case 5: ApplyStats(lightningData.level5_DamageBonus, lightningData.level5_CooldownReduction, lightningData.level5_BranchIncrease, lightningData.level5_UnlockTier2, lightningData.level5_UnlockTier3); break;
+            case 6: ApplyStats(lightningData.level6_DamageBonus, lightningData.level6_CooldownReduction, lightningData.level6_BranchIncrease, lightningData.level6_UnlockTier2, lightningData.level6_UnlockTier3); break;
+            case 7: ApplyStats(lightningData.level7_DamageBonus, lightningData.level7_CooldownReduction, lightningData.level7_BranchIncrease, lightningData.level7_UnlockTier2, lightningData.level7_UnlockTier3); break;
+            case 8: ApplyStats(lightningData.level8_DamageBonus, lightningData.level8_CooldownReduction, lightningData.level8_BranchIncrease, lightningData.level8_UnlockTier2, lightningData.level8_UnlockTier3); break;
+            case 9: ApplyStats(lightningData.level9_DamageBonus, lightningData.level9_CooldownReduction, lightningData.level9_BranchIncrease, lightningData.level9_UnlockTier2, lightningData.level9_UnlockTier3); break;
         }
+
+        if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
+    }
+
+    private void ApplyStats(float dmg, float cooldown, int branch, bool t2, bool t3)
+    {
+        currentDamage += dmg;
+        currentAttackCooldown -= cooldown;
+        currentMaxBranches += branch;
+        if (t2) isTier2Unlocked = true;
+        if (t3) isTier3Unlocked = true;
     }
 }

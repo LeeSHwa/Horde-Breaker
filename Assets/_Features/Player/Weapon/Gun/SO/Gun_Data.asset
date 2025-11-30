@@ -23,13 +23,14 @@ MonoBehaviour:
   - LV.1 Damage+5
   - LV.2 Cooldown-10%
   - LV.3 Damage+10
-  - LV.4 Double Shot
+  - LV.4 Shot+1
   - LV.5 Cooldown-10%
   - LV.6 Damage+20
-  - LV.7 Triple Shot
+  - LV.7 Shot+1
   - LV.MAX The Piercer
   attackSound: {fileID: 8300000, guid: 2352822feb4caa14ebdbc0c713289f8d, type: 3}
   hitSound: {fileID: 8300000, guid: eaae8fe8d600e1f459f34aa5757fa3b8, type: 3}
+  damageVariance: 0.1
   bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
   baseProjectileCount: 1
   multiShotSpread: 5

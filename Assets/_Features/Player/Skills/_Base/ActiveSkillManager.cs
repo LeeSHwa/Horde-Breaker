@@ -4,11 +4,9 @@ using System.Linq;
 
 public class ActiveSkillManager : MonoBehaviour
 {
-    // Variable to link the 'SKill' container object, not 'Hero'
-    [Tooltip("The 'SKill' container object that holds passive skills (Moon, Aura, etc.) as children")]
+    [Tooltip("The 'Skill' container object that holds active skills")]
     public Transform skillContainerTransform;
 
-    // List of passive skills to manage
     private List<Skills> activeSkills;
     private StatsController ownerStats;
 
@@ -19,7 +17,6 @@ public class ActiveSkillManager : MonoBehaviour
         {
             Debug.LogError("ActiveSkillManager: Cannot find StatsController in parent!");
         }
-        // Initialize list here
         activeSkills = new List<Skills>();
     }
 
@@ -27,7 +24,7 @@ public class ActiveSkillManager : MonoBehaviour
     {
         if (skillContainerTransform == null)
         {
-            Debug.LogError("ActiveSkillManager is missing the 'SKill' container object reference!");
+            Debug.LogError("ActiveSkillManager is missing the 'Skill' container object reference!");
             return;
         }
 
@@ -46,10 +43,9 @@ public class ActiveSkillManager : MonoBehaviour
 
     void Update()
     {
-        // Call TryAttack() for every managed passive skill
+        // Call TryAttack() for every managed skill
         foreach (Skills skill in activeSkills)
         {
-            // Call the TryAttack() with no parameters from Skills.cs
             skill.TryAttack();
         }
     }

@@ -21,13 +21,11 @@ public abstract class Skills : MonoBehaviour, AttackInterface
 
     public string GetName()
     {
-        // Example: Get name from the Scriptable Object
-        return skillData.skillName; // Assuming weaponName is in SO
+        return skillData.skillName;
     }
     public string GetNextLevelDescription()
     {
-        // Must reference skillData, NOT weaponData
-        int index = currentLevel - 1; // Level 2 desc is at index 0
+        int index = currentLevel - 1;
         if (skillData.levelDescriptions != null && index < skillData.levelDescriptions.Count)
         {
             return skillData.levelDescriptions[index];
@@ -37,12 +35,8 @@ public abstract class Skills : MonoBehaviour, AttackInterface
 
     public Sprite GetIcon()
     {
-        // Example: Get icon from the Scriptable Object
         return skillData.icon;
     }
-
-    // Removed Awake logic to prevent dependency issues.
-    // protected virtual void Awake() { ... }
 
     // Initialize method to inject dependencies (StatsController)
     public virtual void Initialize(StatsController owner)
@@ -73,7 +67,8 @@ public abstract class Skills : MonoBehaviour, AttackInterface
 
     public virtual void LevelUp()
     {
-        if (currentLevel >= 5) return;
+        // Check based on Data Max Level
+        if (currentLevel >= skillData.maxLevel) return;
 
         currentLevel++;
         ApplyLevelUpStats();

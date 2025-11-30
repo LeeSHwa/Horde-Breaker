@@ -16,14 +16,12 @@ public class Sword : Weapon
     public float guidelineRadiusMultiplier = 1.0f;
     public float guidelineAngleMultiplier = 1.0f;
 
-    [Header("Visual Sync (V10)")]
+    [Header("Visual Sync")]
     public float visualBaselineRadius = 1.5f;
 
     private SwordDataSO swordData;
     private enum State { Idle, Swinging }
     private State currentState = State.Idle;
-
-    // Runtime State
     private Vector2 currentAimDirection;
     private float currentSwingDuration;
     private float currentAngle;
@@ -36,28 +34,24 @@ public class Sword : Weapon
     private int attacksPerProjectile;
     private Transform trailAnchor;
 
-    // Initialize Override
     public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
     {
         base.Initialize(aimObj, owner, animator);
 
-        // 1. Data Casting
         if (weaponData is SwordDataSO) { swordData = (SwordDataSO)weaponData; }
         else { Debug.LogError("Sword: Wrong DataSO!"); return; }
 
-        // 2. Stats Init
         currentAreaRadius = swordData.baseAreaRadius;
         currentSwingDuration = swordData.baseSwingDuration;
         currentAngle = swordData.baseAngle;
         currentKnockback = swordData.knockback;
 
-        // 3. Projectile Init
         isProjectileUnlocked = false;
         attacksPerProjectile = swordData.baseAttacksPerProjectile;
 
         enemiesHitThisSwing = new List<Collider2D>();
 
-        // 4. Component Setup
+        // Visual Setup
         UpdateVisualScale();
 
         if (swordTrail != null)
@@ -101,9 +95,8 @@ public class Sword : Weapon
         }
     }
 
-    private void Update()
+    void Update()
     {
-        // Guideline Logic (Only when Idle)
         if (guidelineContainer == null || guidelineImage == null) return;
         if (currentState == State.Idle)
         {
@@ -134,10 +127,7 @@ public class Sword : Weapon
     {
         currentState = State.Swinging;
         enemiesHitThisSwing.Clear();
-
-        // Lock facing to aim direction
         if (playerAnimator != null) playerAnimator.LockFacing(fixedDirection);
-
         hitboxCollider.enabled = true;
         if (guidelineContainer != null) guidelineContainer.SetActive(false);
         attackCount++;
@@ -180,9 +170,7 @@ public class Sword : Weapon
         pivot.position = aim.position;
         pivot.rotation = Quaternion.Euler(0, 0, endAngle);
         hitboxCollider.enabled = false;
-
         if (playerAnimator != null) playerAnimator.UnlockFacing();
-
         currentState = State.Idle;
 
         if (swordTrail != null)
@@ -192,7 +180,6 @@ public class Sword : Weapon
 
         CheckProjectile(fixedDirection);
     }
-
     public void HandleHit(Collider2D enemyCollider)
     {
         if (enemiesHitThisSwing.Contains(enemyCollider)) { return; }
@@ -205,38 +192,8 @@ public class Sword : Weapon
         }
     }
 
-    // Core Attack Logic : Multi-Hit Implementation
-    private void _Attack(StatsController enemyStats, Collider2D enemyCollider, float damage, float knockback)
-    {
-        // 1. Get total hit count from Projectile Count stats
-        int hitCount = GetFinalProjectileCount();
-
-        // 2. Multi-Hit Loop
-        for (int i = 0; i < hitCount; i++)
-        {
-            float finalDamage = GetFinalDamage(out bool isCrit);
-            enemyStats.TakeDamage(finalDamage, isCrit);
-        }
-
-        // 3. Apply Knockback (Once)
-        EnemyMovement enemyMove = enemyCollider.GetComponent<EnemyMovement>();
-        if (enemyMove != null)
-        {
-            Vector2 knockbackDirection = (enemyCollider.transform.position - ownerStats.transform.position).normalized;
-            if (knockbackDirection == Vector2.zero) { knockbackDirection = pivot.right; }
-            enemyMove.ApplyKnockback(knockbackDirection, knockback, 0.1f);
-        }
-
-        // 4. Play Sound (Once)
-        if (weaponData.hitSound != null)
-        {
-            SoundManager.Instance.PlaySFX(weaponData.hitSound, 0.1f);
-        }
-    }
-
     private void CheckProjectile(Vector2 direction)
     {
-        if (currentLevel < 9) return;
         if (!isProjectileUnlocked) return;
         if (swordData.projectilePrefab == null) return;
 
@@ -244,7 +201,7 @@ public class Sword : Weapon
         {
             attackCount = 0;
 
-            // Spawn multiple projectiles based on stats
+            // Spawn multiple projectiles based on total count
             int count = GetFinalProjectileCount();
 
             float baseAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -295,49 +252,53 @@ public class Sword : Weapon
         }
     }
 
+    private void _Attack(StatsController enemyStats, Collider2D enemyCollider, float damage, float knockback)
+    {
+        // Multi-hit Logic based on Projectile Count
+        int hitCount = GetFinalProjectileCount();
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            float finalDamage = GetFinalDamage(out bool isCrit);
+            enemyStats.TakeDamage(finalDamage, isCrit);
+        }
+
+        EnemyMovement enemyMove = enemyCollider.GetComponent<EnemyMovement>();
+        if (enemyMove != null)
+        {
+            Vector2 knockbackDirection = (enemyCollider.transform.position - ownerStats.transform.position).normalized;
+            if (knockbackDirection == Vector2.zero) { knockbackDirection = pivot.right; }
+            enemyMove.ApplyKnockback(knockbackDirection, knockback, 0.1f);
+        }
+
+        if (weaponData.hitSound != null)
+        {
+            SoundManager.Instance.PlaySFX(weaponData.hitSound, 0.1f);
+        }
+    }
+
     protected override void PerformAttack(Vector2 aimDirection) { }
 
     protected override void ApplyLevelUpStats()
     {
         switch (currentLevel)
         {
-            case 2:
-                ApplyStats(swordData.level2_DamageBonus, swordData.level2_AreaIncrease,
-                           swordData.level2_AngleIncrease, swordData.level2_CooldownReduction);
-                currentSwingDuration -= swordData.level2_SpeedIncrease;
-                break;
-            case 3:
-                ApplyStats(swordData.level3_DamageBonus, swordData.level3_AreaIncrease,
-                           swordData.level3_AngleIncrease, swordData.level3_CooldownReduction);
-                break;
-            case 4:
-                ApplyStats(swordData.level4_DamageBonus, swordData.level4_AreaIncrease,
-                           swordData.level4_AngleIncrease, swordData.level4_CooldownReduction);
-                break;
-            case 5:
-                ApplyStats(swordData.level5_DamageBonus, swordData.level5_AreaIncrease,
-                           swordData.level5_AngleIncrease, swordData.level5_CooldownReduction);
-                break;
-            case 6:
-                ApplyStats(swordData.level6_DamageBonus, swordData.level6_AreaIncrease,
-                           swordData.level6_AngleIncrease, swordData.level6_CooldownReduction);
-                break;
-            case 7:
-                ApplyStats(swordData.level7_DamageBonus, swordData.level7_AreaIncrease,
-                           swordData.level7_AngleIncrease, swordData.level7_CooldownReduction);
-                break;
-            case 8:
-                ApplyStats(swordData.level8_DamageBonus, swordData.level8_AreaIncrease,
-                           swordData.level8_AngleIncrease, swordData.level8_CooldownReduction);
-                break;
+            case 2: ApplyStats(swordData.level2_DamageBonus, swordData.level2_AreaBonus, swordData.level2_AngleBonus, swordData.level2_CooldownReduction); break;
+            case 3: ApplyStats(swordData.level3_DamageBonus, swordData.level3_AreaBonus, swordData.level3_AngleBonus, swordData.level3_CooldownReduction); break;
+            case 4: ApplyStats(swordData.level4_DamageBonus, swordData.level4_AreaBonus, swordData.level4_AngleBonus, swordData.level4_CooldownReduction); break;
+            case 5: ApplyStats(swordData.level5_DamageBonus, swordData.level5_AreaBonus, swordData.level5_AngleBonus, swordData.level5_CooldownReduction); break;
+            case 6: ApplyStats(swordData.level6_DamageBonus, swordData.level6_AreaBonus, swordData.level6_AngleBonus, swordData.level6_CooldownReduction); break;
+            case 7: ApplyStats(swordData.level7_DamageBonus, swordData.level7_AreaBonus, swordData.level7_AngleBonus, swordData.level7_CooldownReduction); break;
+            case 8: ApplyStats(swordData.level8_DamageBonus, swordData.level8_AreaBonus, swordData.level8_AngleBonus, swordData.level8_CooldownReduction); break;
             case 9:
-                ApplyStats(swordData.level9_DamageBonus, swordData.level9_AreaIncrease,
-                           swordData.level9_AngleIncrease, swordData.level9_CooldownReduction);
-
-                isProjectileUnlocked = true;
-                attackCount = 0;
-                attacksPerProjectile -= swordData.level9_AttacksPerProjectile_Reduce;
-                if (attacksPerProjectile < 1) attacksPerProjectile = 1;
+                ApplyStats(swordData.level9_DamageBonus, swordData.level9_AreaBonus, swordData.level9_AngleBonus, swordData.level9_CooldownReduction);
+                if (swordData.level9_UnlockProjectile)
+                {
+                    isProjectileUnlocked = true;
+                    attackCount = 0;
+                    attacksPerProjectile -= swordData.level9_AttacksPerProjectile_Reduce;
+                    if (attacksPerProjectile < 1) attacksPerProjectile = 1;
+                }
                 break;
         }
 
@@ -351,7 +312,6 @@ public class Sword : Weapon
         currentDamage += dmg;
         currentAreaRadius += area;
         currentAngle += angle;
-
         float reductionAmount = currentAttackCooldown * (cooldownPercent / 100f);
         currentAttackCooldown -= reductionAmount;
     }

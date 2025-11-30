@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+// Class name changed from MissileSkill to HellfireSkill
 public class HellfireSkill : Skills
 {
     private HellfireDataSO hellfireData;
@@ -13,6 +14,7 @@ public class HellfireSkill : Skills
     {
         base.Initialize(owner);
 
+        // Cast to HellfireDataSO
         if (skillData is HellfireDataSO)
         {
             hellfireData = (HellfireDataSO)skillData;
@@ -52,6 +54,7 @@ public class HellfireSkill : Skills
         obj.transform.position = transform.position;
         obj.transform.rotation = Quaternion.identity;
 
+        // Get HellfireLogic component
         HellfireLogic logic = obj.GetComponent<HellfireLogic>();
         if (logic != null)
         {
@@ -64,19 +67,25 @@ public class HellfireSkill : Skills
     {
         switch (currentLevel)
         {
-            case 2:
-                currentDamage += hellfireData.level2_DamageIncrease;
-                break;
-            case 3:
-                currentProjectileCount = hellfireData.level3_ProjectileCount;
-                break;
-            case 4:
-                currentAttackCooldown -= hellfireData.level4_CooldownReduction;
-                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
-                break;
-            case 5:
-                currentProjectileCount = hellfireData.level5_ProjectileCount;
-                break;
+            case 2: ApplyStats(hellfireData.level2_DamageBonus, hellfireData.level2_CooldownReduction, hellfireData.level2_ProjectileCountIncrease, hellfireData.level2_SpeedBonus); break;
+            case 3: ApplyStats(hellfireData.level3_DamageBonus, hellfireData.level3_CooldownReduction, hellfireData.level3_ProjectileCountIncrease, hellfireData.level3_SpeedBonus); break;
+            case 4: ApplyStats(hellfireData.level4_DamageBonus, hellfireData.level4_CooldownReduction, hellfireData.level4_ProjectileCountIncrease, hellfireData.level4_SpeedBonus); break;
+            case 5: ApplyStats(hellfireData.level5_DamageBonus, hellfireData.level5_CooldownReduction, hellfireData.level5_ProjectileCountIncrease, hellfireData.level5_SpeedBonus); break;
+            case 6: ApplyStats(hellfireData.level6_DamageBonus, hellfireData.level6_CooldownReduction, hellfireData.level6_ProjectileCountIncrease, hellfireData.level6_SpeedBonus); break;
+            case 7: ApplyStats(hellfireData.level7_DamageBonus, hellfireData.level7_CooldownReduction, hellfireData.level7_ProjectileCountIncrease, hellfireData.level7_SpeedBonus); break;
+            case 8: ApplyStats(hellfireData.level8_DamageBonus, hellfireData.level8_CooldownReduction, hellfireData.level8_ProjectileCountIncrease, hellfireData.level8_SpeedBonus); break;
+            case 9: ApplyStats(hellfireData.level9_DamageBonus, hellfireData.level9_CooldownReduction, hellfireData.level9_ProjectileCountIncrease, hellfireData.level9_SpeedBonus); break;
         }
+
+        // Safety cap for cooldown
+        if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
+    }
+
+    private void ApplyStats(float dmg, float cooldown, int count, float speed)
+    {
+        currentDamage += dmg;
+        currentAttackCooldown -= cooldown;
+        currentProjectileCount += count;
+        currentSpeed += speed;
     }
 }

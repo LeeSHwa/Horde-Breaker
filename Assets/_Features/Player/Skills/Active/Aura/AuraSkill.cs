@@ -13,6 +13,7 @@ public class AuraSkill : Skills
     {
         base.Initialize(owner);
 
+        // Cast to AuraDataSO
         if (skillData is AuraDataSO)
         {
             zoneData = (AuraDataSO)skillData;
@@ -25,7 +26,7 @@ public class AuraSkill : Skills
 
         currentDuration = zoneData.baseDuration;
         currentArea = zoneData.baseArea;
-        currentDebuffPercent = zoneData.speedDebuffPercentage;
+        currentDebuffPercent = zoneData.baseSpeedDebuffPercentage;
     }
 
     protected override void PerformAttack()
@@ -61,20 +62,22 @@ public class AuraSkill : Skills
     {
         switch (currentLevel)
         {
-            case 2:
-                currentDamage += zoneData.level2_DamageIncrease;
-                break;
-            case 3:
-                currentArea += zoneData.level3_AreaIncrease;
-                break;
-            case 4:
-                currentDebuffPercent = zoneData.level4_SlowValue;
-                break;
-            case 5:
-                currentDamage += zoneData.level5_DamageIncrease;
-                currentArea += zoneData.level5_AreaIncrease;
-                currentDebuffPercent += zoneData.level5_DebuffIncrease;
-                break;
+            case 2: ApplyStats(zoneData.level2_DamageBonus, zoneData.level2_AreaBonus, zoneData.level2_DurationBonus, zoneData.level2_DebuffBonus); break;
+            case 3: ApplyStats(zoneData.level3_DamageBonus, zoneData.level3_AreaBonus, zoneData.level3_DurationBonus, zoneData.level3_DebuffBonus); break;
+            case 4: ApplyStats(zoneData.level4_DamageBonus, zoneData.level4_AreaBonus, zoneData.level4_DurationBonus, zoneData.level4_DebuffBonus); break;
+            case 5: ApplyStats(zoneData.level5_DamageBonus, zoneData.level5_AreaBonus, zoneData.level5_DurationBonus, zoneData.level5_DebuffBonus); break;
+            case 6: ApplyStats(zoneData.level6_DamageBonus, zoneData.level6_AreaBonus, zoneData.level6_DurationBonus, zoneData.level6_DebuffBonus); break;
+            case 7: ApplyStats(zoneData.level7_DamageBonus, zoneData.level7_AreaBonus, zoneData.level7_DurationBonus, zoneData.level7_DebuffBonus); break;
+            case 8: ApplyStats(zoneData.level8_DamageBonus, zoneData.level8_AreaBonus, zoneData.level8_DurationBonus, zoneData.level8_DebuffBonus); break;
+            case 9: ApplyStats(zoneData.level9_DamageBonus, zoneData.level9_AreaBonus, zoneData.level9_DurationBonus, zoneData.level9_DebuffBonus); break;
         }
+    }
+
+    private void ApplyStats(float dmg, float area, float duration, float debuff)
+    {
+        currentDamage += dmg;
+        currentArea += area;
+        currentDuration += duration;
+        currentDebuffPercent += debuff;
     }
 }
