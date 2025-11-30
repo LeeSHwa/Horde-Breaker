@@ -1,14 +1,15 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
-// Class to define a BGM track with duration
 [System.Serializable]
 public class BGMTrack
 {
+    [Tooltip("Enter the EXACT Scene Name here (e.g., 'LobbyScene', 'SampleScene')")]
+    public string sceneName;
     public AudioClip clip;
-    [Tooltip("Duration to play this track in seconds")]
-    public float playDuration;
+    // Removed playDuration as it's rarely used for scene BGM
 }
 
 public class SoundManager : MonoBehaviour
@@ -16,129 +17,69 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
 
     [Header("Volume Settings")]
+    // These will be loaded from PlayerPrefs in Awake
     [Range(0f, 1f)] public float masterVolume = 1f;
     [Range(0f, 1f)] public float bgmVolume = 0.5f;
     [Range(0f, 1f)] public float sfxVolume = 1f;
 
-    [Header("BGM Playlist Settings")] // Playlist configuration
+    [Header("BGM Configuration")]
     public List<BGMTrack> bgmPlaylist;
-    [Tooltip("Time for crossfade transition (seconds)")]
-    public float crossfadeDuration = 2.0f;
-    [Tooltip("If true, the playlist will loop indefinitely. If false, it stops after the last track.")]
-    public bool loopPlaylist = true; // [NEW] Loop toggle
+    public float crossfadeDuration = 1.0f;
 
-    [Header("Ducking Settings")]
-    [Tooltip("Volume multiplier when game is paused (0.3 = 30% volume)")]
-    public float duckingVolume = 0.3f;
+    [Header("Settings")]
+    public int sfxPoolSize = 20;
+
+    // Audio Sources
+    private AudioSource bgmSource;
+    private AudioSource uiSource; // Added back uiSource definition
+    private List<AudioSource> sfxSources;
+
+    // SFX Throttling (Prevents spamming the same sound)
+    private Dictionary<AudioClip, float> lastPlayedTimes = new Dictionary<AudioClip, float>();
+    private const float DEFAULT_THROTTLE = 0.05f;
+
+    // Runtime variables
+    private bool isCrossfading = false;
 
     [Header("Event BGM Settings")]
     public AudioClip levelUpBGM;
 
-    [Header("Pooling Settings")]
-    public int sfxPoolSize = 20; // Max number of simultaneous SFX
-
-    // AudioSource for BGM (Only one needed)
-    private AudioSource bgmSource;
-
-    // AudioSource for UI/Event BGM(Level Up, Game Over etc.)
-    private AudioSource uiSource;
-
-    // Pool of AudioSources for SFX (Reused)
-    private List<AudioSource> sfxSources;
-
-    // Throttling: Records the last played time of each clip to prevent overlap noise
-    private Dictionary<AudioClip, float> lastPlayedTimes = new Dictionary<AudioClip, float>();
-
-    // Default throttle time: prevents the same clip from playing again within 0.05s
-    private const float DEFAULT_THROTTLE = 0.05f;
-
-    // Runtime variables for BGM logic
-    private int currentTrackIndex = 0;
-    private float bgmTimer = 0f;
-    private bool isCrossfading = false;
-    private bool isPausedByTimeScale = false; // [NEW] State tracking for pause logic
-
     void Awake()
     {
-        if (Instance == null)
-        {   
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        // [CORE CHANGE] No DontDestroyOnLoad.
+        // A new instance is created for every scene.
+        Instance = this;
 
-        else Destroy(gameObject);
+        // [SETTINGS SHARED] Load volume settings immediately
+        LoadVolumeSettings();
 
         InitializeAudioSources();
     }
 
     void Start()
     {
-        // Start playing the playlist if it's not empty
-        if (bgmPlaylist != null && bgmPlaylist.Count > 0)
-        {
-            PlayTrack(0); // Start the first track
-        }
+        // Play BGM for the current scene immediately
+        PlaySceneBGM(SceneManager.GetActiveScene().name);
     }
 
-    // Update loop to handle BGM timer synchronized with game time
-    void Update()
-    {
-        // Auto-Pause Logic based on Time.timeScale
-        if (Time.timeScale == 0)
-        {
-            if (!isPausedByTimeScale)
-            {
-                //if (bgmSource.isPlaying) bgmSource.Pause(); // Physically pause the audio
-                if (bgmSource != null) bgmSource.volume = bgmVolume * masterVolume * duckingVolume;
-                isPausedByTimeScale = true;
-            }
-            return; // Stop timer update
-        }
-        else
-        {
-            if (isPausedByTimeScale)
-            {
-                if (!isCrossfading && bgmSource != null)
-                {
-                    bgmSource.volume = bgmVolume * masterVolume;
-                }
-                isPausedByTimeScale = false;
-            }
-        }
-
-        // If playlist is empty or crossfading is happening, do nothing
-        if (bgmPlaylist == null || bgmPlaylist.Count == 0) return;
-        if (isCrossfading) return;
-
-        // BGM Timer Logic
-        if (bgmSource != null && bgmSource.isPlaying)
-        {
-            bgmTimer += Time.deltaTime;
-
-            // Check if it's time to switch tracks
-            if (bgmTimer >= bgmPlaylist[currentTrackIndex].playDuration)
-            {
-                PlayNextTrack();
-            }
-        }
-    }
-
+    // Initialize AudioSources (Called once per scene)
     void InitializeAudioSources()
     {
         // 1. Create BGM Source
         GameObject bgmObj = new GameObject("BGM_Source");
         bgmObj.transform.SetParent(transform);
         bgmSource = bgmObj.AddComponent<AudioSource>();
-        bgmSource.loop = true; // Loop is true, but we will switch clip manually
+        bgmSource.loop = true;
+        bgmSource.playOnAwake = false;
 
-        // 2. Create UI BGM Source
+        // 2. Create UI/Event Source
         GameObject uiObj = new GameObject("UI_Source");
         uiObj.transform.SetParent(transform);
         uiSource = uiObj.AddComponent<AudioSource>();
         uiSource.loop = false;
         uiSource.ignoreListenerPause = true;
 
-        // 3. Create SFX Source Pool
+        // 3. Create SFX Pool
         GameObject sfxContainer = new GameObject("SFX_Pool_Container");
         sfxContainer.transform.SetParent(transform);
         sfxSources = new List<AudioSource>();
@@ -148,206 +89,129 @@ public class SoundManager : MonoBehaviour
             GameObject sfxObj = new GameObject($"SFX_Source_{i}");
             sfxObj.transform.SetParent(sfxContainer.transform);
             AudioSource source = sfxObj.AddComponent<AudioSource>();
-            source.playOnAwake = false; // Disable play on awake
+            source.playOnAwake = false;
             sfxSources.Add(source);
         }
+
+        // Apply loaded volumes to the new sources
+        UpdateSourceVolumes();
     }
 
-    // --- BGM Playlist Logic ---
-
-    // --- Level Up BGM Control Functions ---
-    public void PlayLevelUpBGM()
+    // Logic to find and play BGM by Scene Name
+    private void PlaySceneBGM(string currentSceneName)
     {
-        if (levelUpBGM == null) return;
+        if (bgmPlaylist == null) return;
 
-        uiSource.volume = bgmVolume * masterVolume;
-        uiSource.clip = levelUpBGM;
-        uiSource.Play();
+        BGMTrack targetTrack = bgmPlaylist.Find(track => track.sceneName == currentSceneName);
 
-    }
-
-    public void StopLevelUpBGM()
-    {
-        if (uiSource.isPlaying)
+        if (targetTrack != null)
         {
-            uiSource.Stop();
+            // Just play immediately (fresh start)
+            bgmSource.clip = targetTrack.clip;
+            bgmSource.volume = bgmVolume * masterVolume;
+            bgmSource.Play();
+        }
+        else
+        {
+            Debug.LogWarning($"[SoundManager] No BGM found for scene: {currentSceneName}");
         }
     }
 
-    public void PlayNextTrack()
-    {
-        if (bgmPlaylist.Count == 0) return;
-
-        // [NEW] Check for end of playlist if loop is disabled
-        if (!loopPlaylist && currentTrackIndex >= bgmPlaylist.Count - 1)
-        {
-            StopBGM(); // Stop playing
-            return;
-        }
-
-        // Move to next index (Loop back to 0 if end reached)
-        currentTrackIndex = (currentTrackIndex + 1) % bgmPlaylist.Count;
-
-        // Start the track with crossfade
-        StartCoroutine(CrossfadeCoroutine(bgmPlaylist[currentTrackIndex].clip));
-    }
-
-    private void PlayTrack(int index)
-    {
-        if (index < 0 || index >= bgmPlaylist.Count) return;
-
-        currentTrackIndex = index;
-        bgmTimer = 0f;
-
-        // Initial play (no crossfade for the very first start)
-        bgmSource.clip = bgmPlaylist[index].clip;
-        bgmSource.volume = bgmVolume * masterVolume;
-        bgmSource.Play();
-    }
-
-    // Crossfade Coroutine for smooth transition
-    private IEnumerator CrossfadeCoroutine(AudioClip newClip)
-    {
-        isCrossfading = true;
-        float startVolume = bgmSource.volume;
-        float timer = 0f;
-
-        // 1. Fade Out
-        while (timer < crossfadeDuration / 2)
-        {
-            timer += Time.deltaTime;
-            bgmSource.volume = Mathf.Lerp(startVolume, 0f, timer / (crossfadeDuration / 2));
-            yield return null;
-        }
-        bgmSource.volume = 0f;
-
-        // 2. Swap Clip
-        bgmSource.clip = newClip;
-        bgmSource.Play();
-        bgmTimer = 0f; // Reset track timer
-
-        // 3. Fade In
-        timer = 0f;
-        float targetVolume = bgmVolume * masterVolume;
-        while (timer < crossfadeDuration / 2)
-        {
-            timer += Time.deltaTime;
-            bgmSource.volume = Mathf.Lerp(0f, targetVolume, timer / (crossfadeDuration / 2));
-            yield return null;
-        }
-        bgmSource.volume = targetVolume;
-        isCrossfading = false;
-    }
-
-    // External Control: Pause BGM (e.g. Level Up Screen)
-    public void PauseBGM()
-    {
-        if (bgmSource.isPlaying)
-        {
-            bgmSource.Pause();
-        }
-    }
-
-    // External Control: Resume BGM
-    public void ResumeBGM()
-    {
-        if (!bgmSource.isPlaying)
-        {
-            bgmSource.UnPause();
-        }
-    }
-
-    public void StopBGM()
-    {
-        bgmSource.Stop();
-    }
-
-    // --- [SFX Functions] ---
+    // --- SFX Logic ---
     public void PlaySFX(AudioClip clip, float pitchVariation = 0f)
     {
         if (clip == null) return;
 
-        // 1. [Throttling] Prevent sound overlap
+        // Throttle check
         if (lastPlayedTimes.ContainsKey(clip))
         {
-            float lastTime = lastPlayedTimes[clip];
-            if (Time.time - lastTime < DEFAULT_THROTTLE)
-            {
-                return; // Request ignored (too fast)
-            }
+            if (Time.time - lastPlayedTimes[clip] < DEFAULT_THROTTLE) return;
         }
-        // Update last played time
         lastPlayedTimes[clip] = Time.time;
 
-        // 2. Find an available AudioSource
         AudioSource source = GetFreeSFXSource();
-        if (source == null) return; // Pool is full (too many sounds playing)
+        if (source == null) return;
 
-        // 3. Configure and play
         source.clip = clip;
         source.volume = sfxVolume * masterVolume;
 
-        // Randomize pitch: fluctuate around 1.0
+        // Pitch variation
         if (pitchVariation > 0)
-        {
             source.pitch = 1f + Random.Range(-pitchVariation, pitchVariation);
-        }
         else
-        {
             source.pitch = 1f;
-        }
 
         source.Play();
     }
 
-    // Find and return an idle source from the pool
+    public void PlayUISound(AudioClip clip)
+    {
+        // UI sounds usually don't need pitch variation
+        PlaySFX(clip, 0f);
+    }
+
     private AudioSource GetFreeSFXSource()
     {
         foreach (var source in sfxSources)
         {
-            if (!source.isPlaying)
-            {
-                return source;
-            }
+            if (!source.isPlaying) return source;
         }
-        return null;
+        return sfxSources[0]; // Reuse first if full
     }
 
+    // --- Level Up Logic ---
+    public void PlayLevelUpBGM()
+    {
+        if (levelUpBGM == null) return;
+        uiSource.volume = bgmVolume * masterVolume;
+        uiSource.clip = levelUpBGM;
+        uiSource.Play();
+    }
+
+    public void StopLevelUpBGM()
+    {
+        if (uiSource.isPlaying) uiSource.Stop();
+    }
+
+    // --- Shared Settings Logic (PlayerPrefs) ---
+
+    private void LoadVolumeSettings()
+    {
+        // Load saved values or default to 1.0 / 0.5
+        masterVolume = PlayerPrefs.GetFloat("Vol_Master", 1f);
+        bgmVolume = PlayerPrefs.GetFloat("Vol_BGM", 0.5f);
+        sfxVolume = PlayerPrefs.GetFloat("Vol_SFX", 1f);
+    }
+
+    private void UpdateSourceVolumes()
+    {
+        // Update BGM source immediately
+        if (bgmSource != null)
+            bgmSource.volume = bgmVolume * masterVolume;
+
+        if (uiSource != null)
+            uiSource.volume = bgmVolume * masterVolume;
+    }
+
+    // Call these from your Settings UI Sliders
     public void SetMasterVolume(float volume)
     {
         masterVolume = volume;
-
-        if (!isCrossfading && bgmSource != null)
-        {
-            bgmSource.volume = bgmVolume * masterVolume;
-        }
-        if (uiSource != null)
-        {
-            uiSource.volume = bgmVolume * masterVolume;
-        }
+        PlayerPrefs.SetFloat("Vol_Master", volume); // Save
+        UpdateSourceVolumes();
     }
 
     public void SetBGMVolume(float volume)
     {
         bgmVolume = volume;
-
-        if (!isCrossfading && bgmSource != null)
-        {
-            bgmSource.volume = bgmVolume * masterVolume;
-        }
-        if (uiSource != null)
-        {
-            uiSource.volume = bgmVolume * masterVolume;
-        }
+        PlayerPrefs.SetFloat("Vol_BGM", volume); // Save
+        UpdateSourceVolumes();
     }
 
     public void SetSFXVolume(float volume)
     {
         sfxVolume = volume;
-    }
-
-    public void PlayUISound(AudioClip clip)
-    {
-        PlaySFX(clip, 0f);
+        PlayerPrefs.SetFloat("Vol_SFX", volume); // Save
+        // SFX volume is applied when PlaySFX is called, so no immediate update needed
     }
 }

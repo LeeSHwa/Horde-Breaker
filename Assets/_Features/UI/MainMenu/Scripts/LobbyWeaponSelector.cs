@@ -26,6 +26,16 @@ public class LobbyWeaponSelector : MonoBehaviour, IPointerClickHandler
         {
             _manager.SelectWeapon(this);
         }
+
+        if (GameManager.Instance != null && weaponPrefab != null)
+        {
+            GameManager.Instance.SelectWeapon(weaponPrefab);
+            Debug.Log($"[Lobby] Weapon Selected: {weaponPrefab.name}");
+        }
+        else
+        {
+            if (weaponPrefab == null) Debug.LogWarning("WeaponPrefab is missing in Selector!");
+        }
     }
 
     public void UpdateVisual(bool isSelected)
