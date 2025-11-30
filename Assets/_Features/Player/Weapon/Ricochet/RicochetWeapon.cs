@@ -1,13 +1,12 @@
 using UnityEngine;
 
 // This script manages the weapon itself.
-// Its main role is to spawn projectiles and pass the correct stats to them.
 public class RicochetWeapon : Weapon
 {
     // A reference to the ScriptableObject containing this weapon's unique stats.
     private RicochetDataSO ricochetData;
 
-    // The *current* number of [Enemy] bounces, which can be modified by level-ups.
+    // The *current* number of [Enemy] bounces
     private int currentMaxBounces;
 
     // Initialize override to setup specific data
@@ -28,7 +27,7 @@ public class RicochetWeapon : Weapon
         // Initialize Ricochet specific stats
         this.currentMaxBounces = ricochetData.baseBounces;
 
-        // Ensure projectile count starts at 1 (or value from SO if added)
+        // Ensure projectile count starts at 1
         this.currentProjectileCount = 1;
     }
 
@@ -53,24 +52,19 @@ public class RicochetWeapon : Weapon
 
         for (int i = 0; i < count; i++)
         {
-            // Get a recycled projectile from the object pool instead of creating a new one.
             GameObject projectileObj = PoolManager.Instance.GetFromPool(ricochetData.projectilePrefab.name);
             if (projectileObj == null) continue;
 
-            // Set the projectile's position to the 'aim' transform (e.g., player's hand or gun muzzle).
             projectileObj.transform.position = aim.position;
 
             // Set rotation based on spread
             float currentAngle = startAngle + (i * spreadAngle);
             projectileObj.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
-            // Get the script component from the projectile object we just spawned.
             RicochetProjectile projectile = projectileObj.GetComponent<RicochetProjectile>();
 
-            // If the script was found successfully, pass all necessary stats to it.
             if (projectile != null)
             {
-                // Calculate final stats with passives
                 float finalDamage = GetFinalDamage(out bool isCrit);
                 float finalLifetime = GetFinalDuration(ricochetData.lifetime);
 
@@ -81,9 +75,9 @@ public class RicochetWeapon : Weapon
                     currentMaxBounces,
                     ricochetData.bounceRange,
                     finalLifetime,
-                    ownerStats.transform,    // Pass the player (owner) as the attack source
-                    weaponData.hitSound,     // Pass hit sound
-                    isCrit                   // Pass crit status
+                    ownerStats.transform,
+                    weaponData.hitSound,
+                    isCrit
                 );
             }
         }
@@ -92,44 +86,30 @@ public class RicochetWeapon : Weapon
     // Called by the parent 'Weapon' class when the weapon levels up.
     protected override void ApplyLevelUpStats()
     {
+        // Apply stats based on current level using the flexible data structure
         switch (currentLevel)
         {
-            case 2: // Damage +2
-                currentDamage += ricochetData.level2_DamageBonus;
-                break;
-            case 3: // Cooldown -10%, Bounce +1
-                ApplyCooldownReduction(ricochetData.level3_CooldownReduction);
-                currentMaxBounces += ricochetData.level3_BounceIncrease;
-                break;
-            case 4: // Damage +4
-                currentDamage += ricochetData.level4_DamageBonus;
-                break;
-            case 5: // Projectile +1
-                currentProjectileCount += ricochetData.level5_ProjectileCountIncrease;
-                break;
-            case 6: // Cooldown -10%, Bounce +1
-                ApplyCooldownReduction(ricochetData.level6_CooldownReduction);
-                currentMaxBounces += ricochetData.level6_BounceIncrease;
-                break;
-            case 7: // Damage +10
-                currentDamage += ricochetData.level7_DamageBonus;
-                break;
-            case 8: // Projectile +1
-                currentProjectileCount += ricochetData.level8_ProjectileCountIncrease;
-                break;
-            case 9: // Projectile +1
-                currentProjectileCount += ricochetData.level9_ProjectileCountIncrease;
-                break;
+            case 2: ApplyStats(ricochetData.level2_DamageBonus, ricochetData.level2_CooldownReduction, ricochetData.level2_BounceIncrease, ricochetData.level2_ProjectileCountIncrease); break;
+            case 3: ApplyStats(ricochetData.level3_DamageBonus, ricochetData.level3_CooldownReduction, ricochetData.level3_BounceIncrease, ricochetData.level3_ProjectileCountIncrease); break;
+            case 4: ApplyStats(ricochetData.level4_DamageBonus, ricochetData.level4_CooldownReduction, ricochetData.level4_BounceIncrease, ricochetData.level4_ProjectileCountIncrease); break;
+            case 5: ApplyStats(ricochetData.level5_DamageBonus, ricochetData.level5_CooldownReduction, ricochetData.level5_BounceIncrease, ricochetData.level5_ProjectileCountIncrease); break;
+            case 6: ApplyStats(ricochetData.level6_DamageBonus, ricochetData.level6_CooldownReduction, ricochetData.level6_BounceIncrease, ricochetData.level6_ProjectileCountIncrease); break;
+            case 7: ApplyStats(ricochetData.level7_DamageBonus, ricochetData.level7_CooldownReduction, ricochetData.level7_BounceIncrease, ricochetData.level7_ProjectileCountIncrease); break;
+            case 8: ApplyStats(ricochetData.level8_DamageBonus, ricochetData.level8_CooldownReduction, ricochetData.level8_BounceIncrease, ricochetData.level8_ProjectileCountIncrease); break;
+            case 9: ApplyStats(ricochetData.level9_DamageBonus, ricochetData.level9_CooldownReduction, ricochetData.level9_BounceIncrease, ricochetData.level9_ProjectileCountIncrease); break;
         }
 
         // Safety cap for cooldown
         if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
     }
 
-    // Helper for percentage cooldown reduction
-    private void ApplyCooldownReduction(float percent)
+    private void ApplyStats(float dmg, float cdPercent, int bounce, int projCount)
     {
-        float reduction = currentAttackCooldown * (percent / 100f);
+        currentDamage += dmg;
+        currentMaxBounces += bounce;
+        currentProjectileCount += projCount;
+
+        float reduction = currentAttackCooldown * (cdPercent / 100f);
         currentAttackCooldown -= reduction;
     }
 }

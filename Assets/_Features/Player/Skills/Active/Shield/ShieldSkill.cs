@@ -5,44 +5,41 @@ public class ShieldSkill : Skills
 {
     private ShieldDataSO shieldData;
 
+    // Visual components
     private GameObject visualInstance;
     private SpriteRenderer visualRenderer;
 
-    private int currentMaxStacks;
+    // Runtime Stats
+    private int baseMaxStacks; // From SO + Level Up
     private float currentInvulnTime;
     private bool isGhostModeUnlocked = false;
     private float ghostModeSpeedBonus;
 
+    // State Variables
     private int currentStacks = 0;
-    private bool isInvulnerable = false;
+    private bool isInvulnerable = false; // True if currently in the post-hit invulnerability phase
 
-    // Initialize Override
     public override void Initialize(StatsController owner)
     {
-        // 1. Base Init
         base.Initialize(owner);
 
-        // 2. Data Casting
         if (skillData is ShieldDataSO)
         {
             shieldData = (ShieldDataSO)skillData;
         }
         else
         {
-            Debug.LogError("ShieldSkill has wrong DataSO!");
+            Debug.LogError("ShieldSkill has wrong DataSO! Expected ShieldDataSO.");
             return;
         }
 
-        // 3. Setup Stats (Including Passive mapping)
-        // [Mapping Logic] Projectile Count -> Extra Shield Stacks
-        int bonusStacks = ownerStats.bonusProjectileCount;
-        currentMaxStacks = shieldData.baseMaxStacks + bonusStacks;
-
+        baseMaxStacks = shieldData.baseMaxStacks;
         currentInvulnTime = shieldData.baseInvulnTime;
-        isGhostModeUnlocked = false;
-        ghostModeSpeedBonus = shieldData.level5_MoveSpeedBonus;
 
-        // 4. Visual Init
+        isGhostModeUnlocked = false;
+        ghostModeSpeedBonus = 0f;
+
+        // Visual Setup
         if (visualInstance == null && shieldData.shieldVisualPrefab != null)
         {
             visualInstance = Instantiate(shieldData.shieldVisualPrefab, transform);
@@ -51,8 +48,7 @@ public class ShieldSkill : Skills
             visualInstance.SetActive(false);
         }
 
-        // 5. Events
-        // Important: Re-subscribe if Initialize is called again
+        // Subscribe to damage event
         ownerStats.OnDamageProcess -= HandleDamage;
         ownerStats.OnDamageProcess += HandleDamage;
 
@@ -69,25 +65,13 @@ public class ShieldSkill : Skills
         }
     }
 
-    // InitializeStats is handled inside Initialize now.
-    // protected override void InitializeStats() { ... }
-
+    // "Attack" in this context means "Recharge Shield"
     public override void TryAttack()
     {
-        // Check if stats changed dynamically (e.g., passive gained mid-game)
-        if (ownerStats != null)
-        {
-            // Update Max Stacks dynamically based on passive
-            int bonusStacks = ownerStats.bonusProjectileCount;
-            int baseMax = shieldData.baseMaxStacks;
+        // Calculate dynamic max stacks: Base(Level) + Passive(Projectile Count)
+        int finalMaxStacks = baseMaxStacks + ownerStats.bonusProjectileCount;
 
-            // Check level up bonus
-            if (currentLevel >= 2) baseMax += shieldData.level2_StackIncrease;
-
-            currentMaxStacks = baseMax + bonusStacks;
-        }
-
-        if (currentStacks < currentMaxStacks)
+        if (currentStacks < finalMaxStacks)
         {
             if (Time.time >= lastAttackTime + currentAttackCooldown)
             {
@@ -99,7 +83,9 @@ public class ShieldSkill : Skills
 
     protected override void PerformAttack()
     {
-        if (currentStacks < currentMaxStacks)
+        int finalMaxStacks = baseMaxStacks + ownerStats.bonusProjectileCount;
+
+        if (currentStacks < finalMaxStacks)
         {
             currentStacks++;
             UpdateVisuals();
@@ -111,6 +97,7 @@ public class ShieldSkill : Skills
         }
     }
 
+    // Returns true if damage should be blocked.
     private bool HandleDamage(float damageAmount)
     {
         if (isInvulnerable) return true;
@@ -126,6 +113,8 @@ public class ShieldSkill : Skills
             {
                 SoundManager.Instance.PlaySFX(shieldData.shieldBreakSound);
             }
+
+            // Reset recharge timer
             lastAttackTime = Time.time;
             return true;
         }
@@ -148,8 +137,10 @@ public class ShieldSkill : Skills
     private void StartGhostMode()
     {
         ownerStats.SetSpeedBuff(ghostModeSpeedBonus);
+
         int playerLayer = LayerMask.NameToLayer("Player");
         int enemyLayer = LayerMask.NameToLayer("Enemy");
+
         if (playerLayer != -1 && enemyLayer != -1)
         {
             Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
@@ -159,8 +150,10 @@ public class ShieldSkill : Skills
     private void EndGhostMode()
     {
         ownerStats.SetSpeedBuff(0f);
+
         int playerLayer = LayerMask.NameToLayer("Player");
         int enemyLayer = LayerMask.NameToLayer("Enemy");
+
         if (playerLayer != -1 && enemyLayer != -1)
         {
             Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
@@ -178,8 +171,11 @@ public class ShieldSkill : Skills
         else
         {
             visualInstance.SetActive(true);
-            float alphaRatio = (float)currentStacks / currentMaxStacks;
+            int finalMaxStacks = baseMaxStacks + ownerStats.bonusProjectileCount;
+
+            float alphaRatio = (float)currentStacks / finalMaxStacks;
             float finalAlpha = Mathf.Lerp(0.3f, 0.8f, alphaRatio);
+
             Color c = visualRenderer.color;
             c.a = finalAlpha;
             visualRenderer.color = c;
@@ -190,19 +186,26 @@ public class ShieldSkill : Skills
     {
         switch (currentLevel)
         {
-            case 2:
-                // Just update internal base stat logic, visuals update in TryAttack loop or next hit
-                break;
-            case 3:
-                currentInvulnTime += shieldData.level3_InvulnTimeIncrease;
-                break;
-            case 4:
-                currentAttackCooldown -= shieldData.level4_CooldownReduction;
-                if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
-                break;
-            case 5:
-                isGhostModeUnlocked = shieldData.level5_UnlockGhostMode;
-                break;
+            case 2: ApplyStats(shieldData.level2_CooldownReduction, shieldData.level2_InvulnTimeBonus, shieldData.level2_StackIncrease, shieldData.level2_UnlockGhostMode, shieldData.level2_MoveSpeedBonus); break;
+            case 3: ApplyStats(shieldData.level3_CooldownReduction, shieldData.level3_InvulnTimeBonus, shieldData.level3_StackIncrease, shieldData.level3_UnlockGhostMode, shieldData.level3_MoveSpeedBonus); break;
+            case 4: ApplyStats(shieldData.level4_CooldownReduction, shieldData.level4_InvulnTimeBonus, shieldData.level4_StackIncrease, shieldData.level4_UnlockGhostMode, shieldData.level4_MoveSpeedBonus); break;
+            case 5: ApplyStats(shieldData.level5_CooldownReduction, shieldData.level5_InvulnTimeBonus, shieldData.level5_StackIncrease, shieldData.level5_UnlockGhostMode, shieldData.level5_MoveSpeedBonus); break;
+            case 6: ApplyStats(shieldData.level6_CooldownReduction, shieldData.level6_InvulnTimeBonus, shieldData.level6_StackIncrease, shieldData.level6_UnlockGhostMode, shieldData.level6_MoveSpeedBonus); break;
+            case 7: ApplyStats(shieldData.level7_CooldownReduction, shieldData.level7_InvulnTimeBonus, shieldData.level7_StackIncrease, shieldData.level7_UnlockGhostMode, shieldData.level7_MoveSpeedBonus); break;
+            case 8: ApplyStats(shieldData.level8_CooldownReduction, shieldData.level8_InvulnTimeBonus, shieldData.level8_StackIncrease, shieldData.level8_UnlockGhostMode, shieldData.level8_MoveSpeedBonus); break;
+            case 9: ApplyStats(shieldData.level9_CooldownReduction, shieldData.level9_InvulnTimeBonus, shieldData.level9_StackIncrease, shieldData.level9_UnlockGhostMode, shieldData.level9_MoveSpeedBonus); break;
         }
+
+        // Safety check
+        if (currentAttackCooldown < 0.1f) currentAttackCooldown = 0.1f;
+    }
+
+    private void ApplyStats(float cooldown, float invuln, int stack, bool ghost, float speed)
+    {
+        currentAttackCooldown -= cooldown;
+        currentInvulnTime += invuln;
+        baseMaxStacks += stack;
+        if (ghost) isGhostModeUnlocked = true;
+        ghostModeSpeedBonus += speed;
     }
 }

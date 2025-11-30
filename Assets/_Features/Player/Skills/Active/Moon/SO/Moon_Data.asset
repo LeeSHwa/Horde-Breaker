@@ -18,7 +18,7 @@ MonoBehaviour:
   skillName: Moon
   icon: {fileID: -4499063955938224111, guid: 5f4a6fb6526a79b4f98303688468207c, type: 3}
   maxLevel: 5
-  skillDescription: Get 1 orbiting Moon
+  skillDescription: Get 3 orbiting Moon
   levelDescriptions:
   - LV.2 Damage up
   - LV.3 Two Moons          "Mars has two Moon"
@@ -30,8 +30,44 @@ MonoBehaviour:
   baseDuration: 3.6
   baseRotationSpeed: 100
   baseRotationRadius: 5
-  level2_DamageIncrease: 5
-  level3_ProjectileCount: 2
-  level4_RotationSpeedIncrease: 50
-  level5_RadiusIncrease: 3
-  level5_ProjectileCount: 2
+  baseProjectileCount: 3
+  level2_DamageBonus: 0
+  level2_RotationSpeedBonus: 0
+  level2_DurationBonus: 0
+  level2_RadiusBonus: 0
+  level2_ProjectileCountBonus: 0
+  level3_DamageBonus: 0
+  level3_RotationSpeedBonus: 0
+  level3_DurationBonus: 0
+  level3_RadiusBonus: 0
+  level3_ProjectileCountBonus: 0
+  level4_DamageBonus: 0
+  level4_RotationSpeedBonus: 0
+  level4_DurationBonus: 0
+  level4_RadiusBonus: 0
+  level4_ProjectileCountBonus: 0
+  level5_DamageBonus: 0
+  level5_RotationSpeedBonus: 0
+  level5_DurationBonus: 0
+  level5_RadiusBonus: 0
+  level5_ProjectileCountBonus: 0
+  level6_DamageBonus: 0
+  level6_RotationSpeedBonus: 0
+  level6_DurationBonus: 0
+  level6_RadiusBonus: 0
+  level6_ProjectileCountBonus: 0
+  level7_DamageBonus: 0
+  level7_RotationSpeedBonus: 0
+  level7_DurationBonus: 0
+  level7_RadiusBonus: 0
+  level7_ProjectileCountBonus: 0
+  level8_DamageBonus: 0
+  level8_RotationSpeedBonus: 0
+  level8_DurationBonus: 0
+  level8_RadiusBonus: 0
+  level8_ProjectileCountBonus: 0
+  level9_DamageBonus: 0
+  level9_RotationSpeedBonus: 0
+  level9_DurationBonus: 0
+  level9_RadiusBonus: 0
+  level9_ProjectileCountBonus: 0

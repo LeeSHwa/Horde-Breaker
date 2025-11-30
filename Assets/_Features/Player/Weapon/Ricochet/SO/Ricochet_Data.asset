@@ -19,12 +19,52 @@ MonoBehaviour:
   icon: {fileID: -7585660988095454295, guid: 121067652fb50a44ab7005770846bc7a, type: 3}
   maxLevel: 5
   weaponDescription: LV.0 EnergyBall
-  levelDescriptions: []
+  levelDescriptions:
+  - LV.1 Damage+2
+  - LV.2 Cooldown-10%, Bounce+1
+  - LV.3 Damage+4
+  - LV.4 Shot+1
+  - LV.5 Cooldown-10%, Bounce+1
+  - LV.6 Damage+10
+  - LV.7 Shot+1
+  - LV.8 Shot+2
   attackSound: {fileID: 8300000, guid: 323e15cfe809e114ab92c9f4b25e8bc2, type: 3}
   hitSound: {fileID: 8300000, guid: 023ea3ddeaa8dd146b7633a0800e5a0e, type: 3}
   damageVariance: 0.1
   projectilePrefab: {fileID: 5562750625780970372, guid: f6927456b7174b149b0920b48e9a5d87, type: 3}
   projectileSpeed: 20
-  maxBounces: 5
+  baseBounces: 1
   bounceRange: 10
   lifetime: 5
+  level2_DamageBonus: 2
+  level2_CooldownReduction: 0
+  level2_BounceIncrease: 0
+  level2_ProjectileCountIncrease: 0
+  level3_DamageBonus: 0
+  level3_CooldownReduction: 10
+  level3_BounceIncrease: 1
+  level3_ProjectileCountIncrease: 0
+  level4_DamageBonus: 4
+  level4_CooldownReduction: 0
+  level4_BounceIncrease: 0
+  level4_ProjectileCountIncrease: 0
+  level5_DamageBonus: 0
+  level5_CooldownReduction: 0
+  level5_BounceIncrease: 0
+  level5_ProjectileCountIncrease: 1
+  level6_DamageBonus: 0
+  level6_CooldownReduction: 10
+  level6_BounceIncrease: 1
+  level6_ProjectileCountIncrease: 0
+  level7_DamageBonus: 10
+  level7_CooldownReduction: 0
+  level7_BounceIncrease: 0
+  level7_ProjectileCountIncrease: 0
+  level8_DamageBonus: 0
+  level8_CooldownReduction: 0
+  level8_BounceIncrease: 0
+  level8_ProjectileCountIncrease: 1
+  level9_DamageBonus: 0
+  level9_CooldownReduction: 0
+  level9_BounceIncrease: 0
+  level9_ProjectileCountIncrease: 2
