@@ -2,29 +2,30 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    // Stats (damage, knockback) will be "injected" by Initialize()
+    // Stats injected by Initialize()
     private float damage;
     private float knockback;
-    private bool penetration; // Does this bullet penetrate?
+
+    // "penetration" means Infinite Penetration (Level 9)
+    private bool penetration;
+
+    // Finite penetration count
+    private int currentPenetrationCount;
 
     private bool isCritical;
-
-    // [New] Variable to store the attack's source (the player)
     private Transform attackSource;
-
-    // [NEW] Variable to store hit sound
     private AudioClip hitSound;
 
-    // Bullet's own properties
     public float speed = 20f;
-    public float lifetime = 2f; // Auto-deactivates after 2 seconds
+    public float lifetime = 2f;
     private float lifetimeTimer;
 
-    public void Initialize(float dmg, float kb, bool pen, Transform source, Vector3 scale, float newLifetime, AudioClip sound = null, bool isCrit = false)
+    public void Initialize(float dmg, float kb, bool isInfinitePen, int pierceCount, Transform source, Vector3 scale, float newLifetime, AudioClip sound = null, bool isCrit = false)
     {
         this.damage = dmg;
         this.knockback = kb;
-        this.penetration = pen;
+        this.penetration = isInfinitePen;
+        this.currentPenetrationCount = pierceCount;
         this.attackSource = source;
 
         transform.localScale = scale;
@@ -38,14 +39,14 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        // (2) If lifetime expires, deactivate instead of destroying.
+        // If lifetime expires, deactivate instead of destroying.
         lifetimeTimer -= Time.deltaTime;
         if (lifetimeTimer <= 0)
         {
-            gameObject.SetActive(false); // Changed from Destroy(gameObject)
+            gameObject.SetActive(false);
         }
 
-        // (Note) Logic for moving forward (assuming bullet faces right by default)
+        // Logic for moving forward
         transform.Translate(Vector2.right * speed * Time.deltaTime);
     }
 
@@ -56,48 +57,51 @@ public class Bullet : MonoBehaviour
             StatsController enemyStats = other.GetComponent<StatsController>();
             if (enemyStats != null)
             {
-                // (3) Attack with the injected damage & crit status.
-                enemyStats.TakeDamage(damage, isCritical); // [MODIFIED] Pass isCritical
+                // Attack with the injected damage & crit status.
+                enemyStats.TakeDamage(damage, isCritical);
 
                 EnemyMovement enemyMove = other.GetComponent<EnemyMovement>();
                 if (enemyMove != null)
                 {
-                    // [Modified] Changed knockback calculation basis to 'attackSource' (the player)
                     if (attackSource == null)
                     {
-                        // Prevents null reference if attackSource is not assigned
                         Debug.LogWarning("Bullet's attackSource is not set!");
                         return;
                     }
 
                     Vector2 knockbackDirection = (other.transform.position - attackSource.position).normalized;
 
-                    // Prevents the direction vector from becoming (0,0) if player and enemy overlap
                     if (knockbackDirection == Vector2.zero)
                     {
-                        // (Fallback) Knock them back in the bullet's traveling direction (transform.right)
                         knockbackDirection = transform.right;
                     }
 
                     enemyMove.ApplyKnockback(knockbackDirection, this.knockback, 0.1f);
                 }
 
-                // [NEW] Play Hit Sound
                 if (hitSound != null)
                 {
                     SoundManager.Instance.PlaySFX(hitSound, 0.1f);
                 }
             }
 
-            // (4) If this bullet does not penetrate, deactivate self on hit.
-            if (!penetration)
+            // Penetration Logic
+            // 1. If Infinite Penetration is active (Lv 9), do nothing (keep flying).
+            if (penetration) return;
+
+            // 2. If we have Pierce Count left, decrement and keep flying.
+            if (currentPenetrationCount > 0)
             {
-                gameObject.SetActive(false); // Changed from Destroy(gameObject)
+                currentPenetrationCount--;
+                return;
             }
+
+            // 3. Otherwise, destroy the bullet.
+            gameObject.SetActive(false);
         }
     }
 
-    // (5) [Important] Called when the object is re-enabled from the pool.
+    // Called when the object is re-enabled from the pool.
     void OnEnable()
     {
         // Reset the lifetime timer every time it's fired.

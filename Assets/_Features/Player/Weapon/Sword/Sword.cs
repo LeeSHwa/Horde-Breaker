@@ -237,10 +237,12 @@ public class Sword : Weapon
                     float baseLifetime = 3.0f;
                     float finalLifetime = GetFinalDuration(baseLifetime);
 
+                    // Added dummy parameter '0' for pierceCount, since isInfinitePen is true
                     projectileScript.Initialize(
                         projDmg,
                         projKb,
                         true,
+                        0,
                         ownerStats.transform,
                         finalScale,
                         finalLifetime,

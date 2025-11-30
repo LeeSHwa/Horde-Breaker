@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Gun : Weapon
 {
-    // A private variable to hold our *specific* data.
+    // A private variable to hold our specific data.
     private GunDataSO gunData;
 
     // Gun-specific runtime stats
     private bool currentProjectilePenetration = false;
+    private int currentPierceCount = 0;
 
-    // (1) [INITIALIZATION] [MODIFIED] Added 'PlayerAnimator animator' parameter
     public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
     {
         base.Initialize(aimObj, owner, animator);
@@ -24,6 +24,9 @@ public class Gun : Weapon
 
         currentProjectilePenetration = false;
 
+        // Initialize penetration count from base stats
+        currentPierceCount = gunData.basePenetrationCount;
+
         // Use base count from SO if available, otherwise default to 1
         currentProjectileCount = gunData.baseProjectileCount > 0 ? gunData.baseProjectileCount : 1;
     }
@@ -31,7 +34,7 @@ public class Gun : Weapon
     // PerformAttack
     protected override void PerformAttack(Vector2 aimDirection)
     {
-        // [Core] Get the prefab from 'gunData' (our specific SO)
+        // Get the prefab from 'gunData'
         if (gunData.bulletPrefab == null) return;
 
         int count = GetFinalProjectileCount();
@@ -39,7 +42,6 @@ public class Gun : Weapon
         float baseAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
 
         float startAngle = baseAngle;
-
 
         if (count > 1)
         {
@@ -69,6 +71,7 @@ public class Gun : Weapon
                                 finalDamage,
                                 weaponData.knockback,
                                 currentProjectilePenetration,
+                                currentPierceCount,
                                 ownerStats.transform,
                                 finalScaleVector,
                                 finalDuration,
@@ -79,36 +82,36 @@ public class Gun : Weapon
         }
     }
 
-    // [Core Logic] Implement the level-up logic
+    // Implement the level-up logic
     protected override void ApplyLevelUpStats()
     {
         switch (currentLevel)
         {
             case 2:
-                ApplyStats(gunData.level2_DamageBonus, gunData.level2_ProjectileCountBonus, gunData.level2_CooldownReduction);
+                ApplyStats(gunData.level2_DamageBonus, gunData.level2_ProjectileCountBonus, gunData.level2_CooldownReduction, gunData.level2_PenetrationBonus);
                 break;
             case 3:
-                ApplyStats(gunData.level3_DamageBonus, gunData.level3_ProjectileCountBonus, gunData.level3_CooldownReduction);
+                ApplyStats(gunData.level3_DamageBonus, gunData.level3_ProjectileCountBonus, gunData.level3_CooldownReduction, gunData.level3_PenetrationBonus);
                 break;
             case 4:
-                ApplyStats(gunData.level4_DamageBonus, gunData.level4_ProjectileCountBonus, gunData.level4_CooldownReduction);
+                ApplyStats(gunData.level4_DamageBonus, gunData.level4_ProjectileCountBonus, gunData.level4_CooldownReduction, gunData.level4_PenetrationBonus);
                 break;
             case 5:
-                ApplyStats(gunData.level5_DamageBonus, gunData.level5_ProjectileCountBonus, gunData.level5_CooldownReduction);
+                ApplyStats(gunData.level5_DamageBonus, gunData.level5_ProjectileCountBonus, gunData.level5_CooldownReduction, gunData.level5_PenetrationBonus);
                 break;
             case 6:
-                ApplyStats(gunData.level6_DamageBonus, gunData.level6_ProjectileCountBonus, gunData.level6_CooldownReduction);
+                ApplyStats(gunData.level6_DamageBonus, gunData.level6_ProjectileCountBonus, gunData.level6_CooldownReduction, gunData.level6_PenetrationBonus);
                 break;
             case 7:
-                ApplyStats(gunData.level7_DamageBonus, gunData.level7_ProjectileCountBonus, gunData.level7_CooldownReduction);
+                ApplyStats(gunData.level7_DamageBonus, gunData.level7_ProjectileCountBonus, gunData.level7_CooldownReduction, gunData.level7_PenetrationBonus);
                 break;
             case 8:
-                ApplyStats(gunData.level8_DamageBonus, gunData.level8_ProjectileCountBonus, gunData.level8_CooldownReduction);
+                ApplyStats(gunData.level8_DamageBonus, gunData.level8_ProjectileCountBonus, gunData.level8_CooldownReduction, gunData.level8_PenetrationBonus);
                 break;
-            case 9: // Max Level
-                ApplyStats(gunData.level9_DamageBonus, gunData.level9_ProjectileCountBonus, gunData.level9_CooldownReduction);
+            case 9:
+                ApplyStats(gunData.level9_DamageBonus, gunData.level9_ProjectileCountBonus, gunData.level9_CooldownReduction, gunData.level9_PenetrationBonus);
 
-                // [Unlock Penetration]
+                // Unlock Penetration
                 if (gunData.level9_UnlockPenetration)
                 {
                     currentProjectilePenetration = true;
@@ -121,10 +124,11 @@ public class Gun : Weapon
     }
 
     // Helper to reduce code duplication and apply percentage cooldown reduction
-    private void ApplyStats(float dmgBonus, int countBonus, float cooldownPercent)
+    private void ApplyStats(float dmgBonus, int countBonus, float cooldownPercent, int penBonus)
     {
         currentDamage += dmgBonus;
         currentProjectileCount += countBonus;
+        currentPierceCount += penBonus;
 
         // Calculate reduction amount based on percentage of current cooldown
         float reductionAmount = currentAttackCooldown * (cooldownPercent / 100f);

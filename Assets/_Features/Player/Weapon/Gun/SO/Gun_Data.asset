@@ -18,13 +18,13 @@ MonoBehaviour:
   weaponName: Gun
   icon: {fileID: 1355517345105888652, guid: 775974ecee16e934fb08f24c9b02eae0, type: 3}
   maxLevel: 9
-  weaponDescription: Gun
+  weaponDescription: Arrow Gun
   levelDescriptions:
   - Damage+5
-  - Cooldown-10%
+  - Cooldown-10%, Penetration+1
   - Damage+10
   - Shot+1
-  - Cooldown-10%
+  - Cooldown-10%, Penetration+1
   - Damage+20
   - Shot+1
   - The Piercer
@@ -33,29 +33,38 @@ MonoBehaviour:
   damageVariance: 0.1
   bulletPrefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
   baseProjectileCount: 1
+  basePenetrationCount: 1
   multiShotSpread: 5
   level2_DamageBonus: 5
   level2_ProjectileCountBonus: 0
   level2_CooldownReduction: 0
+  level2_PenetrationBonus: 0
   level3_DamageBonus: 0
   level3_ProjectileCountBonus: 0
   level3_CooldownReduction: 10
+  level3_PenetrationBonus: 1
   level4_DamageBonus: 15
   level4_ProjectileCountBonus: 0
   level4_CooldownReduction: 0
+  level4_PenetrationBonus: 0
   level5_DamageBonus: 0
   level5_ProjectileCountBonus: 1
   level5_CooldownReduction: 0
+  level5_PenetrationBonus: 0
   level6_DamageBonus: 0
   level6_ProjectileCountBonus: 0
   level6_CooldownReduction: 10
+  level6_PenetrationBonus: 1
   level7_DamageBonus: 20
   level7_ProjectileCountBonus: 0
   level7_CooldownReduction: 0
+  level7_PenetrationBonus: 0
   level8_DamageBonus: 0
   level8_ProjectileCountBonus: 1
   level8_CooldownReduction: 0
+  level8_PenetrationBonus: 0
   level9_DamageBonus: 0
   level9_ProjectileCountBonus: 0
   level9_CooldownReduction: 0
+  level9_PenetrationBonus: 0
   level9_UnlockPenetration: 1
