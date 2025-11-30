@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wave_00_00
   m_EditorClassIdentifier: 
   waveName: 1. Strat with Green Slime
-  startTime: 100
+  startTime: 0
   spawnRules:
   - note: "\uC2DC\uC791 \uC2AC\uB77C\uC784"
     prefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}

@@ -20,9 +20,6 @@ public class SkillStatusManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (var slot in activeSlots) if (slot != null) slot.ClearSlot();
-        foreach (var slot in passiveSlots) if (slot != null) slot.ClearSlot();
-
         UpdateUI();
     }
 
@@ -39,10 +36,6 @@ public class SkillStatusManager : MonoBehaviour
             {
                 activeSlots[i].SetSlot(myActives[i].skillData.icon, myActives[i].CurrentLevel);
             }
-            else
-            {
-                activeSlots[i].ClearSlot();
-            }
         }
 
         List<PassiveUpgradeSO> myPassives = playerStats.learnedPassives;
@@ -57,10 +50,6 @@ public class SkillStatusManager : MonoBehaviour
                 int level = playerStats.GetPassiveLevel(data.upgradeName);
 
                 passiveSlots[i].SetSlot(data.icon, level);
-            }
-            else
-            {
-                passiveSlots[i].ClearSlot();
             }
         }
     }

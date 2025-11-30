@@ -20,7 +20,7 @@ MonoBehaviour:
   maxLevel: 5
   skillDescription: Fires in a random direction
   levelDescriptions:
-  - LV.2 Damage up
+  - Damage up
   - LV.3 Bigger Fireball
   - LV.4 Reduced firing frequency
   - LV.MAX Fire spread
@@ -30,8 +30,36 @@ MonoBehaviour:
   baseProjectileSpeed: 20
   baseProjectileLifetime: 6
   damageFalloffPercentage: 75
-  level2_DamageIncrease: 10
-  level3_AreaIncrease: 0.75
+  spreadAngle: 15
+  level2_DamageBonus: 0
+  level2_AreaBonus: 0
+  level2_CooldownReduction: 0
+  level2_ProjectileCountIncrease: 0
+  level3_DamageBonus: 0
+  level3_AreaBonus: 0
+  level3_CooldownReduction: 0
+  level3_ProjectileCountIncrease: 0
+  level4_DamageBonus: 0
+  level4_AreaBonus: 0
   level4_CooldownReduction: 2
-  level5_ProjectileCount: 3
-  level5_SpreadAngle: 15
+  level4_ProjectileCountIncrease: 0
+  level5_DamageBonus: 0
+  level5_AreaBonus: 0
+  level5_CooldownReduction: 0
+  level5_ProjectileCountIncrease: 0
+  level6_DamageBonus: 0
+  level6_AreaBonus: 0
+  level6_CooldownReduction: 0
+  level6_ProjectileCountIncrease: 0
+  level7_DamageBonus: 0
+  level7_AreaBonus: 0
+  level7_CooldownReduction: 0
+  level7_ProjectileCountIncrease: 0
+  level8_DamageBonus: 0
+  level8_AreaBonus: 0
+  level8_CooldownReduction: 0
+  level8_ProjectileCountIncrease: 0
+  level9_DamageBonus: 0
+  level9_AreaBonus: 0
+  level9_CooldownReduction: 0
+  level9_ProjectileCountIncrease: 0
