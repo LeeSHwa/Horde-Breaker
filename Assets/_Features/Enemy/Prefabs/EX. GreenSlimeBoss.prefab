@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: -8177292086610979139}
   - component: {fileID: -1659051550180691773}
   m_Layer: 0
-  m_Name: 1_1. GreenSlimeBoss1
+  m_Name: EX. GreenSlimeBoss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

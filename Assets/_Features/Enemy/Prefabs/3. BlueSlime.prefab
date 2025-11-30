@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6678338938222245641}
   - component: {fileID: 272946746058151902}
   m_Layer: 0
-  m_Name: 3.BlueSlime
+  m_Name: 3. BlueSlime
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 5511fec38b803094582955939fb81b72, type: 2}
+  baseStats: {fileID: 11400000, guid: db182a672e2ed14488c440e2a22bf9f7, type: 2}
   currentHP: 0
   currentMoveSpeed: 0
   currentDamageMultiplier: 0
@@ -185,6 +185,8 @@ MonoBehaviour:
   expGainMultiplier: 1
   currentCritChance: 0
   currentCritMultiplier: 0
+  meatPrefabName: Item_Meat
+  magnetPrefabName: Item_Magnet
 --- !u!114 &6678338938222245641
 MonoBehaviour:
   m_ObjectHideFlags: 0

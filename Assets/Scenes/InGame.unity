@@ -760,7 +760,7 @@ MonoBehaviour:
     prefab: {fileID: 2465294122650626018, guid: d88d5849eca638e48985b89ff810cc27, type: 3}
     size: 50
     container: {fileID: 976381514}
-  - tag: DamagePopup
+  - tag: DamageText
     prefab: {fileID: 3122794286893099572, guid: 82c76db25d66b234b8a11d626b1b92b3, type: 3}
     size: 100
     container: {fileID: 1773587617}

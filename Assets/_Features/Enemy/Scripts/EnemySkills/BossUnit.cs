@@ -2,15 +2,23 @@ using UnityEngine;
 
 public class BossUnit : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private StatsController stats;
+
+    void Awake()
     {
-        
+        stats = GetComponent<StatsController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDisable()
     {
-        
+        if (GameManager.Instance != null && !GameManager.Instance.isGameOver)
+        {
+            if (stats != null && stats.currentHP <= 0)
+            {
+                Debug.Log("Boss Defeated! Resuming Timer.");
+
+                GameManager.Instance.ResumeGameTimer();
+            }
+        }
     }
 }
