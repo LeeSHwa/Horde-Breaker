@@ -345,4 +345,9 @@ public class SoundManager : MonoBehaviour
     {
         sfxVolume = volume;
     }
+
+    public void PlayUISound(AudioClip clip)
+    {
+        PlaySFX(clip, 0f);
+    }
 }
