@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
     // "penetration" means Infinite Penetration (Level 9)
     private bool penetration;
 
-    // Finite penetration count (Level 3, 6)
+    // Finite penetration count
     private int currentPenetrationCount;
 
     private bool isCritical;
@@ -89,7 +89,7 @@ public class Bullet : MonoBehaviour
             // 1. If Infinite Penetration is active (Lv 9), do nothing (keep flying).
             if (penetration) return;
 
-            // 2. If we have Pierce Count left (Lv 3, 6), decrement and keep flying.
+            // 2. If we have Pierce Count left, decrement and keep flying.
             if (currentPenetrationCount > 0)
             {
                 currentPenetrationCount--;

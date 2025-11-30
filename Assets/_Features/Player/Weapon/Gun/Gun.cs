@@ -23,7 +23,9 @@ public class Gun : Weapon
         }
 
         currentProjectilePenetration = false;
-        currentPierceCount = 0;
+
+        // Initialize penetration count from base stats
+        currentPierceCount = gunData.basePenetrationCount;
 
         // Use base count from SO if available, otherwise default to 1
         currentProjectileCount = gunData.baseProjectileCount > 0 ? gunData.baseProjectileCount : 1;
@@ -86,28 +88,28 @@ public class Gun : Weapon
         switch (currentLevel)
         {
             case 2:
-                ApplyStats(gunData.level2_DamageBonus, gunData.level2_ProjectileCountBonus, gunData.level2_CooldownReduction, 0);
+                ApplyStats(gunData.level2_DamageBonus, gunData.level2_ProjectileCountBonus, gunData.level2_CooldownReduction, gunData.level2_PenetrationBonus);
                 break;
             case 3:
                 ApplyStats(gunData.level3_DamageBonus, gunData.level3_ProjectileCountBonus, gunData.level3_CooldownReduction, gunData.level3_PenetrationBonus);
                 break;
             case 4:
-                ApplyStats(gunData.level4_DamageBonus, gunData.level4_ProjectileCountBonus, gunData.level4_CooldownReduction, 0);
+                ApplyStats(gunData.level4_DamageBonus, gunData.level4_ProjectileCountBonus, gunData.level4_CooldownReduction, gunData.level4_PenetrationBonus);
                 break;
             case 5:
-                ApplyStats(gunData.level5_DamageBonus, gunData.level5_ProjectileCountBonus, gunData.level5_CooldownReduction, 0);
+                ApplyStats(gunData.level5_DamageBonus, gunData.level5_ProjectileCountBonus, gunData.level5_CooldownReduction, gunData.level5_PenetrationBonus);
                 break;
             case 6:
                 ApplyStats(gunData.level6_DamageBonus, gunData.level6_ProjectileCountBonus, gunData.level6_CooldownReduction, gunData.level6_PenetrationBonus);
                 break;
             case 7:
-                ApplyStats(gunData.level7_DamageBonus, gunData.level7_ProjectileCountBonus, gunData.level7_CooldownReduction, 0);
+                ApplyStats(gunData.level7_DamageBonus, gunData.level7_ProjectileCountBonus, gunData.level7_CooldownReduction, gunData.level7_PenetrationBonus);
                 break;
             case 8:
-                ApplyStats(gunData.level8_DamageBonus, gunData.level8_ProjectileCountBonus, gunData.level8_CooldownReduction, 0);
+                ApplyStats(gunData.level8_DamageBonus, gunData.level8_ProjectileCountBonus, gunData.level8_CooldownReduction, gunData.level8_PenetrationBonus);
                 break;
             case 9:
-                ApplyStats(gunData.level9_DamageBonus, gunData.level9_ProjectileCountBonus, gunData.level9_CooldownReduction, 0);
+                ApplyStats(gunData.level9_DamageBonus, gunData.level9_ProjectileCountBonus, gunData.level9_CooldownReduction, gunData.level9_PenetrationBonus);
 
                 // Unlock Penetration
                 if (gunData.level9_UnlockPenetration)
