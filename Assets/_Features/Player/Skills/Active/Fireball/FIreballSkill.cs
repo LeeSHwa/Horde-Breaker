@@ -92,6 +92,7 @@ public class FireballSkill : Skills
 
     private void ApplyStats(float dmg, float area, float cooldown, int count)
     {
+        // All stats are applied as flat values
         currentDamage += dmg;
         currentArea += area;
         currentAttackCooldown -= cooldown;

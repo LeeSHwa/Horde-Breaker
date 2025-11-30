@@ -252,8 +252,11 @@ public class LightningSkill : Skills
     private void ApplyStats(float dmg, float cooldown, int branch, bool t2, bool t3)
     {
         currentDamage += dmg;
-        currentAttackCooldown -= cooldown;
         currentMaxBranches += branch;
+
+        // Apply cooldown as flat reduction
+        currentAttackCooldown -= cooldown;
+
         if (t2) isTier2Unlocked = true;
         if (t3) isTier3Unlocked = true;
     }

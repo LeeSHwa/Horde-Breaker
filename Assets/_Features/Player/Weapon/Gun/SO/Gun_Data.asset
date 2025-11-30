@@ -20,14 +20,14 @@ MonoBehaviour:
   maxLevel: 9
   weaponDescription: LV.0 Gun
   levelDescriptions:
-  - LV.1 Damage+5
-  - LV.2 Cooldown-10%
-  - LV.3 Damage+10
-  - LV.4 Shot+1
-  - LV.5 Cooldown-10%
-  - LV.6 Damage+20
-  - LV.7 Shot+1
-  - LV.MAX The Piercer
+  - Damage+5
+  - Cooldown-10%
+  - Damage+10
+  - Shot+1
+  - Cooldown-10%
+  - Damage+20
+  - Shot+1
+  - The Piercer
   attackSound: {fileID: 8300000, guid: 2352822feb4caa14ebdbc0c713289f8d, type: 3}
   hitSound: {fileID: 8300000, guid: eaae8fe8d600e1f459f34aa5757fa3b8, type: 3}
   damageVariance: 0.1

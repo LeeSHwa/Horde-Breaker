@@ -17,19 +17,51 @@ MonoBehaviour:
   knockback: 3
   skillName: Hellfire
   icon: {fileID: -7139488364972308601, guid: d40c33c4526ea584baf9b2b7985f23ea, type: 3}
-  maxLevel: 5
+  maxLevel: 9
   skillDescription: Tracks the nearest enemy
   levelDescriptions:
-  - LV.2 Damage up
-  - LV.3  Double Casting
-  - LV.4 Reduced casting cooldown
-  - LV.MAX Triple Casting
+  - Damage+5
+  - Cast+1
+  - Speed+5
+  - cast+1
+  - Damage+5
+  - cast+1
+  - Cooldow-1s
+  - Damage+10, cast+1
   castSound: {fileID: 8300000, guid: 5c7b6d4002009e842bd2621585546d19, type: 3}
   hitSound: {fileID: 8300000, guid: 7bef0064f8567430cac22499c6b93d4f, type: 3}
   missilePrefab: {fileID: 9067339777270423991, guid: 7ebcdbddd78cada4ebbf11036e45aae7, type: 3}
   missileSpeed: 10
   searchRadius: 100
-  level2_DamageIncrease: 20
-  level3_ProjectileCount: 2
-  level4_CooldownReduction: 2
-  level5_ProjectileCount: 3
+  level2_DamageBonus: 5
+  level2_CooldownReduction: 0
+  level2_ProjectileCountIncrease: 0
+  level2_SpeedBonus: 0
+  level3_DamageBonus: 0
+  level3_CooldownReduction: 0
+  level3_ProjectileCountIncrease: 1
+  level3_SpeedBonus: 0
+  level4_DamageBonus: 0
+  level4_CooldownReduction: 0
+  level4_ProjectileCountIncrease: 0
+  level4_SpeedBonus: 5
+  level5_DamageBonus: 0
+  level5_CooldownReduction: 0
+  level5_ProjectileCountIncrease: 1
+  level5_SpeedBonus: 0
+  level6_DamageBonus: 5
+  level6_CooldownReduction: 0
+  level6_ProjectileCountIncrease: 0
+  level6_SpeedBonus: 0
+  level7_DamageBonus: 0
+  level7_CooldownReduction: 0
+  level7_ProjectileCountIncrease: 1
+  level7_SpeedBonus: 0
+  level8_DamageBonus: 0
+  level8_CooldownReduction: 1
+  level8_ProjectileCountIncrease: 0
+  level8_SpeedBonus: 0
+  level9_DamageBonus: 10
+  level9_CooldownReduction: 0
+  level9_ProjectileCountIncrease: 1
+  level9_SpeedBonus: 0

@@ -20,14 +20,14 @@ MonoBehaviour:
   maxLevel: 9
   weaponDescription: LV.0 Sword
   levelDescriptions:
-  - LV.1 Damage+3
-  - LV.2 Cooldown-10%
-  - LV.3 Damage+10
-  - LV.4 Sword Length Increase
-  - LV.5 Cooldown-10%
-  - LV.6 Damage+10
-  - LV.7 Swing Angle Increase
-  - LV.MAX Sword Master
+  - Damage+3
+  - Cooldown-10%
+  - Damage+10
+  - Sword Length Increase
+  - Cooldown-10%
+  - Damage+10
+  - Swing Angle Increase
+  - Sword Master
   attackSound: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
   hitSound: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
   damageVariance: 0.1

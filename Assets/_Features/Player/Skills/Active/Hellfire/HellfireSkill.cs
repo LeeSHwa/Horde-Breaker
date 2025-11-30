@@ -83,6 +83,7 @@ public class HellfireSkill : Skills
 
     private void ApplyStats(float dmg, float cooldown, int count, float speed)
     {
+        // All stats are applied as flat values
         currentDamage += dmg;
         currentAttackCooldown -= cooldown;
         currentProjectileCount += count;
