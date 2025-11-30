@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
   m_Name: 9. cat_stats
   m_EditorClassIdentifier: 
-  baseMaxHealth: 30
+  baseMaxHealth: 150
   baseMoveSpeed: 15
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 1.5
-  expValue: 7
+  contactDamage: 1
+  expValue: 50

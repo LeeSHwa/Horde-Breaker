@@ -41,7 +41,7 @@ public class StatsController : MonoBehaviour
 
     public Func<float, bool> OnDamageProcess;
 
-    // ÀÌ°Ç ·¹º§ °è»ê¿ë (ÀÌ¸§, ·¹º§)
+    // ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ì¸ï¿½, ï¿½ï¿½ï¿½ï¿½)
     private Dictionary<string, int> passiveLevels = new Dictionary<string, int>();
 
     private bool isDead = false;

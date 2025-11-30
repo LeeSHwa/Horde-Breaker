@@ -50,7 +50,7 @@ public class LevelUpManager : MonoBehaviour
         public PassiveUpgradeSO passiveUpgrade;
 
         // Probability weight for RNG
-        public int weight = 7;
+        public int weight = 12;
 
         // Flag to identify if this is a new item or an upgrade
         public bool isNew = false;
@@ -64,8 +64,8 @@ public class LevelUpManager : MonoBehaviour
             isNew = false; // It's an upgrade, so not new
 
             // Logic: Weapons are powerful, so make their upgrades rare
-            if (item is Weapon) weight = 2;
-            else weight = 7;
+            if (item is Weapon) weight = 8;
+            else weight = 10;
         }
 
         // Constructor 2: For NEW Active Skills
@@ -73,7 +73,7 @@ public class LevelUpManager : MonoBehaviour
         {
             newSkillPrefab = prefab;
             isNew = true; // It's a new skill
-            weight = 7; // Standard weight for new skills
+            weight = 12; // Standard weight for new skills
         }
 
         // Constructor 3: For Passive Upgrades

@@ -1689,7 +1689,12 @@ MonoBehaviour:
   waves:
   - {fileID: 11400000, guid: 0e66d6a31fcb07a4aa1a7ce48f201c51, type: 2}
   - {fileID: 11400000, guid: 8cf6026ee14788b42919a09e57789248, type: 2}
+  - {fileID: 11400000, guid: b07477777f301d145b89bcc667accc7f, type: 2}
   - {fileID: 11400000, guid: 82eb6c2334d4ce84ca0e606ec03a0db5, type: 2}
+  - {fileID: 11400000, guid: a4897900952097e4dacb147ef5db1d4d, type: 2}
+  - {fileID: 11400000, guid: 7d9323841f3786f44a990777ee8bf647, type: 2}
+  - {fileID: 11400000, guid: de811ebd4aebd68428f98ed0f5c530ba, type: 2}
+  - {fileID: 11400000, guid: d76fc644f0a33f940bbfbd292722a709, type: 2}
   enemyContainer: {fileID: 348919813}
   spawnPadding: 2
 --- !u!4 &348919813
@@ -2232,7 +2237,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 462313906}
-  - component: {fileID: 462313907}
   m_Layer: 0
   m_Name: '@Managers'
   m_TagString: Untagged
@@ -2259,25 +2263,6 @@ Transform:
   - {fileID: 1727075072}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &462313907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 462313905}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3b9a6d2344ee66449c15894a42ee502, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  masterVolume: 1
-  bgmVolume: 0.5
-  sfxVolume: 1
-  bgmPlaylist: []
-  crossfadeDuration: 1
-  sfxPoolSize: 20
-  levelUpBGM: {fileID: 0}
 --- !u!224 &488956182 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6208861370679787558, guid: f6710748026f0474b9736db63c462ed6, type: 3}
@@ -7365,6 +7350,10 @@ PrefabInstance:
     - target: {fileID: 7503961604559906625, guid: 79c601132dad29c4eb62bfdf2ffcefbb, type: 3}
       propertyPath: m_Name
       value: SoundManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7503961604559906625, guid: 79c601132dad29c4eb62bfdf2ffcefbb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

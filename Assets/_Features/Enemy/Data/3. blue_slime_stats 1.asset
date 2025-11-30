@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
-  m_Name: 1_1. green_slime_boss_stats
+  m_Name: 3. blue_slime_stats 1
   m_EditorClassIdentifier: 
-  baseMaxHealth: 10000
+  baseMaxHealth: 60
   baseMoveSpeed: 4
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 5
-  expValue: 500
+  contactDamage: 0.6
+  expValue: 2

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d919d59176ae6e408e57053564ca99c, type: 3}
   m_Name: Player_Stats2
   m_EditorClassIdentifier: 
-  baseMaxHealth: 100
-  baseMoveSpeed: 15
+  baseMaxHealth: 60
+  baseMoveSpeed: 10
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
-  expToNextLevel: 140000001e0000002d000000410000005a000000780000009b000000c3000000f0000000220100005901000095010000
+  expToNextLevel: 050000000a0000000f00000014000000190000001e0000002800000037000000460000005a0000006e00000087000000a0000000be000000dc000000ff000000220100004a010000720100009f010000cc010000fe01000030020000620200009e020000
   basePickupRadius: 4
-  baseCritChance: 0.5
+  baseCritChance: 0
   baseCritMultiplier: 1.5

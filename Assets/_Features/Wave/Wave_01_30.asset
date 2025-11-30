@@ -10,13 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 043f9b8dfc53ab445adb99203d82b6e1, type: 3}
-  m_Name: Wave_00_00
+  m_Name: Wave_01_30
   m_EditorClassIdentifier: 
-  waveName: 1. Strat with Green Slime
-  startTime: 0
+  waveName: "3. 1:30, \uC554\uC0B4\uC790 \uB4F1\uC7A5"
+  startTime: 90
   spawnRules:
   - note: "\uC2DC\uC791 \uC2AC\uB77C\uC784"
     prefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
-    interval: 0.2
+    interval: 0.3
+    chance: 1
+  - note: "\uB808\uB4DC \uC2AC\uB77C\uC784"
+    prefab: {fileID: 8171226546246630872, guid: cb5b27ab1c178924ba02bd694d583b33, type: 3}
+    interval: 0.4
+    chance: 1
+  - note: "Cat(\uC554\uC0B4\uC790)"
+    prefab: {fileID: 839540718817352759, guid: 8a6ae5163b38f1840bcf4b15a0857f76, type: 3}
+    interval: 12
     chance: 1
   isBossWave: 0
