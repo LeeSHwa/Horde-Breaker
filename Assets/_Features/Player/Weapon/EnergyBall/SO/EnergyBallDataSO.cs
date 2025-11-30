@@ -1,21 +1,24 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RicochetData", menuName = "Stats/Weapon Data/RicochetData")]
-public class RicochetDataSO : WeaponDataSO
+[CreateAssetMenu(fileName = "EnergyBall_Data", menuName = "Stats/Weapon Data/EnergyBallData")]
+public class EnergyBallDataSO : WeaponDataSO
 {
-    [Header("Ricochet Base Stats (Lv.1)")]
+    [Header("EnergyBall Base Stats (Lv.1)")]
     public GameObject projectilePrefab;
     public float projectileSpeed = 15f;
     public int baseBounces = 1;
-    public float bounceRange = 8f;
-    public float lifetime = 3f;
+    public float bounceRange = 10f; // Increased default range
+    public float lifetime = 5f;     // Initial lifetime (long)
+
+    [Header("Behavior")]
+    [Tooltip("Time to find next target after a bounce (Short)")]
+    public float bounceSearchDuration = 1.5f; // Short duration after hit
 
     // --- Flexible Level Up Data Structure ---
-    // Headers represent the transition (e.g., Level 1 -> Upgrade to Level 2)
 
     [Header("Level 1 (Upgrade to Lv.2)")]
     public float level2_DamageBonus;
-    public float level2_CooldownReduction; // Percent
+    public float level2_CooldownReduction;
     public int level2_BounceIncrease;
     public int level2_ProjectileCountIncrease;
 

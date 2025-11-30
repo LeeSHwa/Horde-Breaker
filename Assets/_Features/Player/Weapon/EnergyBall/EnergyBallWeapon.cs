@@ -1,10 +1,10 @@
 using UnityEngine;
 
 // This script manages the weapon itself.
-public class RicochetWeapon : Weapon
+public class EnergyBallWeapon : Weapon
 {
     // A reference to the ScriptableObject containing this weapon's unique stats.
-    private RicochetDataSO ricochetData;
+    private EnergyBallDataSO energyBallData;
 
     // The *current* number of [Enemy] bounces
     private int currentMaxBounces;
@@ -14,18 +14,18 @@ public class RicochetWeapon : Weapon
     {
         base.Initialize(aimObj, owner, animator);
 
-        if (weaponData is RicochetDataSO)
+        if (weaponData is EnergyBallDataSO)
         {
-            ricochetData = (RicochetDataSO)weaponData;
+            energyBallData = (EnergyBallDataSO)weaponData;
         }
         else
         {
-            Debug.LogError("[RicochetWeapon] Wrong DataSO assigned!");
+            Debug.LogError("[EnergyBallWeapon] Wrong DataSO assigned!");
             return;
         }
 
-        // Initialize Ricochet specific stats
-        this.currentMaxBounces = ricochetData.baseBounces;
+        // Initialize specific stats
+        this.currentMaxBounces = energyBallData.baseBounces;
 
         // Ensure projectile count starts at 1
         this.currentProjectileCount = 1;
@@ -34,7 +34,7 @@ public class RicochetWeapon : Weapon
     // This function is called by the parent 'Weapon' class when the attack timer is ready.
     protected override void PerformAttack(Vector2 aimDirection)
     {
-        if (ricochetData.projectilePrefab == null) return;
+        if (energyBallData.projectilePrefab == null) return;
 
         // Get total projectile count (Base + Passive + Level Up)
         int count = GetFinalProjectileCount();
@@ -52,29 +52,36 @@ public class RicochetWeapon : Weapon
 
         for (int i = 0; i < count; i++)
         {
-            GameObject projectileObj = PoolManager.Instance.GetFromPool(ricochetData.projectilePrefab.name);
+            // Get a recycled projectile from the object pool instead of creating a new one.
+            GameObject projectileObj = PoolManager.Instance.GetFromPool(energyBallData.projectilePrefab.name);
             if (projectileObj == null) continue;
 
+            // Set the projectile's position to the 'aim' transform
             projectileObj.transform.position = aim.position;
 
             // Set rotation based on spread
             float currentAngle = startAngle + (i * spreadAngle);
             projectileObj.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
-            RicochetProjectile projectile = projectileObj.GetComponent<RicochetProjectile>();
+            // Get the script component from the projectile object we just spawned.
+            EnergyBallProjectile projectile = projectileObj.GetComponent<EnergyBallProjectile>();
 
             if (projectile != null)
             {
+                // Calculate final stats with passives
                 float finalDamage = GetFinalDamage(out bool isCrit);
-                float finalLifetime = GetFinalDuration(ricochetData.lifetime);
+
+                // Initial lifetime is used for the first shot
+                float initialLifetime = GetFinalDuration(energyBallData.lifetime);
 
                 // Call the projectile's Initialize method to set it up.
                 projectile.Initialize(
                     finalDamage,
-                    ricochetData.projectileSpeed,
+                    energyBallData.projectileSpeed,
                     currentMaxBounces,
-                    ricochetData.bounceRange,
-                    finalLifetime,
+                    energyBallData.bounceRange,
+                    initialLifetime,
+                    energyBallData.bounceSearchDuration,
                     ownerStats.transform,
                     weaponData.hitSound,
                     isCrit
@@ -89,14 +96,14 @@ public class RicochetWeapon : Weapon
         // Apply stats based on current level using the flexible data structure
         switch (currentLevel)
         {
-            case 2: ApplyStats(ricochetData.level2_DamageBonus, ricochetData.level2_CooldownReduction, ricochetData.level2_BounceIncrease, ricochetData.level2_ProjectileCountIncrease); break;
-            case 3: ApplyStats(ricochetData.level3_DamageBonus, ricochetData.level3_CooldownReduction, ricochetData.level3_BounceIncrease, ricochetData.level3_ProjectileCountIncrease); break;
-            case 4: ApplyStats(ricochetData.level4_DamageBonus, ricochetData.level4_CooldownReduction, ricochetData.level4_BounceIncrease, ricochetData.level4_ProjectileCountIncrease); break;
-            case 5: ApplyStats(ricochetData.level5_DamageBonus, ricochetData.level5_CooldownReduction, ricochetData.level5_BounceIncrease, ricochetData.level5_ProjectileCountIncrease); break;
-            case 6: ApplyStats(ricochetData.level6_DamageBonus, ricochetData.level6_CooldownReduction, ricochetData.level6_BounceIncrease, ricochetData.level6_ProjectileCountIncrease); break;
-            case 7: ApplyStats(ricochetData.level7_DamageBonus, ricochetData.level7_CooldownReduction, ricochetData.level7_BounceIncrease, ricochetData.level7_ProjectileCountIncrease); break;
-            case 8: ApplyStats(ricochetData.level8_DamageBonus, ricochetData.level8_CooldownReduction, ricochetData.level8_BounceIncrease, ricochetData.level8_ProjectileCountIncrease); break;
-            case 9: ApplyStats(ricochetData.level9_DamageBonus, ricochetData.level9_CooldownReduction, ricochetData.level9_BounceIncrease, ricochetData.level9_ProjectileCountIncrease); break;
+            case 2: ApplyStats(energyBallData.level2_DamageBonus, energyBallData.level2_CooldownReduction, energyBallData.level2_BounceIncrease, energyBallData.level2_ProjectileCountIncrease); break;
+            case 3: ApplyStats(energyBallData.level3_DamageBonus, energyBallData.level3_CooldownReduction, energyBallData.level3_BounceIncrease, energyBallData.level3_ProjectileCountIncrease); break;
+            case 4: ApplyStats(energyBallData.level4_DamageBonus, energyBallData.level4_CooldownReduction, energyBallData.level4_BounceIncrease, energyBallData.level4_ProjectileCountIncrease); break;
+            case 5: ApplyStats(energyBallData.level5_DamageBonus, energyBallData.level5_CooldownReduction, energyBallData.level5_BounceIncrease, energyBallData.level5_ProjectileCountIncrease); break;
+            case 6: ApplyStats(energyBallData.level6_DamageBonus, energyBallData.level6_CooldownReduction, energyBallData.level6_BounceIncrease, energyBallData.level6_ProjectileCountIncrease); break;
+            case 7: ApplyStats(energyBallData.level7_DamageBonus, energyBallData.level7_CooldownReduction, energyBallData.level7_BounceIncrease, energyBallData.level7_ProjectileCountIncrease); break;
+            case 8: ApplyStats(energyBallData.level8_DamageBonus, energyBallData.level8_CooldownReduction, energyBallData.level8_BounceIncrease, energyBallData.level8_ProjectileCountIncrease); break;
+            case 9: ApplyStats(energyBallData.level9_DamageBonus, energyBallData.level9_CooldownReduction, energyBallData.level9_BounceIncrease, energyBallData.level9_ProjectileCountIncrease); break;
         }
 
         // Safety cap for cooldown

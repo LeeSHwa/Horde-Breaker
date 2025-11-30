@@ -1,29 +1,25 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// [New Logic Applied Version]
-public class RicochetProjectile : MonoBehaviour
+public class EnergyBallProjectile : MonoBehaviour
 {
-    // --- Stats passed from the Weapon ---
+    // Stats passed from the Weapon
     private float currentDamage;
     private float speed;
     private int remainingBounces;
     private float bounceRange;
+    private float bounceSearchDuration;
     private Transform attackSource;
 
-    // [NEW] Variable to store hit sound
     private AudioClip hitSound;
-    // [NEW] Is Crit?
     private bool isCritical;
 
-    // --- Internal State ---
+    // Internal State
     private float lifetimeTimer;
-    private float initialLifetime;
     private Vector2 moveDirection;
-
     private List<Transform> hitEnemies;
 
-    // --- Variables for Screen Bound Bouncing ---
+    // Variables for Screen Bound Bouncing
     private float bulletRadius;
 
     void Start()
@@ -39,24 +35,22 @@ public class RicochetProjectile : MonoBehaviour
         else
         {
             bulletRadius = 0.1f;
-            Debug.LogWarning("RicochetProjectile: Circle/Box Collider not found for calculating bullet radius.");
         }
     }
 
-    // [MODIFIED] Added 'AudioClip sound' & 'bool isCrit' parameter
-    public void Initialize(float damage, float speed, int maxBounces, float range, float lifetime, Transform source, AudioClip sound = null, bool isCrit = false)
+    public void Initialize(float damage, float speed, int maxBounces, float range, float initialLifetime, float searchDuration, Transform source, AudioClip sound = null, bool isCrit = false)
     {
         this.currentDamage = damage;
         this.speed = speed;
         this.remainingBounces = maxBounces;
         this.bounceRange = range;
 
-        this.initialLifetime = lifetime;
-        this.lifetimeTimer = lifetime;
+        this.lifetimeTimer = initialLifetime;
+        this.bounceSearchDuration = searchDuration;
 
         this.attackSource = source;
-        this.hitSound = sound; // [NEW] Store hit sound
-        this.isCritical = isCrit; // [NEW] Store crit status
+        this.hitSound = sound;
+        this.isCritical = isCrit;
         this.moveDirection = transform.right;
 
         if (hitEnemies == null)
@@ -89,10 +83,8 @@ public class RicochetProjectile : MonoBehaviour
 
             if (collision.TryGetComponent<StatsController>(out StatsController enemyStats))
             {
-                // [MODIFIED] Pass isCritical
                 enemyStats.TakeDamage(currentDamage, isCritical);
 
-                // [NEW] Play Hit Sound
                 if (hitSound != null)
                 {
                     SoundManager.Instance.PlaySFX(hitSound, 0.1f);
@@ -104,8 +96,13 @@ public class RicochetProjectile : MonoBehaviour
             if (remainingBounces > 0)
             {
                 remainingBounces--;
-                lifetimeTimer = initialLifetime;
+                lifetimeTimer = bounceSearchDuration; // Reset to short duration on hit
                 FindNextTarget(collision.transform.position);
+            }
+            else
+            {
+                // No more bounces allowed, despawn immediately
+                gameObject.SetActive(false);
             }
         }
     }
