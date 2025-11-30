@@ -58,11 +58,11 @@ public class EnemyProjectile : MonoBehaviour
             // Disable projectile on hit
             DisableProjectile();
         }
-        else if (other.CompareTag("Wall") || other.CompareTag("Obstacle"))
-        {
-            // Optional: Destroy on wall hit
-            DisableProjectile();
-        }
+        //else if (other.CompareTag("Wall") || other.CompareTag("Obstacle"))
+        //{
+        //    // Optional: Destroy on wall hit
+        //    DisableProjectile();
+        //}
     }
 
     private void DisableProjectile()

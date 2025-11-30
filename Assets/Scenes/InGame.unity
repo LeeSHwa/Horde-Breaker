@@ -1377,9 +1377,13 @@ MonoBehaviour:
     prefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
     size: 50
     container: {fileID: 1773587617}
-  - tag: Moon_Prefab
-    prefab: {fileID: 2615944730286373386, guid: 9e30334dde7ab50479843e2c310a9bea, type: 3}
-    size: 30
+  - tag: Item_Magnet
+    prefab: {fileID: 3800038629284559149, guid: 6f315f18b9316f441bb304a1d51139b8, type: 3}
+    size: 3
+    container: {fileID: 1773587617}
+  - tag: Item_Meat
+    prefab: {fileID: 3800038629284559149, guid: e1e0681881aa03e43aaa941aa77bc0fe, type: 3}
+    size: 10
     container: {fileID: 1773587617}
   - tag: Hellfire_Prefab
     prefab: {fileID: 9067339777270423991, guid: 7ebcdbddd78cada4ebbf11036e45aae7, type: 3}
