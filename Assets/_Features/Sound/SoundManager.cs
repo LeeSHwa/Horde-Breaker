@@ -46,11 +46,15 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        // [CORE CHANGE] No DontDestroyOnLoad.
-        // A new instance is created for every scene.
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning($"[SoundManager] 중복된 SoundManager가 감지되어 파괴합니다: {gameObject.name}");
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
 
-        // [SETTINGS SHARED] Load volume settings immediately
         LoadVolumeSettings();
 
         InitializeAudioSources();
@@ -102,7 +106,7 @@ public class SoundManager : MonoBehaviour
     {
         if (bgmPlaylist == null) return;
 
-        BGMTrack targetTrack = bgmPlaylist.Find(track => track.sceneName == currentSceneName);
+        BGMTrack targetTrack = bgmPlaylist.Find(track => track.sceneName.Trim() == currentSceneName);
 
         if (targetTrack != null)
         {
@@ -178,9 +182,9 @@ public class SoundManager : MonoBehaviour
     private void LoadVolumeSettings()
     {
         // Load saved values or default to 1.0 / 0.5
-        masterVolume = PlayerPrefs.GetFloat("Vol_Master", 1f);
+        masterVolume = PlayerPrefs.GetFloat("Vol_Master", 0.5f);
         bgmVolume = PlayerPrefs.GetFloat("Vol_BGM", 0.5f);
-        sfxVolume = PlayerPrefs.GetFloat("Vol_SFX", 1f);
+        sfxVolume = PlayerPrefs.GetFloat("Vol_SFX", 0.5f);
     }
 
     private void UpdateSourceVolumes()

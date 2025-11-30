@@ -41,7 +41,7 @@ public class StatsController : MonoBehaviour
 
     public Func<float, bool> OnDamageProcess;
 
-    // Passive Level Dictionary
+    // �̰� ���� ���� (�̸�, ����)
     private Dictionary<string, int> passiveLevels = new Dictionary<string, int>();
 
     private bool isDead = false;
@@ -54,14 +54,6 @@ public class StatsController : MonoBehaviour
     private int currentLevel = 1;
     private int currentExp = 0;
     private int expNeededForNextLevel;
-
-    [Header("Drop Settings")]
-    [Range(0f, 1f)] private float expDropChance = 1f;
-    [Range(0f, 1f)] private float meatDropChance = 0.03f;
-    [Range(0f, 1f)] private float magnetDropChance = 0.002f;
-
-    public string meatPrefabName = "Item_Meat";
-    public string magnetPrefabName = "Item_Magnet";
 
     private class SpeedModifier
     {
@@ -264,9 +256,7 @@ public class StatsController : MonoBehaviour
         if (enemyStats != null)
         {
             if (GameManager.Instance != null) GameManager.Instance.AddKillCount();
-
-            // Call SpawnLoot instead of SpawnExpOrb
-            SpawnLoot(enemyStats.expValue);
+            SpawnExpOrb(enemyStats.expValue);
         }
 
         StartCoroutine(DieAndDisable(baseStats.deathAnimationLength));
@@ -291,35 +281,6 @@ public class StatsController : MonoBehaviour
         }
     }
 
-    // --- Dropping System ---
-    private void SpawnLoot(int expAmount)
-    {
-        if (UnityEngine.Random.value <= expDropChance)
-        {
-            SpawnExpOrb(expAmount);
-        }
-
-        float randomValue = UnityEngine.Random.value;
-        float currentChanceCheck = 0f;
-
-        if (CheckDrop(ref currentChanceCheck, randomValue, magnetDropChance))
-        {
-            SpawnItem(magnetPrefabName);
-            return; 
-        }
-
-        if (CheckDrop(ref currentChanceCheck, randomValue, meatDropChance))
-        {
-            SpawnItem(meatPrefabName);
-            return;
-        }
-    }
-    private bool CheckDrop(ref float currentCheckSum, float randomValue, float dropChance)
-    {
-        currentCheckSum += dropChance; 
-        return randomValue <= currentCheckSum;
-    }
-
     private void SpawnExpOrb(int expAmount)
     {
         GameObject expOrb = PoolManager.Instance.GetFromPool("ExpOrb");
@@ -328,15 +289,6 @@ public class StatsController : MonoBehaviour
             expOrb.transform.position = transform.position;
             ExpOrb orbComponent = expOrb.GetComponent<ExpOrb>();
             if (orbComponent != null) orbComponent.Initialize(expAmount);
-        }
-    }
-
-    private void SpawnItem(string prefabName)
-    {
-        GameObject item = PoolManager.Instance.GetFromPool(prefabName);
-        if (item != null)
-        {
-            item.transform.position = transform.position;
         }
     }
 
@@ -450,8 +402,12 @@ public class StatsController : MonoBehaviour
         else
         {
             passiveLevels.Add(data.upgradeName, 1);
+
+            
             learnedPassives.Add(data);
         }
+
+        Debug.Log($"Passive {data.upgradeName} Applied! Current Level: {passiveLevels[data.upgradeName]}");
 
         OnStatsChanged?.Invoke();
     }
