@@ -20,9 +20,7 @@ public class EnemyDashSkill : MonoBehaviour
 
     [Header("Animation Settings")]
     public string animChargeTrigger = "doCharge";
-
     public string animDashBool = "isDashing";
-
     public string animIdleTrigger = "doIdle";
     public string animMoveBool = "isMoving";
 
@@ -33,8 +31,8 @@ public class EnemyDashSkill : MonoBehaviour
     private Transform playerTarget;
     private Color originalColor;
 
-    private bool isSkillAvailable = true;
-    private bool isDashing = false;
+    // Timer to track individual skill cooldown
+    private float lastUsedTime = -999f;
 
     void Start()
     {
@@ -52,26 +50,29 @@ public class EnemyDashSkill : MonoBehaviour
         }
     }
 
-    void Update()
+    // [Manager Call] Check if this skill is ready to be used
+    public bool IsReady(float distanceToPlayer)
     {
-        if (!isSkillAvailable || isDashing || playerTarget == null) return;
+        bool isCooldownReady = Time.time >= lastUsedTime + skillCooldown;
+        bool isRangeReady = distanceToPlayer <= triggerRange;
 
-        float distance = Vector2.Distance(transform.position, playerTarget.position);
-
-        if (distance <= triggerRange)
-        {
-            StartCoroutine(DashRoutine());
-        }
+        return isCooldownReady && isRangeReady;
     }
 
-    private IEnumerator DashRoutine()
+    // [Manager Call] Execute the skill logic
+    public void Execute(System.Action onComplete)
     {
-        isDashing = true;
-        isSkillAvailable = false;
+        lastUsedTime = Time.time; // Update cooldown usage time
+        StartCoroutine(DashRoutine(onComplete));
+    }
 
+    private IEnumerator DashRoutine(System.Action onComplete)
+    {
+        // 1. Prepare (Stop movement)
         if (movementScript != null) movementScript.enabled = false;
         rb.linearVelocity = Vector2.zero;
 
+        // 2. Charge Animation/Visuals
         if (anim != null)
         {
             anim.SetBool(animMoveBool, false);
@@ -82,6 +83,7 @@ public class EnemyDashSkill : MonoBehaviour
 
         yield return new WaitForSeconds(chargeTime);
 
+        // 3. Dash Action
         if (anim != null) anim.SetBool(animDashBool, true);
 
         Vector2 direction;
@@ -89,7 +91,6 @@ public class EnemyDashSkill : MonoBehaviour
             direction = (playerTarget.position - transform.position).normalized;
         else
             direction = transform.right;
-
 
         float timer = 0f;
         while (timer < dashDuration)
@@ -103,16 +104,16 @@ public class EnemyDashSkill : MonoBehaviour
 
         rb.linearVelocity = Vector2.zero;
 
+        // 4. Reset Visuals
         if (useColorChange && sr != null) sr.color = originalColor;
-
         if (anim != null) anim.SetTrigger(animIdleTrigger);
 
+        // 5. Rest (Post-skill delay within the skill itself)
         yield return new WaitForSeconds(restTime);
 
         if (movementScript != null) movementScript.enabled = true;
-        isDashing = false;
 
-        yield return new WaitForSeconds(skillCooldown);
-        isSkillAvailable = true;
+        // 6. Notify Manager that skill is finished
+        onComplete?.Invoke();
     }
 }

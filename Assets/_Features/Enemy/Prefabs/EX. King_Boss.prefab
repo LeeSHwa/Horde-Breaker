@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &839540718817352759
+--- !u!1 &3710890656605072032
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,43 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5230358992603603023}
-  - component: {fileID: 8637618943305556546}
-  - component: {fileID: 6800406346740614185}
-  - component: {fileID: 1344363957339254362}
-  - component: {fileID: -1407343032638741718}
-  - component: {fileID: -5359657117556825819}
-  - component: {fileID: 6670902177661480817}
-  - component: {fileID: 4928280022892963242}
+  - component: {fileID: 749628734820188840}
+  - component: {fileID: 1911821865896364480}
+  - component: {fileID: 2737574607351374028}
+  - component: {fileID: 4189391919773034124}
+  - component: {fileID: 8740581233204010807}
+  - component: {fileID: 5203947550871990260}
+  - component: {fileID: 5831141246612579996}
+  - component: {fileID: 2800240749121699200}
+  - component: {fileID: 3686189038001321432}
+  - component: {fileID: 2069957823393566022}
+  - component: {fileID: 6307893277952816024}
+  - component: {fileID: 5918891601730410418}
+  - component: {fileID: 6899383859252305420}
   m_Layer: 0
-  m_Name: 15. King
+  m_Name: EX. King_Boss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5230358992603603023
+--- !u!4 &749628734820188840
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalPosition: {x: 11.842115, y: 4.1865816, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &8637618943305556546
+--- !u!212 &1911821865896364480
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -93,27 +98,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6800406346740614185
+--- !u!114 &2737574607351374028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hitCooldown: 0.5
---- !u!50 &1344363957339254362
+--- !u!50 &4189391919773034124
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -133,13 +138,13 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &-1407343032638741718
+--- !u!114 &8740581233204010807
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00fe1b8cc14dcc04b83b41b96f54d057, type: 3}
@@ -148,13 +153,13 @@ MonoBehaviour:
   mass: 10000
   despawnDistance: 40
   isReverseSprite: 0
---- !u!114 &-5359657117556825819
+--- !u!114 &5203947550871990260
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf04e446b982b8a4aa375bddc3ccb712, type: 3}
@@ -176,14 +181,14 @@ MonoBehaviour:
   expGainMultiplier: 1
   currentCritChance: 0
   currentCritMultiplier: 0
---- !u!95 &6670902177661480817
+--- !u!95 &5831141246612579996
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 877c237dd65387b4c82ba0ef0a1296e6, type: 2}
@@ -198,13 +203,13 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!60 &4928280022892963242
+--- !u!60 &2800240749121699200
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839540718817352759}
+  m_GameObject: {fileID: 3710890656605072032}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -263,3 +268,127 @@ PolygonCollider2D:
       - {x: 0.04, y: -0.515}
       - {x: 0.16998065, y: -0.5233301}
   m_UseDelaunayMesh: 0
+--- !u!114 &3686189038001321432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710890656605072032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824baa6e20005434d9ffd5ef87a299c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerRange: 500
+  teleportRadius: 0.5
+  skillCooldown: 7
+  chargeTime: 0.5
+  vanishDuration: 0
+  appearDelay: 0.1
+  useColorChange: 1
+  chargeColor: {r: 0, g: 0, b: 0, a: 1}
+  appearColor: {r: 0.015686274, g: 0.15883276, b: 0.49803922, a: 1}
+  animChargeTrigger: doTeleportCharge
+  animVanishTrigger: doVanish
+  animAppearTrigger: doAppear
+  animIdleTrigger: doIdle
+  animMoveBool: isMoving
+--- !u!114 &2069957823393566022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710890656605072032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b910041a041311945ad0acefc8e976f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileTag: BossWave
+  projectilePrefab: {fileID: 3772101136225902764, guid: 337659b88bd8ed543ae71b7672182126, type: 3}
+  projectileSpeed: 5
+  projectileAcceleration: 30
+  projectileLifetime: 5
+  damageMultiplier: 10
+  projectileCount: 3
+  multiShotAngle: 15
+  triggerRange: 500
+  skillCooldown: 5
+  chargeTime: 0.5
+  fireDelay: 0.2
+  recoveryTime: 0.1
+  useColorChange: 0
+  chargeColor: {r: 0, g: 0.9414892, b: 1, a: 1}
+  fireColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
+  animChargeTrigger: doWaveCharge
+  animFireTrigger: doWaveFire
+  animIdleTrigger: doIdle
+  animMoveBool: isMoving
+--- !u!114 &6307893277952816024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710890656605072032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 501e1def8d8ecef449399343dd6b3ddd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerRange: 500
+  chargeTime: 1
+  dashSpeed: 40
+  dashDuration: 0.8
+  restTime: 0.5
+  skillCooldown: 10
+  useColorChange: 0
+  chargeColor: {r: 1, g: 0, b: 0, a: 1}
+  animChargeTrigger: doCharge
+  animDashBool: isDashing
+  animIdleTrigger: doIdle
+  animMoveBool: isMoving
+--- !u!114 &5918891601730410418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710890656605072032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe8272457c33b514f8303f125aaefdc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minionPrefabs:
+  - {fileID: 839540718817352759, guid: 831d6fbb436dab546ae09a78607e6b29, type: 3}
+  summonCount: 10
+  spawnRadius: 30
+  triggerRange: 500
+  castTime: 2
+  skillCooldown: 20
+  useColorChange: 0
+  castColor: {r: 1, g: 0, b: 1, a: 1}
+  animSummonTrigger: doSummon
+  animIdleTrigger: doIdle
+  animMoveBool: isMoving
+--- !u!114 &6899383859252305420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710890656605072032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea1e9e374bd8234a81238ca0470e136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashSkill: {fileID: 6307893277952816024}
+  summonSkill: {fileID: 5918891601730410418}
+  rangeSkill: {fileID: 2069957823393566022}
+  teleportSkill: {fileID: 3686189038001321432}
+  minGlobalCooldown: 1
+  maxGlobalCooldown: 2
