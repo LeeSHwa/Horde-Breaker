@@ -45,9 +45,12 @@ public class StatsController : MonoBehaviour
     private Dictionary<string, int> passiveLevels = new Dictionary<string, int>();
 
     private bool isDead = false;
+    private bool isInvincible = false;
+
     private Animator anim;
     private Rigidbody2D rb;
     private Collider2D col;
+    private SpriteRenderer spriteRenderer; // rivival use
 
     private PlayerStatsSO playerStats;
     private PlayerPickup playerPickup;
@@ -79,6 +82,7 @@ public class StatsController : MonoBehaviour
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         playerPickup = GetComponentInChildren<PlayerPickup>();
 
         InitializeStats();
@@ -121,8 +125,15 @@ public class StatsController : MonoBehaviour
     void OnEnable()
     {
         isDead = false;
+        isInvincible = false;
         if (col != null) col.enabled = true;
         if (rb != null) rb.simulated = true;
+        if (spriteRenderer != null)
+        {
+            Color c = spriteRenderer.color;
+            c.a = 1f;
+            spriteRenderer.color = c;
+        }
 
         InitializeStats();
     }
@@ -205,7 +216,7 @@ public class StatsController : MonoBehaviour
 
     public void TakeDamage(float damage, bool isCritical = false)
     {
-        if (isDead || damage < 0) return;
+        if (isDead || isInvincible || damage < 0) return;
 
         if (OnDamageProcess != null)
         {
@@ -222,7 +233,7 @@ public class StatsController : MonoBehaviour
         }
 
         float reducedDamage = damage - armor;
-        if (reducedDamage < 1) reducedDamage = 1;
+        if (reducedDamage < 0.1f) reducedDamage = 0.1f;
 
         currentHP -= reducedDamage;
 
@@ -245,17 +256,16 @@ public class StatsController : MonoBehaviour
     {
         if (gameObject.CompareTag("Player") && revivalCount > 0)
         {
-            revivalCount--;
-            currentHP = runtimeMaxHP * 0.5f;
-            isDead = false;
-
+            isDead = true;
+            Time.timeScale = 0f;
             if (UIManager.Instance != null)
-                UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
-
-            OnStatsChanged?.Invoke();
+            {
+                UIManager.Instance.ShowRevivalPopup(revivalCount);
+            }
             return;
         }
 
+        isDead = true;
         if (anim != null) anim.SetTrigger("Die");
         if (rb != null) { rb.linearVelocity = Vector2.zero; rb.simulated = false; }
         if (col != null) col.enabled = false;
@@ -264,13 +274,59 @@ public class StatsController : MonoBehaviour
         if (enemyStats != null)
         {
             if (GameManager.Instance != null) GameManager.Instance.AddKillCount();
-
-            // Call SpawnLoot instead of SpawnExpOrb
             SpawnLoot(enemyStats.expValue);
         }
 
         StartCoroutine(DieAndDisable(baseStats.deathAnimationLength));
     }
+
+    public void RevivePlayer()
+    {
+        if (revivalCount <= 0) return;
+
+        revivalCount--;
+
+        currentHP = runtimeMaxHP * 0.5f;
+        isDead = false;
+
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateHP((int)currentHP, (int)runtimeMaxHP);
+
+        OnStatsChanged?.Invoke();
+
+        Time.timeScale = 1f;
+        StartCoroutine(InvincibilityRoutine(3.0f));
+    }
+
+    private IEnumerator InvincibilityRoutine(float duration)
+    {
+        isInvincible = true;
+        float timer = 0f;
+        float blinkInterval = 0.1f;
+
+        while (timer < duration)
+        {
+            if (spriteRenderer != null)
+            {
+                Color c = spriteRenderer.color;
+                c.a = (c.a == 1f) ? 0.3f : 1f;
+                spriteRenderer.color = c;
+            }
+            yield return new WaitForSecondsRealtime(blinkInterval);
+            timer += blinkInterval;
+        }
+
+        if (spriteRenderer != null)
+        {
+            Color c = spriteRenderer.color;
+            c.a = 1f;
+            spriteRenderer.color = c;
+        }
+
+        isInvincible = false;
+        Debug.Log("Player Invincibility Ended");
+    }
+
 
     private IEnumerator DieAndDisable(float delay)
     {

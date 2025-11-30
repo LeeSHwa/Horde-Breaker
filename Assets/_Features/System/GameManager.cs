@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public int currentStage = 1;
     public int killCount = 0;
 
+    public bool isTimerPaused = false;
+
     [Header("Persistent Data")]
     public GameObject selectedWeaponPrefab; // Weapon selected from the lobby
 
@@ -52,9 +54,24 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Increment game time
-        gameTime += Time.deltaTime;
+        if (!isTimerPaused)
+        {
+            gameTime += Time.deltaTime;
+        }
 
-         if (UIManager.Instance != null) UIManager.Instance.UpdateTimeUI(gameTime);
+        if (UIManager.Instance != null) UIManager.Instance.UpdateTimeUI(gameTime);
+    }
+
+    public void PauseGameTimer()
+    {
+        isTimerPaused = true;
+        Debug.Log("Game Timer Paused (Boss Encounter)");
+    }
+
+    public void ResumeGameTimer()
+    {
+        isTimerPaused = false;
+        Debug.Log("Game Timer Resumed");
     }
 
     public void AddKillCount()

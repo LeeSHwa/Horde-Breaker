@@ -31,6 +31,10 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI resultTimeText;
     public TextMeshProUGUI resultKillText;
 
+    [Header("Revival UI")]
+    public GameObject revivalPanel;
+    public TextMeshProUGUI revivalCountText;
+
     [Header("Scene Management")]
     [Tooltip("Enter the exact name of your Lobby Scene file")]
     public string lobbySceneName = "LobbyScene"; // [NEW] Set this in Inspector!
@@ -145,6 +149,44 @@ public class UIManager : MonoBehaviour
         {
             // [English String] Display Kill Count
             resultKillText.text = $"Enemies Killed : {finalKills}";
+        }
+    }
+
+    public void ShowRevivalPopup(int remainingCount)
+    {
+        if (revivalPanel != null)
+        {
+            revivalPanel.SetActive(true);
+            if (revivalCountText != null)
+            {
+                revivalCountText.text = $"Revival Left: {remainingCount}";
+            }
+        }
+    }
+
+    public void OnClickReviveButton()
+    {
+        if (revivalPanel != null) revivalPanel.SetActive(false);
+
+        StatsController player = FindAnyObjectByType<StatsController>();
+
+        if (player != null)
+        {
+            player.RevivePlayer();
+        }
+        else
+        {
+            Debug.LogError("Player StatsController Not Found!");
+        }
+    }
+
+    public void OnClickGiveUpButton()
+    {
+        if (revivalPanel != null) revivalPanel.SetActive(false);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.GameOver();
         }
     }
 

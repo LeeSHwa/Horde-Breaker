@@ -18,6 +18,8 @@ public class EnemySpawnerTemp : MonoBehaviour
     private List<float> ruleTimers; // Timers for each spawn rule
     private Camera mainCamera;
 
+    private bool warningTriggered = false;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -62,7 +64,6 @@ public class EnemySpawnerTemp : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Enemy Pools Auto-Initialized!");
     }
 
     private GameObject CreateNewEnemy(GameObject prefab, string key)
@@ -86,8 +87,10 @@ public class EnemySpawnerTemp : MonoBehaviour
         // Check if it's time to transition to the next wave
         CheckNextWave(currentTime);
 
-        // Handle spawning based on current wave rules
-        HandleSpawning();
+        if (!GameManager.Instance.isTimerPaused)
+        {
+            HandleSpawning();
+        }
     }
 
     private void CheckNextWave(float time)
@@ -96,6 +99,16 @@ public class EnemySpawnerTemp : MonoBehaviour
         if (currentWaveIndex >= waves.Count - 1) return;
 
         WaveData nextWave = waves[currentWaveIndex + 1];
+        float timeToNextWave = nextWave.startTime - time;
+
+        if (nextWave.isBossWave && timeToNextWave <= 3.0f && timeToNextWave > 0f && !warningTriggered)
+        {
+            warningTriggered = true;
+            // TODO: UIManager alignment for boss warning
+            Debug.LogWarning("⚠️ WARNING! BOSS APPROACHING! ⚠️");
+
+            // ex: if(UIManager.Instance != null) UIManager.Instance.ShowBossWarning();
+        }
 
         // Transition to the next wave if the time has come
         if (time >= nextWave.startTime)
@@ -108,6 +121,15 @@ public class EnemySpawnerTemp : MonoBehaviour
     private void SetWave(WaveData newWave)
     {
         currentWave = newWave;
+        warningTriggered = false;
+
+        if (currentWave.isBossWave)
+        {
+            GameManager.Instance.PauseGameTimer();
+
+            ClearAllEnemies();
+        }
+
 
         // Prepare timers for the new wave's rules
         ruleTimers.Clear();
@@ -115,7 +137,7 @@ public class EnemySpawnerTemp : MonoBehaviour
         {
             foreach (var rule in currentWave.spawnRules)
             {
-                // [NEW] Boss Logic: If interval is 0 or less, spawn ONCE immediately
+                // Boss Logic: If interval is 0 or less, spawn ONCE immediately
                 if (rule.interval <= 0)
                 {
                     SpawnEnemyFromPool(rule.prefab); // Spawn Immediately
@@ -128,6 +150,20 @@ public class EnemySpawnerTemp : MonoBehaviour
             }
         }
         Debug.Log($"[Wave Changed] {currentWave.waveName} started at {currentWave.startTime}s");
+    }
+    private void ClearAllEnemies()
+    {
+        int childCount = enemyContainer.childCount;
+
+        for (int i = childCount - 1; i >= 0; i--)
+        {
+            Transform child = enemyContainer.GetChild(i);
+            if (child.gameObject.activeSelf)
+            {
+                ReturnEnemy(child.gameObject);
+            }
+        }
+        Debug.Log("Field Cleared for Boss!");
     }
 
     private void HandleSpawning()
