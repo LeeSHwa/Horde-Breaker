@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Enemy
   - ExpOrb
+  - Item_Meat
+  - Item_Magnet
   layers:
   - Default
   - TransparentFX
