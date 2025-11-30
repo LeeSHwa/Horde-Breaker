@@ -86,6 +86,7 @@ public class MoonSkill : Skills
 
     private void ApplyStats(float dmg, float speed, float duration, float radius, int count)
     {
+        // All stats are applied as flat values
         currentDamage += dmg;
         currentRotationSpeed += speed;
         currentDuration += duration;
