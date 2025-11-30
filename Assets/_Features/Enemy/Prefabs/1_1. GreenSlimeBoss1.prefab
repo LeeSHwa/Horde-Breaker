@@ -175,6 +175,16 @@ MonoBehaviour:
   currentHP: 0
   currentMoveSpeed: 0
   currentDamageMultiplier: 0
+  learnedPassives: []
+  bonusCooldownReduction: 0
+  bonusProjectileCount: 0
+  bonusArea: 0
+  bonusDuration: 0
+  bonusPickupRange: 0
+  hpRecoveryRate: 0
+  armor: 0
+  revivalCount: 0
+  expGainMultiplier: 1
   currentCritChance: 0
   currentCritMultiplier: 0
 --- !u!114 &8851462600876830387
