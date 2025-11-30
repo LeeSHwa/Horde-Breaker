@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 569732385824989914}
   - component: {fileID: 2080087892882479405}
   - component: {fileID: 7635674733528600420}
+  - component: {fileID: -8177292086610979139}
   m_Layer: 0
   m_Name: 1_1. GreenSlimeBoss1
   m_TagString: Enemy
@@ -187,6 +188,8 @@ MonoBehaviour:
   expGainMultiplier: 1
   currentCritChance: 0
   currentCritMultiplier: 0
+  meatPrefabName: Item_Meat
+  magnetPrefabName: Item_Magnet
 --- !u!114 &8851462600876830387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,7 +279,7 @@ MonoBehaviour:
   useColorChange: 1
   chargeColor: {r: 1, g: 0, b: 0, a: 1}
   animChargeTrigger: doCharge
-  animDashTrigger: doDash
+  animDashBool: isDashing
   animIdleTrigger: doIdle
   animMoveBool: isMoving
 --- !u!114 &7635674733528600420
@@ -305,3 +308,21 @@ MonoBehaviour:
   animSummonTrigger: doSummon
   animIdleTrigger: doIdle
   animMoveBool: isMoving
+--- !u!114 &-8177292086610979139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8068589428734277748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea1e9e374bd8234a81238ca0470e136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashSkill: {fileID: 2080087892882479405}
+  summonSkill: {fileID: 7635674733528600420}
+  rangeSkill: {fileID: 0}
+  teleportSkill: {fileID: 0}
+  minGlobalCooldown: 3
+  maxGlobalCooldown: 5
