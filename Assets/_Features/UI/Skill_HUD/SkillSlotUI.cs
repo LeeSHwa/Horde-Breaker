@@ -18,9 +18,4 @@ public class SkillSlotUI : MonoBehaviour
         if (iconImage != null) iconImage.sprite = icon;
         if (levelText != null) levelText.text = $"Lv.{level}";
     }
-
-    public void ClearSlot()
-    {
-        gameObject.SetActive(false);
-    }
 }

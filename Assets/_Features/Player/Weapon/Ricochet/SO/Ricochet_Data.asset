@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponName: EnergyBall
   icon: {fileID: -7585660988095454295, guid: 121067652fb50a44ab7005770846bc7a, type: 3}
   maxLevel: 9
-  weaponDescription: LV.0 EnergyBall
+  weaponDescription: EnergyBall
   levelDescriptions:
   - Damage+2
   - Cooldown-10%, Bounce+1

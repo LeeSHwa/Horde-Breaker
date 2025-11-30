@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponName: Sword
   icon: {fileID: -4726053861337558831, guid: 921fa9745ce2ac645ade89c945d5ca10, type: 3}
   maxLevel: 9
-  weaponDescription: LV.0 Sword
+  weaponDescription: Sword
   levelDescriptions:
   - Damage+3
   - Cooldown-10%

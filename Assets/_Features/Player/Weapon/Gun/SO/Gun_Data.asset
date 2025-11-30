@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponName: Gun
   icon: {fileID: 1355517345105888652, guid: 775974ecee16e934fb08f24c9b02eae0, type: 3}
   maxLevel: 9
-  weaponDescription: LV.0 Gun
+  weaponDescription: Gun
   levelDescriptions:
   - Damage+5
   - Cooldown-10%

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wave_test
   m_EditorClassIdentifier: 
   waveName: 
-  startTime: 0
+  startTime: 9999
   spawnRules:
   - note: 
     prefab: {fileID: 8068589428734277748, guid: dd3df5769be3ef5419754df006966971, type: 3}

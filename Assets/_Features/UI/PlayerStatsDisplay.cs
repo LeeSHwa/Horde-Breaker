@@ -79,11 +79,12 @@ public class PlayerStatsDisplay : MonoBehaviour
 
         SetText(expText, $"EXP : {playerStats.CurrentExp} / {playerStats.MaxExp}");
 
-        SetText(hpText, $"MaxHP : {playerStats.currentHP:F0} / {playerStats.MaxHP:F0}");
+        SetText(hpText, $"MaxHP : {playerStats.MaxHP:F0}");
 
         SetText(hpRecoveryText, $"HP Recovery : {playerStats.hpRecoveryRate:F1} / sec");
 
         SetText(armorText, $"Armor : {playerStats.armor:F0}");
+
         SetText(revivalText, $"Revival : {playerStats.revivalCount}");
 
         // --- 2. Offense ---
@@ -99,7 +100,7 @@ public class PlayerStatsDisplay : MonoBehaviour
         SetText(cooldownText, $"Cooldown : {playerStats.bonusCooldownReduction * 100f:F0}%");
 
         // Amount (Projectiles)
-        SetText(projectileText, $"Amount : +{playerStats.bonusProjectileCount}");
+        SetText(projectileText, $"Multi-shot : +{playerStats.bonusProjectileCount}");
 
 
         // --- 3. Utility ---

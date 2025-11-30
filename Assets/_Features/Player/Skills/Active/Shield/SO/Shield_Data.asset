@@ -41,7 +41,7 @@ MonoBehaviour:
   level2_UnlockGhostMode: 0
   level2_MoveSpeedBonus: 0
   level3_CooldownReduction: 0
-  level3_InvulnTimeBonus: 0.8
+  level3_InvulnTimeBonus: 0.5
   level3_StackIncrease: 0
   level3_UnlockGhostMode: 0
   level3_MoveSpeedBonus: 0

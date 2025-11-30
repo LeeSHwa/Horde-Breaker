@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [Header("Persistent Data")]
     public GameObject selectedWeaponPrefab; // Weapon selected from the lobby
 
+    private static GameObject _keptWeapon;
+
     [Header("Map Settings")]
     //public Rect mapBounds = new Rect(-40f, -25f, 80f, 50f);
     public Renderer mapRenderer;
@@ -23,15 +25,11 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        // Singleton Pattern Implementation
-        if (Instance != null && Instance != this)
+        Instance = this;
+
+        if (_keptWeapon != null)
         {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            selectedWeaponPrefab = _keptWeapon;
         }
     }
 
@@ -79,6 +77,12 @@ public class GameManager : MonoBehaviour
         {
             UIManager.Instance.ShowGameOver(gameTime, killCount);
         }
+    }
+
+    public void SelectWeapon(GameObject weapon)
+    {
+        selectedWeaponPrefab = weapon;
+        _keptWeapon = weapon;
     }
 
 }
