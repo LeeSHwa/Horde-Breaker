@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 15. King_stats
   m_EditorClassIdentifier: 
   baseMaxHealth: 500
-  baseMoveSpeed: 7
+  baseMoveSpeed: 1
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 6
+  contactDamage: 50
   expValue: 70

@@ -21,6 +21,8 @@ public class ExpOrb : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    private float currentMoveSpeed;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -30,6 +32,8 @@ public class ExpOrb : MonoBehaviour
     {
         isMovingToPlayer = false;
         targetPlayer = null;
+
+        currentMoveSpeed = moveSpeed;
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
@@ -82,12 +86,16 @@ public class ExpOrb : MonoBehaviour
         }
     }
     // Called by PlayerPickup.cs or Magnet Item
-    public void ActivateMagnet(Transform playerTarget)
+    public void ActivateMagnet(Transform playerTarget, float speedOverride = 0f)
     {
-        if (isMovingToPlayer) return;
-
+    
         this.targetPlayer = playerTarget;
         this.isMovingToPlayer = true;
+
+        if (speedOverride > 0)
+        {
+            currentMoveSpeed = speedOverride;
+        }
     }
 
     void Update()
@@ -97,7 +105,7 @@ public class ExpOrb : MonoBehaviour
             transform.position = Vector2.MoveTowards(
                 transform.position,
                 targetPlayer.position,
-                moveSpeed * Time.deltaTime
+                currentMoveSpeed * Time.deltaTime
             );
 
             if (Vector2.Distance(transform.position, targetPlayer.position) <= directPickupRadius)
