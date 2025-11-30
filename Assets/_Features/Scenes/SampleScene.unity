@@ -1547,7 +1547,7 @@ MonoBehaviour:
     container: {fileID: 1773587617}
   - tag: SwordCrescent
     prefab: {fileID: 6052581829811208905, guid: 5fbd78051597f804c82224e65dd6ea18, type: 3}
-    size: 5
+    size: 10
     container: {fileID: 1773587617}
   - tag: Aura_Prefab
     prefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
@@ -1555,17 +1555,21 @@ MonoBehaviour:
     container: {fileID: 1773587617}
   - tag: Fireball_Prefab
     prefab: {fileID: 9187814388354200019, guid: 09f7740eb69a65644ba0a63401054df4, type: 3}
-    size: 5
+    size: 10
     container: {fileID: 1773587617}
   - tag: LightningVisual
+    prefab: {fileID: 8457814466692287673, guid: d6849ffe5038af74797df8d2756f2bbd, type: 3}
+    size: 20
+    container: {fileID: 1773587617}
+  - tag: LightningChainVisual
     prefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
-    size: 30
+    size: 50
     container: {fileID: 1773587617}
   - tag: Moon_Prefab
     prefab: {fileID: 2615944730286373386, guid: 9e30334dde7ab50479843e2c310a9bea, type: 3}
     size: 30
     container: {fileID: 1773587617}
-  - tag: Missle_Prefab
+  - tag: Hellfire_Prefab
     prefab: {fileID: 9067339777270423991, guid: 7ebcdbddd78cada4ebbf11036e45aae7, type: 3}
     size: 30
     container: {fileID: 1773587617}
