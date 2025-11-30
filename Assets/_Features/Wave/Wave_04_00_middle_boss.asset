@@ -15,7 +15,7 @@ MonoBehaviour:
   waveName: middle boss
   startTime: 240
   spawnRules:
-  - note: "\uB808\uB4DC \uC2AC\uB77C\uC784"
+  - note: "\uC911\uAC04\uBCF4\uC2A4"
     prefab: {fileID: 8068589428734277748, guid: a1d6c7cdf2f0d18449cb96b0175be3d6, type: 3}
     interval: 0
     chance: 1

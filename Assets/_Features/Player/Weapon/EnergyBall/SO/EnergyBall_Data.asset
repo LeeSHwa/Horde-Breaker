@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79c525b2bdb3bc44eb391b9dd9a0640a, type: 3}
-  m_Name: Ricochet_Data
+  m_Name: EnergyBall_Data
   m_EditorClassIdentifier: 
   baseDamage: 10
   baseAttackCooldown: 0.7

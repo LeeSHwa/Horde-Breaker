@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2624534757257824651}
   - component: {fileID: 7573783110468265276}
   m_Layer: 0
-  m_Name: RicochetProjectile
+  m_Name: EnergyBallProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
