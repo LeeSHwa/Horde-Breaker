@@ -5,24 +5,25 @@ public class PlayerStatsDisplay : MonoBehaviour
 {
     [Header("Main Stats UI")]
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI expText;        
     public TextMeshProUGUI hpText;
-    public TextMeshProUGUI hpRecoveryText; 
-    public TextMeshProUGUI armorText;     
+    public TextMeshProUGUI hpRecoveryText;
+    public TextMeshProUGUI armorText;
 
     [Header("Offensive Stats UI")]
     public TextMeshProUGUI damageText;
     public TextMeshProUGUI critChanceText;
-    public TextMeshProUGUI critDamageText; 
-    public TextMeshProUGUI cooldownText;   
-    public TextMeshProUGUI projectileText; 
+    public TextMeshProUGUI critDamageText;
+    public TextMeshProUGUI cooldownText;
+    public TextMeshProUGUI projectileText;
 
     [Header("Utility Stats UI")]
-    public TextMeshProUGUI areaText;      
-    public TextMeshProUGUI durationText;   
-    public TextMeshProUGUI speedText;      
-    public TextMeshProUGUI pickupText;    
-    public TextMeshProUGUI expGainText;    
-    public TextMeshProUGUI revivalText;    
+    public TextMeshProUGUI areaText;
+    public TextMeshProUGUI durationText;
+    public TextMeshProUGUI speedText;
+    public TextMeshProUGUI pickupText;
+    public TextMeshProUGUI expGainText;
+    public TextMeshProUGUI revivalText;
 
     [Header("Session Info UI")]
     public TextMeshProUGUI timeText;
@@ -32,7 +33,34 @@ public class PlayerStatsDisplay : MonoBehaviour
 
     private void OnEnable()
     {
+        FindAndSetupPlayer();
         UpdateStatusUI();
+    }
+
+    private void OnDisable()
+    {
+        if (playerStats != null)
+        {
+            playerStats.OnStatsChanged -= UpdateStatusUI;
+        }
+    }
+
+    private void FindAndSetupPlayer()
+    {
+        if (playerStats == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                playerStats = player.GetComponent<StatsController>();
+            }
+        }
+
+        if (playerStats != null)
+        {
+            playerStats.OnStatsChanged -= UpdateStatusUI;
+            playerStats.OnStatsChanged += UpdateStatusUI;
+        }
     }
 
     public void UpdateStatusUI()
@@ -46,46 +74,62 @@ public class PlayerStatsDisplay : MonoBehaviour
 
         if (playerStats == null) return;
 
+        // --- 1. Survival (Defense) ---
         SetText(levelText, $"Lv. {playerStats.Level}");
-        SetText(hpText, $"{playerStats.currentHP:F0} / {playerStats.MaxHP:F0}");
-        SetText(hpRecoveryText, $"{playerStats.hpRecoveryRate:F1} / sec");
-        SetText(armorText, $"{playerStats.armor:F0}");
-        SetText(revivalText, $"{playerStats.revivalCount}");
 
-        
-        SetText(damageText, $"{playerStats.currentDamageMultiplier:F1}x");
+        SetText(expText, $"EXP : {playerStats.CurrentExp} / {playerStats.MaxExp}");
 
-        SetText(critChanceText, $"{playerStats.currentCritChance * 100f:F0}%");
+        SetText(hpText, $"MaxHP : {playerStats.currentHP:F0} / {playerStats.MaxHP:F0}");
 
-        SetText(critDamageText, $"{playerStats.currentCritMultiplier:F1}x");
+        SetText(hpRecoveryText, $"HP Recovery : {playerStats.hpRecoveryRate:F1} / sec");
 
-        SetText(cooldownText, $"-{playerStats.bonusCooldownReduction * 100f:F0}%");
+        SetText(armorText, $"Armor : {playerStats.armor:F0}");
+        SetText(revivalText, $"Revival : {playerStats.revivalCount}");
 
-        SetText(projectileText, $"+{playerStats.bonusProjectileCount}");
+        // --- 2. Offense ---
+        SetText(damageText, $"Damage : {playerStats.currentDamageMultiplier:F1}x");
+
+        // Crit Chance
+        SetText(critChanceText, $"Crit Chance : {playerStats.currentCritChance * 100f:F0}%");
+
+        // Crit Damage
+        SetText(critDamageText, $"Crit Damage : {playerStats.currentCritMultiplier:F1}x");
+
+        // Cooldown
+        SetText(cooldownText, $"Cooldown : {playerStats.bonusCooldownReduction * 100f:F0}%");
+
+        // Amount (Projectiles)
+        SetText(projectileText, $"Amount : +{playerStats.bonusProjectileCount}");
 
 
+        // --- 3. Utility ---
+        // Area
         float areaTotal = 1.0f + playerStats.bonusArea;
-        SetText(areaText, $"{areaTotal:F1}x");
+        SetText(areaText, $"Area : {areaTotal:F1}x");
 
+        // Duration
         float durationTotal = 1.0f + playerStats.bonusDuration;
-        SetText(durationText, $"{durationTotal:F1}x");
+        SetText(durationText, $"Duration : {durationTotal:F1}x");
 
-        SetText(speedText, $"{playerStats.currentMoveSpeed:F1}");
+        // Speed
+        SetText(speedText, $"Speed : {playerStats.currentMoveSpeed:F1}");
 
-        
-        SetText(pickupText, $"+{playerStats.bonusPickupRange:F1}");
+        // Magnet (Pickup Range)
+        SetText(pickupText, $"Magnet : +{playerStats.bonusPickupRange:F1}");
 
-        SetText(expGainText, $"{playerStats.expGainMultiplier:F1}x");
+        // Growth (Exp Gain)
+        SetText(expGainText, $"Growth : {playerStats.expGainMultiplier:F1}x");
 
 
+        // --- 4. Session Info ---
         if (GameManager.Instance != null)
         {
             float t = GameManager.Instance.gameTime;
             int min = (int)(t / 60);
             int sec = (int)(t % 60);
 
-            SetText(timeText, $"{min:D2}:{sec:D2}");
-            SetText(killText, $"{GameManager.Instance.killCount}");
+            SetText(timeText, $"Time : {min:D2}:{sec:D2}");
+            SetText(killText, $"Kills : {GameManager.Instance.killCount}");
         }
     }
 

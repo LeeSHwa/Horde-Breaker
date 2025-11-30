@@ -321,6 +321,11 @@ public class LevelUpManager : MonoBehaviour
         // Apply the upgrade
         chosenUpgrade.Apply(playerStats, playerController, skillManager);
 
+        if (SkillStatusManager.Instance != null)
+        {
+            SkillStatusManager.Instance.UpdateUI();
+        }
+
         // Decrease queue count
         pendingLevelUps--;
 
