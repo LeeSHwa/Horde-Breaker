@@ -21,9 +21,10 @@ public class WeaponLoadoutUI : MonoBehaviour
             selector.Init(this);
         }
 
-        if (startButton != null) startButton.SetActive(false);
-        nameText.text = "choose weapon";
-        descText.text = "";
+        if (weaponSelectors.Count > 0)
+        {
+            SelectWeapon(weaponSelectors[0]);
+        }
     }
 
     public void SelectWeapon(LobbyWeaponSelector slot)

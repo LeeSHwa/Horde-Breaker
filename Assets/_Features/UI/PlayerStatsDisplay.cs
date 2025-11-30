@@ -3,12 +3,27 @@ using TMPro;
 
 public class PlayerStatsDisplay : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("Main Stats UI")]
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI expText;        
     public TextMeshProUGUI hpText;
-    public TextMeshProUGUI expText;
+    public TextMeshProUGUI hpRecoveryText;
+    public TextMeshProUGUI armorText;
+
+    [Header("Offensive Stats UI")]
     public TextMeshProUGUI damageText;
+    public TextMeshProUGUI critChanceText;
+    public TextMeshProUGUI critDamageText;
+    public TextMeshProUGUI cooldownText;
+    public TextMeshProUGUI projectileText;
+
+    [Header("Utility Stats UI")]
+    public TextMeshProUGUI areaText;
+    public TextMeshProUGUI durationText;
     public TextMeshProUGUI speedText;
+    public TextMeshProUGUI pickupText;
+    public TextMeshProUGUI expGainText;
+    public TextMeshProUGUI revivalText;
 
     [Header("Session Info UI")]
     public TextMeshProUGUI timeText;
@@ -16,15 +31,40 @@ public class PlayerStatsDisplay : MonoBehaviour
 
     private StatsController playerStats;
 
-    // 이 패널(LevelUpPanel)이 켜질 때마다 자동으로 실행됩니다.
     private void OnEnable()
     {
+        FindAndSetupPlayer();
         UpdateStatusUI();
+    }
+
+    private void OnDisable()
+    {
+        if (playerStats != null)
+        {
+            playerStats.OnStatsChanged -= UpdateStatusUI;
+        }
+    }
+
+    private void FindAndSetupPlayer()
+    {
+        if (playerStats == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                playerStats = player.GetComponent<StatsController>();
+            }
+        }
+
+        if (playerStats != null)
+        {
+            playerStats.OnStatsChanged -= UpdateStatusUI;
+            playerStats.OnStatsChanged += UpdateStatusUI;
+        }
     }
 
     public void UpdateStatusUI()
     {
-        // 1. 플레이어 스탯 컨트롤러 가져오기
         if (playerStats == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -34,45 +74,67 @@ public class PlayerStatsDisplay : MonoBehaviour
 
         if (playerStats == null) return;
 
-        // --- 기본 정보 표시 ---
-        if (levelText != null)
-            levelText.text = $"Lv. {playerStats.Level}";
+        // --- 1. Survival (Defense) ---
+        SetText(levelText, $"Lv. {playerStats.Level}");
 
-        if (hpText != null)
-            hpText.text = $"HP : {playerStats.currentHP:F0} / {playerStats.MaxHP:F0}";
+        SetText(expText, $"EXP : {playerStats.CurrentExp} / {playerStats.MaxExp}");
 
-        if (expText != null)
-            expText.text = $"EXP : {playerStats.CurrentExp} / {playerStats.MaxExp}";
+        SetText(hpText, $"MaxHP : {playerStats.currentHP:F0} / {playerStats.MaxHP:F0}");
 
-        // --- [핵심] 증가량 계산 (기본값 제외하고 보여주기) ---
+        SetText(hpRecoveryText, $"HP Recovery : {playerStats.hpRecoveryRate:F1} / sec");
 
-        if (damageText != null)
-        {
-            // 기본 배율 1.0(100%)을 뺀 나머지만 표시
-            // 예: 1.0 -> 0% / 1.1 -> 10% / 1.5 -> 50%
-            float damageBonus = (playerStats.currentDamageMultiplier - 1.0f) * 100f;
-            damageText.text = $"Damage : {damageBonus:F0}%";
-        }
+        SetText(armorText, $"Armor : {playerStats.armor:F0}");
+        SetText(revivalText, $"Revival : {playerStats.revivalCount}");
 
-        if (speedText != null)
-        {
-            // 이동속도는 현재 속도를 그대로 표시
-            // (만약 '+1.0' 처럼 증가분만 보고 싶다면 StatsController에 '기본속도' 변수가 따로 있어야 계산 가능합니다)
-            speedText.text = $"Speed : {playerStats.currentMoveSpeed:F1}";
-        }
+        // --- 2. Offense ---
+        SetText(damageText, $"Damage : {playerStats.currentDamageMultiplier:F1}x");
 
-        // --- 게임 진행 정보 (GameManager) ---
+        // Crit Chance
+        SetText(critChanceText, $"Crit Chance : {playerStats.currentCritChance * 100f:F0}%");
+
+        // Crit Damage
+        SetText(critDamageText, $"Crit Damage : {playerStats.currentCritMultiplier:F1}x");
+
+        // Cooldown
+        SetText(cooldownText, $"Cooldown : {playerStats.bonusCooldownReduction * 100f:F0}%");
+
+        // Amount (Projectiles)
+        SetText(projectileText, $"Amount : +{playerStats.bonusProjectileCount}");
+
+
+        // --- 3. Utility ---
+        // Area
+        float areaTotal = 1.0f + playerStats.bonusArea;
+        SetText(areaText, $"Area : {areaTotal:F1}x");
+
+        // Duration
+        float durationTotal = 1.0f + playerStats.bonusDuration;
+        SetText(durationText, $"Duration : {durationTotal:F1}x");
+
+        // Speed
+        SetText(speedText, $"Speed : {playerStats.currentMoveSpeed:F1}");
+
+        // Magnet (Pickup Range)
+        SetText(pickupText, $"Magnet : +{playerStats.bonusPickupRange:F1}");
+
+        // Growth (Exp Gain)
+        SetText(expGainText, $"Growth : {playerStats.expGainMultiplier:F1}x");
+
+
+        // --- 4. Session Info ---
         if (GameManager.Instance != null)
         {
             float t = GameManager.Instance.gameTime;
             int min = (int)(t / 60);
             int sec = (int)(t % 60);
 
-            if (timeText != null)
-                timeText.text = $"Time : {min:D2}:{sec:D2}";
-
-            if (killText != null)
-                killText.text = $"Kills : {GameManager.Instance.killCount}";
+            SetText(timeText, $"Time : {min:D2}:{sec:D2}");
+            SetText(killText, $"Kills : {GameManager.Instance.killCount}");
         }
+    }
+
+    private void SetText(TextMeshProUGUI ui, string content)
+    {
+        if (ui != null) ui.text = content;
     }
 }
