@@ -5,8 +5,13 @@ using UnityEngine;
 public class PlayerStatsSO : CharacterStatsSO
 {
     [Header("Leveling (Player-Only)")]
-    public int[] expToNextLevel;
-        
+    public int[] expToNextLevel = new int[] {
+    5, 10, 15, 20, 25, 30, 40, 55, 70, 90,
+    110, 135, 160, 190, 220, 255, 290, 330, 370, 415,
+    460, 510, 560, 610, 660, 710, 760, 810, 860, 910,
+    990, 1070, 1150, 1230, 1310, 1390, 1470, 1550, 1630, 1710
+};
+
     [Header("Pickup Stats (Player-Only)")]
     // The base magnet radius for ExpOrbs
     public float basePickupRadius = 4f;

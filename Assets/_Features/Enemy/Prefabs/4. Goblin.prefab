@@ -155,6 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mass: 0.5
+  despawnDistance: 40
   isReverseSprite: 0
 --- !u!114 &7114234979050921713
 MonoBehaviour:
@@ -168,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 533949037404ce74bb12534700f23567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitCooldown: 0.5
+  hitCooldown: 0.01
 --- !u!114 &7050110507231611124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +186,20 @@ MonoBehaviour:
   currentHP: 0
   currentMoveSpeed: 0
   currentDamageMultiplier: 0
+  learnedPassives: []
+  bonusCooldownReduction: 0
+  bonusProjectileCount: 0
+  bonusArea: 0
+  bonusDuration: 0
+  bonusPickupRange: 0
+  hpRecoveryRate: 0
+  armor: 0
+  revivalCount: 0
+  expGainMultiplier: 1
+  currentCritChance: 0
+  currentCritMultiplier: 0
+  meatPrefabName: Item_Meat
+  magnetPrefabName: Item_Magnet
 --- !u!61 &2012941831984802877
 BoxCollider2D:
   m_ObjectHideFlags: 0

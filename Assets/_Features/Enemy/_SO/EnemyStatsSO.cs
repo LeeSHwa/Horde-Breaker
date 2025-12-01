@@ -9,6 +9,9 @@ public class EnemyStatsSO : CharacterStatsSO
     [Header("EXP Drop (Enemy-Only)")]
     public int expValue = 1;
 
-    [Header("Boss Settings")]
+    [Header("Physics Settings")]
     public bool isBoss = false;
+    public bool isFlying = false;
+    public float mass = 0.5f;
+
 }

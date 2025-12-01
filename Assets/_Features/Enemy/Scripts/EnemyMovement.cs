@@ -34,10 +34,12 @@ public class EnemyMovement : MonoBehaviour
     {
         canMove = true; // Ensure movement is enabled
 
-        float finalMass = mass;
+        float finalMass = 0.5f;
 
         if (stats != null && stats.baseStats is EnemyStatsSO enemyStats)
         {
+            finalMass = enemyStats.mass;
+
             if (enemyStats.isBoss)
             {
                 finalMass = 500f; 

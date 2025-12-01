@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043f9b8dfc53ab445adb99203d82b6e1, type: 3}
+  m_Name: Wave_06_30
+  m_EditorClassIdentifier: 
+  waveName: "13. 6:30, \uC2A4\uCF08\uB808\uD1A4 \uB354\uC3DF\uAE30"
+  startTime: 390
+  spawnRules:
+  - note: "\uC2A4\uCF08\uB808\uD1A4"
+    prefab: {fileID: 839540718817352759, guid: 7c8c87975f3f75048998af7af4558e2f, type: 3}
+    interval: 0.05
+    chance: 1
+  - note: "\uC554\uC0B4\uC790"
+    prefab: {fileID: 839540718817352759, guid: 118e850ede6a3bf4cbec20c9dc01be31, type: 3}
+    interval: 3
+    chance: 1
+  isBossWave: 0
