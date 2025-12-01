@@ -224,16 +224,12 @@ public class StatsController : MonoBehaviour
             if (isBlocked) return;
         }
 
-        if (!gameObject.CompareTag("Player"))
+        GameObject popup = PoolManager.Instance.GetFromPool("DamageText");
+        if (popup != null)
         {
-            GameObject popup = PoolManager.Instance.GetFromPool("DamageText");
-            if (popup != null)
-            {
-                popup.transform.position = transform.position + new Vector3(0, 0.5f, 0);
-
-                DamagePopup dp = popup.GetComponent<DamagePopup>();
-                if (dp != null) dp.Setup(damage, isCritical);
-            }
+            popup.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+            DamagePopup dp = popup.GetComponent<DamagePopup>();
+            if (dp != null) dp.Setup(damage, isCritical);
         }
 
         float reducedDamage = damage - armor;
