@@ -913,7 +913,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7d9323841f3786f44a990777ee8bf647, type: 2}
   - {fileID: 11400000, guid: de811ebd4aebd68428f98ed0f5c530ba, type: 2}
   - {fileID: 11400000, guid: d76fc644f0a33f940bbfbd292722a709, type: 2}
-  - {fileID: 11400000, guid: 51f6515d1b92d5d46bea3cca922875f2, type: 2}
+  - {fileID: 11400000, guid: ca3bb2dcc32686347a5b4130edbca218, type: 2}
+  - {fileID: 11400000, guid: 714615e4c376fa44eb865ab739dd158b, type: 2}
+  - {fileID: 11400000, guid: 09715e88c8e251443afca4433e74d6e9, type: 2}
+  - {fileID: 11400000, guid: af3e0748420374f4ba14215e0946fb8e, type: 2}
+  - {fileID: 11400000, guid: 7323851f01d46514692e41fa89c3de10, type: 2}
+  - {fileID: 11400000, guid: f89a8c7713e7e83438a417057f4445f2, type: 2}
+  - {fileID: 11400000, guid: be90e278e6ab0b945992b0e0bbca589b, type: 2}
+  - {fileID: 11400000, guid: 22841e74a4d867b4c829eeaf1a260e00, type: 2}
+  - {fileID: 11400000, guid: 6ae90cb495c012540bd54e01edbd0c4a, type: 2}
   enemyContainer: {fileID: 348919813}
   spawnPadding: 2
 --- !u!4 &348919813

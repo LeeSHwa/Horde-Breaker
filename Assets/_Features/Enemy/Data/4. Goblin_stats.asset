@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
   m_Name: 4. Goblin_stats
   m_EditorClassIdentifier: 
-  baseMaxHealth: 40
-  baseMoveSpeed: 4
+  baseMaxHealth: 120
+  baseMoveSpeed: 6
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 1.2
-  expValue: 4
+  contactDamage: 0.7
+  expValue: 5
+  isBoss: 0
+  isFlying: 0
+  mass: 0.5

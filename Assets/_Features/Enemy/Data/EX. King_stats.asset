@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
   m_Name: EX. King_stats
   m_EditorClassIdentifier: 
-  baseMaxHealth: 30000
+  baseMaxHealth: 80000
   baseMoveSpeed: 6
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
   contactDamage: 20
   expValue: 50
   isBoss: 1
+  isFlying: 0
+  mass: 0.5

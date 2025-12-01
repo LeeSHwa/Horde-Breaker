@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d8a13c81a1875479f183bee8d2e59c, type: 3}
   m_Name: 5. Mushroom_stats
   m_EditorClassIdentifier: 
-  baseMaxHealth: 80
-  baseMoveSpeed: 5
+  baseMaxHealth: 300
+  baseMoveSpeed: 2
   baseDamageMultiplier: 1
   deathAnimationLength: 0.5
-  contactDamage: 1.8
-  expValue: 6
+  contactDamage: 0.5
+  expValue: 10
+  isBoss: 0
+  isFlying: 0
+  mass: 0.5
