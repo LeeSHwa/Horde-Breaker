@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
   m_Name: CriticalDamage
   m_EditorClassIdentifier: 
-  type: 0
+  type: 13
   value: 0.1
   maxLevel: 8
   rarityWeight: 2

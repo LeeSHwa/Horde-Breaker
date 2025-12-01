@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashSpeed: 50
   dashMoveDuration: 0.1
-  invincibilityDuration: 1
+  invincibilityDuration: 0.1
   maxDashStacks: 3
   stackRechargeCooldown: 1
   startingDashStacks: 3

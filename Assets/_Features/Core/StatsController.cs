@@ -60,8 +60,8 @@ public class StatsController : MonoBehaviour
 
     [Header("Drop Settings")]
     [Range(0f, 1f)] private float expDropChance = 1f;
-    [Range(0f, 1f)] private float meatDropChance = 0.03f;
-    [Range(0f, 1f)] private float magnetDropChance = 0.002f;
+    [Range(0f, 1f)] private float meatDropChance = 0.005f;
+    [Range(0f, 1f)] private float magnetDropChance = 0.0005f;
 
     public string meatPrefabName = "Item_Meat";
     public string magnetPrefabName = "Item_Magnet";

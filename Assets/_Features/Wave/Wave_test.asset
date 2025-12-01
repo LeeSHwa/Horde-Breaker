@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 043f9b8dfc53ab445adb99203d82b6e1, type: 3}
   m_Name: Wave_test
   m_EditorClassIdentifier: 
-  waveName: 
-  startTime: 9999
+  waveName: "\uC6B0\uB2E4\uB2E4~"
+  startTime: 241
   spawnRules:
-  - note: 
-    prefab: {fileID: 8068589428734277748, guid: dd3df5769be3ef5419754df006966971, type: 3}
-    interval: 0.5
+  - note: "\uC6B0\uB2E4\uB2E4~"
+    prefab: {fileID: 839540718817352759, guid: 8a6ae5163b38f1840bcf4b15a0857f76, type: 3}
+    interval: 0.1
     chance: 1
   isBossWave: 0

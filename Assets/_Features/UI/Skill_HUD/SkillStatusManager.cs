@@ -1,15 +1,18 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SkillStatusManager : MonoBehaviour
 {
     public static SkillStatusManager Instance;
 
     [Header("UI References")]
+    public SkillSlotUI weaponSlot;
     public SkillSlotUI[] activeSlots;
     public SkillSlotUI[] passiveSlots;
 
     [Header("System References")]
+    public PlayerController playerController;
     public ActiveSkillManager skillManager;
     public StatsController playerStats;
 
@@ -18,14 +21,31 @@ public class SkillStatusManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
+        if (playerController == null)
+            playerController = FindFirstObjectByType<PlayerController>();
+
+
+        yield return null;
+
         UpdateUI();
     }
 
     public void UpdateUI()
     {
-        if (skillManager == null || playerStats == null) return;
+        if (skillManager == null || playerStats == null || playerController == null) return;
+
+        Weapon currentWeapon = playerController.GetCurrentWeapon();
+
+        if (weaponSlot != null)
+        {
+            if (currentWeapon != null)
+            {
+                weaponSlot.SetSlot(currentWeapon.GetIcon(), currentWeapon.CurrentLevel);
+            }
+
+        }
 
         List<Skills> myActives = skillManager.GetEquippedSkills();
         for (int i = 0; i < activeSlots.Length; i++)

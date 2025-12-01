@@ -119,7 +119,7 @@ public class PlayerStatsDisplay : MonoBehaviour
         SetText(pickupText, $"Magnet : +{playerStats.bonusPickupRange:F1}");
 
         // Growth (Exp Gain)
-        SetText(expGainText, $"Growth : {playerStats.expGainMultiplier:F1}x");
+        SetText(expGainText, $"Exp Gain : {playerStats.expGainMultiplier:F1}x");
 
 
         // --- 4. Session Info ---

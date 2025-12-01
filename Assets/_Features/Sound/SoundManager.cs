@@ -38,8 +38,6 @@ public class SoundManager : MonoBehaviour
     private Dictionary<AudioClip, float> lastPlayedTimes = new Dictionary<AudioClip, float>();
     private const float DEFAULT_THROTTLE = 0.05f;
 
-    // Runtime variables
-    private bool isCrossfading = false;
 
     [Header("Event BGM Settings")]
     public AudioClip levelUpBGM;
