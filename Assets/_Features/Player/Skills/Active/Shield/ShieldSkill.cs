@@ -209,4 +209,26 @@ public class ShieldSkill : Skills
         if (ghost) isGhostModeUnlocked = true;
         ghostModeSpeedBonus += speed;
     }
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+
+        if (shieldData != null)
+        {
+            baseMaxStacks = shieldData.baseMaxStacks;
+            currentInvulnTime = shieldData.baseInvulnTime;
+            isGhostModeUnlocked = false;
+            ghostModeSpeedBonus = 0f;
+        }
+
+        if (isInvulnerable)
+        {
+            StopAllCoroutines(); 
+            EndGhostMode();      
+            isInvulnerable = false;
+        }
+
+        currentStacks = 1;
+        UpdateVisuals();
+    }
 }

@@ -84,4 +84,33 @@ public abstract class Skills : MonoBehaviour, AttackInterface
         currentProjectileCount = 1;
         lastAttackTime = -999f; // Set to allow immediate attack
     }
+
+    public void Cheat_SetLevel(int targetLevel)
+    {
+        if (targetLevel < 1) targetLevel = 1;
+        if (targetLevel > MaxLevel) targetLevel = MaxLevel;
+
+        InitializeStats();
+
+        while (currentLevel < targetLevel)
+        {
+            LevelUp();
+        }
+    }
+    public string GetCurrentLevelDescription()
+    {
+        if (currentLevel <= 1)
+        {
+            return "Basic Skill"; 
+        }
+
+        int index = currentLevel - 2;
+
+        if (skillData.levelDescriptions != null && index >= 0 && index < skillData.levelDescriptions.Count)
+        {
+            return skillData.levelDescriptions[index];
+        }
+
+        return "Max Level Effect";
+    }
 }
