@@ -84,4 +84,17 @@ public abstract class Skills : MonoBehaviour, AttackInterface
         currentProjectileCount = 1;
         lastAttackTime = -999f; // Set to allow immediate attack
     }
+
+    public void Cheat_SetLevel(int targetLevel)
+    {
+        if (targetLevel < 1) targetLevel = 1;
+        if (targetLevel > MaxLevel) targetLevel = MaxLevel;
+
+        InitializeStats();
+
+        while (currentLevel < targetLevel)
+        {
+            LevelUp();
+        }
+    }
 }
