@@ -181,6 +181,8 @@ MonoBehaviour:
   expGainMultiplier: 1
   currentCritChance: 0
   currentCritMultiplier: 0
+  meatPrefabName: Item_Meat
+  magnetPrefabName: Item_Magnet
 --- !u!95 &5831141246612579996
 Animator:
   serializedVersion: 7
@@ -281,11 +283,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerRange: 500
-  teleportRadius: 0.5
+  teleportRadius: 0
   skillCooldown: 7
   chargeTime: 0.5
-  vanishDuration: 0
-  appearDelay: 0.1
+  vanishDuration: 0.2
+  appearDelay: 0.5
   useColorChange: 1
   chargeColor: {r: 0, g: 0, b: 0, a: 1}
   appearColor: {r: 0.015686274, g: 0.15883276, b: 0.49803922, a: 1}
@@ -309,11 +311,11 @@ MonoBehaviour:
   projectileTag: BossWave
   projectilePrefab: {fileID: 3772101136225902764, guid: 337659b88bd8ed543ae71b7672182126, type: 3}
   projectileSpeed: 5
-  projectileAcceleration: 30
+  projectileAcceleration: 40
   projectileLifetime: 5
-  damageMultiplier: 10
+  damageMultiplier: 2.5
   projectileCount: 3
-  multiShotAngle: 15
+  multiShotAngle: 30
   triggerRange: 500
   skillCooldown: 5
   chargeTime: 0.5
@@ -339,12 +341,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerRange: 500
-  chargeTime: 1
-  dashSpeed: 40
+  chargeTime: 0.8
+  dashSpeed: 50
   dashDuration: 0.8
-  restTime: 0.5
+  restTime: 0.2
   skillCooldown: 10
-  useColorChange: 0
+  useColorChange: 1
   chargeColor: {r: 1, g: 0, b: 0, a: 1}
   animChargeTrigger: doCharge
   animDashBool: isDashing
@@ -364,7 +366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minionPrefabs:
   - {fileID: 839540718817352759, guid: 831d6fbb436dab546ae09a78607e6b29, type: 3}
-  summonCount: 10
+  summonCount: 1
   spawnRadius: 30
   triggerRange: 500
   castTime: 2

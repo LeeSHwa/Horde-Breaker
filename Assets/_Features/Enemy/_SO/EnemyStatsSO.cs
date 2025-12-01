@@ -8,4 +8,7 @@ public class EnemyStatsSO : CharacterStatsSO
 
     [Header("EXP Drop (Enemy-Only)")]
     public int expValue = 1;
+
+    [Header("Boss Settings")]
+    public bool isBoss = false;
 }

@@ -19,6 +19,7 @@ public class EnemyMovement : MonoBehaviour
 
     private bool canMove = true;
 
+
     private SpriteRenderer spriteRenderer;
 
     void Awake()
@@ -28,15 +29,25 @@ public class EnemyMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // [NEW] Reset state when respawning from the pool
+    // Reset state when respawning from the pool
     void OnEnable()
     {
         canMove = true; // Ensure movement is enabled
 
+        float finalMass = mass;
+
+        if (stats != null && stats.baseStats is EnemyStatsSO enemyStats)
+        {
+            if (enemyStats.isBoss)
+            {
+                finalMass = 500f; 
+            }
+        }
+
         // Reset Physics
         if (rb != null)
         {
-            rb.mass = mass;
+            rb.mass = finalMass;
             rb.gravityScale = 0;
             rb.linearVelocity = Vector2.zero; // Stop previous momentum
         }
@@ -95,6 +106,17 @@ public class EnemyMovement : MonoBehaviour
     // A public function that can be called by other scripts (like MeleeWeapon).
     public void ApplyKnockback(Vector2 direction, float force, float duration)
     {
+        if (stats != null)
+        {
+            if (stats.baseStats is EnemyStatsSO enemyStats)
+            {
+                if (enemyStats.isBoss)
+                {
+                    return;
+                }
+            }
+        }
+
         // Stop the coroutine if it's already running to reset the knockback.
         StopAllCoroutines();
         // Check if object is active before starting coroutine (prevents errors)

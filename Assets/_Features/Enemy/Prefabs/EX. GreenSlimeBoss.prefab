@@ -271,10 +271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 501e1def8d8ecef449399343dd6b3ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerRange: 30
-  chargeTime: 2
-  dashSpeed: 20
-  dashDuration: 1.5
+  triggerRange: 100
+  chargeTime: 1.5
+  dashSpeed: 35
+  dashDuration: 1
   restTime: 1
   skillCooldown: 5
   useColorChange: 1
@@ -298,10 +298,10 @@ MonoBehaviour:
   minionPrefabs:
   - {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
   - {fileID: 8171226546246630872, guid: cb5b27ab1c178924ba02bd694d583b33, type: 3}
-  - {fileID: 6033797287192625791, guid: 3644074e1a011804b96fb3af2781e6a2, type: 3}
-  summonCount: 10
+  - {fileID: 8171226546246630872, guid: 4324c8142a0288a4b9dbb7a18a9e16ce, type: 3}
+  summonCount: 20
   spawnRadius: 20
-  triggerRange: 30
+  triggerRange: 500
   castTime: 1
   skillCooldown: 10
   useColorChange: 1
