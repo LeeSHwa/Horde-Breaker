@@ -147,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 0.5
   despawnDistance: 40
-  isReverseSprite: 0
+  isReverseSprite: 1
 --- !u!114 &-5359657117556825819
 MonoBehaviour:
   m_ObjectHideFlags: 0
