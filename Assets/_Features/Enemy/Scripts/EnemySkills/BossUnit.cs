@@ -4,6 +4,9 @@ public class BossUnit : MonoBehaviour
 {
     private StatsController stats;
 
+    [Header("Boss Settings")]
+    public bool isFinalBoss = false;
+
     void Awake()
     {
         stats = GetComponent<StatsController>();
@@ -15,9 +18,16 @@ public class BossUnit : MonoBehaviour
         {
             if (stats != null && stats.currentHP <= 0)
             {
-                Debug.Log("Boss Defeated! Resuming Timer.");
-
-                GameManager.Instance.ResumeGameTimer();
+                if (isFinalBoss)
+                {
+                    Debug.Log("Final Boss Defeated! Game Clear.");
+                    GameManager.Instance.ProcessGameClear();
+                }
+                else
+                {
+                    Debug.Log("Boss Defeated! Resuming Timer.");
+                    GameManager.Instance.ResumeGameTimer();
+                }
             }
         }
     }

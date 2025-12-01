@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     //public Rect mapBounds = new Rect(-40f, -25f, 80f, 50f);
     public Renderer mapRenderer;
 
+    [Header("UI References")]
+    public GameObject gameClearPanel;
+
     [HideInInspector]
     public bool isGameOver = false; // Flag to prevent multiple Game Over calls
 
@@ -102,4 +105,19 @@ public class GameManager : MonoBehaviour
         _keptWeapon = weapon;
     }
 
+    public void ProcessGameClear()
+    {
+        isGameOver = true;
+
+        Time.timeScale = 0f;
+
+        if (gameClearPanel != null)
+        {
+            gameClearPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("Game Clear Panel is not assigned in GameManager!");
+        }
+    }
 }
