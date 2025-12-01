@@ -77,6 +77,18 @@ public class ActiveSkillManager : MonoBehaviour
             activeSkills.Add(newSkill);
         }
     }
+    public void UnEquipSkill(Skills skillToRemove)
+    {
+        if (activeSkills.Contains(skillToRemove))
+        {
+            activeSkills.Remove(skillToRemove);
+
+            if (skillToRemove != null)
+            {
+                Destroy(skillToRemove.gameObject);
+            }
+        }
+    }
 
     public Skills GetSkill(string skillName)
     {

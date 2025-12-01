@@ -260,4 +260,15 @@ public class LightningSkill : Skills
         if (t2) isTier2Unlocked = true;
         if (t3) isTier3Unlocked = true;
     }
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+
+        if (lightningData != null)
+        {
+            isTier2Unlocked = false;
+            isTier3Unlocked = false;
+            currentMaxBranches = lightningData.maxBranches;
+        }
+    }
 }

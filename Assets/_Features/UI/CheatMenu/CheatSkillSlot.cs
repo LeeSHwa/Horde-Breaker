@@ -4,102 +4,94 @@ using TMPro;
 
 public class CheatSkillSlot : MonoBehaviour
 {
-    [Header("UI Components")]
+    [Header("UI References")]
     public Image iconImage;
-    public TextMeshProUGUI nameText;
-    public TextMeshProUGUI descText;
-    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI titleText; 
+    public TextMeshProUGUI levelText; 
+    public TextMeshProUGUI descText;  
 
-    [Header("Buttons")]
     public Button plusButton;
     public Button minusButton;
 
-    // 데이터 저장용
-    private LevelUpManager.UpgradeChoice targetChoice;
-    private ActiveSkillManager skillManager;
+    private SkillCheatManager manager;
+    private GameObject skillPrefab;
+    private Skills activeInstance;
 
-    public void Init(LevelUpManager.UpgradeChoice choice, ActiveSkillManager manager)
+    private void Start()
     {
-        targetChoice = choice;
-        skillManager = manager;
-
-        // UI 그리기
-        if (nameText != null) nameText.text = choice.GetName();
-        if (descText != null) descText.text = choice.GetDescription();
-        if (iconImage != null) iconImage.sprite = choice.GetIcon();
-
-        // 버튼 연결
-        plusButton.onClick.RemoveAllListeners();
-        plusButton.onClick.AddListener(OnClickPlus);
-
-        minusButton.onClick.RemoveAllListeners();
-        minusButton.onClick.AddListener(OnClickMinus);
-
-        UpdateSlotUI();
+        if (plusButton) plusButton.onClick.AddListener(OnPlusClicked);
+        if (minusButton) minusButton.onClick.AddListener(OnMinusClicked);
     }
 
-    private void UpdateSlotUI()
+    public void Setup(SkillCheatManager manager, GameObject prefab, Skills instance)
     {
-        Skills currentSkill = GetMyActiveSkill();
+        this.manager = manager;
+        this.skillPrefab = prefab;
+        this.activeInstance = instance;
 
-        if (currentSkill != null)
+        gameObject.SetActive(true);
+        RefreshUI();
+    }
+
+    private void RefreshUI()
+    {
+        Skills dataRef = (activeInstance != null) ? activeInstance : skillPrefab.GetComponent<Skills>();
+
+        if (iconImage != null) iconImage.sprite = dataRef.GetIcon();
+
+        if (activeInstance == null)
         {
-            if (levelText != null) levelText.text = currentSkill.CurrentLevel.ToString();
+            if (titleText) titleText.text = dataRef.GetName();
+            if (levelText) levelText.text = "Lv.0";
+            if (descText) descText.text = "Click (+) to Equip";
+
+            if (iconImage) iconImage.color = new Color(1, 1, 1, 0.5f);
         }
         else
         {
-            if (levelText != null) levelText.text = "0";
+            if (titleText) titleText.text = activeInstance.GetName();
+
+            if (levelText) levelText.text = $"Lv.{activeInstance.CurrentLevel}";
+
+            if (iconImage) iconImage.color = Color.white;
+
+            if (descText)
+            {
+                descText.text = activeInstance.GetCurrentLevelDescription();
+            }
         }
     }
 
-    private void OnClickPlus()
+    private void OnPlusClicked()
     {
-        Skills currentSkill = GetMyActiveSkill();
-
-        if (currentSkill == null)
+        if (activeInstance == null)
         {
-            // 스킬이 없으면 획득
-            if (targetChoice.itemToUpgrade != null)
-            {
-                // [수정됨] 인터페이스를 MonoBehaviour로 변환해서 gameObject에 접근
-                skillManager.EquipSkill(((MonoBehaviour)targetChoice.itemToUpgrade).gameObject);
-                Debug.Log($"[Cheat] {targetChoice.GetName()} 획득!");
-            }
+            manager.ForceEquipSkill(skillPrefab);
         }
         else
         {
-            // 스킬이 있으면 레벨업
-            currentSkill.LevelUp();
-            Debug.Log($"[Cheat] {currentSkill.name} 레벨업");
+            activeInstance.Cheat_SetLevel(activeInstance.CurrentLevel + 1);
+            RefreshUI();
         }
-        UpdateSlotUI();
     }
 
-    private void OnClickMinus()
+    private void OnMinusClicked()
     {
-        Skills currentSkill = GetMyActiveSkill();
-        if (currentSkill != null)
+        if (activeInstance == null) return;
+
+        if (activeInstance.CurrentLevel <= 1)
         {
-            // 레벨 다운 (기능이 있다면)
-            // currentSkill.LevelDown();
-            Debug.Log("레벨 다운 클릭됨");
-            UpdateSlotUI();
+            manager.ForceRemoveSkill(activeInstance);
+
+            activeInstance = null;
+
+            RefreshUI();
+        }
+        else
+        {
+            activeInstance.Cheat_SetLevel(activeInstance.CurrentLevel - 1);
+            RefreshUI();
         }
     }
 
-    private Skills GetMyActiveSkill()
-    {
-        if (targetChoice.itemToUpgrade == null) return null;
-
-        var currentList = skillManager.GetEquippedSkills();
-        foreach (var skill in currentList)
-        {
-            // [수정됨] 인터페이스를 MonoBehaviour로 변환해서 name에 접근
-            if (skill.name.Contains(((MonoBehaviour)targetChoice.itemToUpgrade).name))
-            {
-                return skill;
-            }
-        }
-        return null;
-    }
 }

@@ -97,4 +97,20 @@ public abstract class Skills : MonoBehaviour, AttackInterface
             LevelUp();
         }
     }
+    public string GetCurrentLevelDescription()
+    {
+        if (currentLevel <= 1)
+        {
+            return "Basic Skill"; 
+        }
+
+        int index = currentLevel - 2;
+
+        if (skillData.levelDescriptions != null && index >= 0 && index < skillData.levelDescriptions.Count)
+        {
+            return skillData.levelDescriptions[index];
+        }
+
+        return "Max Level Effect";
+    }
 }

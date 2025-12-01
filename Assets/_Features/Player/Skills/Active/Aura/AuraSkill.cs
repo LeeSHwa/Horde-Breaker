@@ -81,4 +81,15 @@ public class AuraSkill : Skills
         currentDuration += duration;
         currentDebuffPercent += debuff;
     }
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+
+        if (zoneData != null)
+        {
+            currentDuration = zoneData.baseDuration;
+            currentArea = zoneData.baseArea;
+            currentDebuffPercent = zoneData.baseSpeedDebuffPercentage;
+        }
+    }
 }

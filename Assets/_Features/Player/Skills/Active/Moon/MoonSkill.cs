@@ -93,4 +93,17 @@ public class MoonSkill : Skills
         currentRotationRadius += radius;
         currentProjectileCount += count;
     }
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+
+        if (moonData != null)
+        {
+            currentDuration = moonData.baseDuration;
+            currentRotationSpeed = moonData.baseRotationSpeed;
+            currentRotationRadius = moonData.baseRotationRadius;
+            currentProjectileCount = moonData.baseProjectileCount; 
+        }
+
+    }
 }

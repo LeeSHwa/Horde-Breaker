@@ -26,6 +26,17 @@ public class FireballSkill : Skills
         currentLifetime = fireballData.baseProjectileLifetime;
         currentArea = 1f;
     }
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+
+        if (fireballData != null)
+        {
+            currentSpeed = fireballData.baseProjectileSpeed;
+            currentLifetime = fireballData.baseProjectileLifetime;
+            currentArea = 1f; 
+        }
+    }
 
     protected override void PerformAttack()
     {
@@ -70,6 +81,7 @@ public class FireballSkill : Skills
                 );
             }
         }
+
     }
 
     protected override void ApplyLevelUpStats()

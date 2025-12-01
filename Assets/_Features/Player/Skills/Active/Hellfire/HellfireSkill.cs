@@ -89,4 +89,14 @@ public class HellfireSkill : Skills
         currentProjectileCount += count;
         currentSpeed += speed;
     }
+    protected override void InitializeStats()
+    {
+        base.InitializeStats();
+
+        if (hellfireData != null)
+        {
+            currentSearchRadius = hellfireData.searchRadius;
+            currentSpeed = hellfireData.missileSpeed;
+        }
+    }
 }
