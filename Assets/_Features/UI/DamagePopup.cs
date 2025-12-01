@@ -21,13 +21,13 @@ public class DamagePopup : MonoBehaviour
 
         if (!isCriticalHit)
         {
-            textMesh.fontSize = 5;
+            textMesh.fontSize = 8;
             textColor = Color.yellow;
             textMesh.fontStyle = FontStyles.Normal;
         }
         else
         {
-            textMesh.fontSize = 8;
+            textMesh.fontSize = 11;
             textColor = Color.red;
             textMesh.fontStyle = FontStyles.Bold; 
         }
