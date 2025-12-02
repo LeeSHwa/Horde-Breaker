@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56115fb129b769541b40adef48c3a198, type: 3}
+  m_Name: ProjectileCount
+  m_EditorClassIdentifier: 
+  type: 4
+  value: 1
+  maxLevel: 2
+  rarityWeight: 1
+  upgradeName: Multi-shot
+  icon: {fileID: -6942802416177915674, guid: 7753c463d46b30644a8a140ef0c38d18, type: 3}
+  description: Increases amount of projectiles by 1.

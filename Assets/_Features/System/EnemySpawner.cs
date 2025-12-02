@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        spawnBounds = GameManager.Instance.SpawnBounds;
+        spawnBounds = GameManager.Instance.mapBounds;
         StartCoroutine(SpawnEnemiesRoutine());
     }
 

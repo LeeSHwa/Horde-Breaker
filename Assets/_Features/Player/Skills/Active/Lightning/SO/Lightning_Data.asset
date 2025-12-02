@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f97576d7d8727046956252d8e7af6a3, type: 3}
+  m_Name: Lightning_Data
+  m_EditorClassIdentifier: 
+  baseDamage: 70
+  baseAttackCooldown: 5
+  knockback: 0
+  skillName: Lightning
+  icon: {fileID: 7989235288497715281, guid: 10aa7d445ac7e5a498050102fcfcf0c4, type: 3}
+  maxLevel: 9
+  skillDescription: Lightning strikes a random enemy, causing chain damage.
+  levelDescriptions:
+  - Damage+5
+  - Spreads Far
+  - Cooldown-0.5s
+  - Damage+5
+  - Chain Brach+5
+  - Cooldown-0.5s
+  - Damage+8
+  - Judgement (Spreads Far, More Powerful)
+  castSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  chainVisualPrefab: {fileID: 8457814466692287673, guid: cfed670e2b705a0439bb8c48dccc3c04, type: 3}
+  thunderStrikePrefab: {fileID: 8457814466692287673, guid: d6849ffe5038af74797df8d2756f2bbd, type: 3}
+  radius_R1: 4
+  radius_R2: 7
+  radius_R3: 10
+  ratio_A: 0.8
+  ratio_B: 0.6
+  ratio_C: 0.4
+  maxBranches: 10
+  thunderStrikeSound: {fileID: 8300000, guid: b7f8695cf65a4f24eb37544298821146, type: 3}
+  chainSound: {fileID: 8300000, guid: f1cb5d83282f2904a85f73111d068616, type: 3}
+  level2_DamageBonus: 5
+  level2_CooldownReduction: 0
+  level2_BranchIncrease: 0
+  level2_UnlockTier2: 0
+  level2_UnlockTier3: 0
+  level3_DamageBonus: 0
+  level3_CooldownReduction: 0
+  level3_BranchIncrease: 0
+  level3_UnlockTier2: 1
+  level3_UnlockTier3: 0
+  level4_DamageBonus: 0
+  level4_CooldownReduction: 0.5
+  level4_BranchIncrease: 0
+  level4_UnlockTier2: 1
+  level4_UnlockTier3: 0
+  level5_DamageBonus: 5
+  level5_CooldownReduction: 0
+  level5_BranchIncrease: 0
+  level5_UnlockTier2: 1
+  level5_UnlockTier3: 0
+  level6_DamageBonus: 0
+  level6_CooldownReduction: 0
+  level6_BranchIncrease: 5
+  level6_UnlockTier2: 1
+  level6_UnlockTier3: 0
+  level7_DamageBonus: 0
+  level7_CooldownReduction: 0.5
+  level7_BranchIncrease: 0
+  level7_UnlockTier2: 1
+  level7_UnlockTier3: 0
+  level8_DamageBonus: 8
+  level8_CooldownReduction: 0
+  level8_BranchIncrease: 0
+  level8_UnlockTier2: 1
+  level8_UnlockTier3: 0
+  level9_DamageBonus: 8
+  level9_CooldownReduction: 0
+  level9_BranchIncrease: 0
+  level9_UnlockTier2: 1
+  level9_UnlockTier3: 1

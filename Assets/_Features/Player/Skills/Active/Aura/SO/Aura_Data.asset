@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75eb4e08ed5df0e4fbc20817d1e4fafa, type: 3}
+  m_Name: Aura_Data
+  m_EditorClassIdentifier: 
+  baseDamage: 3
+  baseAttackCooldown: 1
+  knockback: 0
+  skillName: Aura
+  icon: {fileID: 4662751524554112198, guid: a6546bf69e9dcbc4c9804d1b6689a5fe, type: 3}
+  maxLevel: 9
+  skillDescription: Damages surrounding enemies
+  levelDescriptions:
+  - Damage+1
+  - Area+0.5
+  - Damage+2
+  - Slow+20%
+  - Area+1
+  - Damage+3
+  - Area+1
+  - Damage+5, Slow+40%
+  castSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  zonePrefab: {fileID: 5729150117572551092, guid: eb68e40cbd93b064b87b556009cc8845, type: 3}
+  baseDuration: 1
+  baseArea: 4
+  baseSpeedDebuffPercentage: 100
+  slowHitSound: {fileID: 0}
+  level2_DamageBonus: 1
+  level2_AreaBonus: 0
+  level2_DurationBonus: 0
+  level2_DebuffBonus: 0
+  level3_DamageBonus: 0
+  level3_AreaBonus: 0.5
+  level3_DurationBonus: 0
+  level3_DebuffBonus: 0
+  level4_DamageBonus: 2
+  level4_AreaBonus: 0
+  level4_DurationBonus: 0
+  level4_DebuffBonus: 0
+  level5_DamageBonus: 0
+  level5_AreaBonus: 0
+  level5_DurationBonus: 0
+  level5_DebuffBonus: -20
+  level6_DamageBonus: 0
+  level6_AreaBonus: 1
+  level6_DurationBonus: 0
+  level6_DebuffBonus: 0
+  level7_DamageBonus: 3
+  level7_AreaBonus: 0
+  level7_DurationBonus: 0
+  level7_DebuffBonus: 0
+  level8_DamageBonus: 0
+  level8_AreaBonus: 1
+  level8_DurationBonus: 0
+  level8_DebuffBonus: 0
+  level9_DamageBonus: 5
+  level9_AreaBonus: 0
+  level9_DurationBonus: 0
+  level9_DebuffBonus: -40

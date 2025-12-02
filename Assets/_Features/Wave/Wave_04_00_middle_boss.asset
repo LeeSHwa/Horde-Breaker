@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 043f9b8dfc53ab445adb99203d82b6e1, type: 3}
+  m_Name: Wave_04_00_middle_boss
+  m_EditorClassIdentifier: 
+  waveName: middle boss
+  startTime: 240
+  spawnRules:
+  - note: "\uC911\uAC04\uBCF4\uC2A4"
+    prefab: {fileID: 8068589428734277748, guid: a1d6c7cdf2f0d18449cb96b0175be3d6, type: 3}
+    interval: 0
+    chance: 1
+  isBossWave: 1

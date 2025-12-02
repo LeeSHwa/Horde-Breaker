@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee605b4a04fda514e8c5931cef710146, type: 3}
+  m_Name: Shield_Data
+  m_EditorClassIdentifier: 
+  baseDamage: 0
+  baseAttackCooldown: 10
+  knockback: 0
+  skillName: Shield
+  icon: {fileID: 4941912509069588640, guid: 002643d56099a1b43ae7c9cb453e2415, type: 3}
+  maxLevel: 9
+  skillDescription: '"Even a broken shield can block it for a while."'
+  levelDescriptions:
+  - Cooldown -1s
+  - invincible Time +0.5s when losing Shield
+  - Stack+1
+  - Cooldown -1s
+  - Stack+1
+  - Invincible Time +0.5s when losing Shield
+  - Cooldown -1s
+  - Be a Ghost when losing Shield
+  castSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  shieldVisualPrefab: {fileID: 6850633904461164430, guid: b34c5e6283621c343b33dc3c7cb29e10, type: 3}
+  baseMaxStacks: 1
+  baseInvulnTime: 0.5
+  shieldRechargeSound: {fileID: 0}
+  shieldBreakSound: {fileID: 8300000, guid: b7b5a6156961bac44a67504d42ce6fcf, type: 3}
+  level2_CooldownReduction: 1
+  level2_InvulnTimeBonus: 0
+  level2_StackIncrease: 0
+  level2_UnlockGhostMode: 0
+  level2_MoveSpeedBonus: 0
+  level3_CooldownReduction: 0
+  level3_InvulnTimeBonus: 0.5
+  level3_StackIncrease: 0
+  level3_UnlockGhostMode: 0
+  level3_MoveSpeedBonus: 0
+  level4_CooldownReduction: 0
+  level4_InvulnTimeBonus: 0
+  level4_StackIncrease: 1
+  level4_UnlockGhostMode: 0
+  level4_MoveSpeedBonus: 0
+  level5_CooldownReduction: 1
+  level5_InvulnTimeBonus: 0
+  level5_StackIncrease: 0
+  level5_UnlockGhostMode: 1
+  level5_MoveSpeedBonus: 0
+  level6_CooldownReduction: 0
+  level6_InvulnTimeBonus: 0
+  level6_StackIncrease: 1
+  level6_UnlockGhostMode: 0
+  level6_MoveSpeedBonus: 0
+  level7_CooldownReduction: 0
+  level7_InvulnTimeBonus: 0.5
+  level7_StackIncrease: 0
+  level7_UnlockGhostMode: 0
+  level7_MoveSpeedBonus: 0
+  level8_CooldownReduction: 1
+  level8_InvulnTimeBonus: 0
+  level8_StackIncrease: 0
+  level8_UnlockGhostMode: 0
+  level8_MoveSpeedBonus: 0
+  level9_CooldownReduction: 0
+  level9_InvulnTimeBonus: 0
+  level9_StackIncrease: 0
+  level9_UnlockGhostMode: 1
+  level9_MoveSpeedBonus: 10

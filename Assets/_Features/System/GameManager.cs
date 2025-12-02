@@ -2,75 +2,122 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
     public static GameManager Instance { get; private set; }
 
-    [Header("Map Settings")]
-    public Rect mapBounds = new Rect(-40f, -25f, 80f, 50f);
-    public float spawnOffset = 2f; // Distance outside the map bounds to spawn enemies
-    public Rect SpawnBounds { get; private set; }
-
     [Header("Game State")]
-    public float gameTime = 0f;
+    public float gameTime = 0f; // Current game time in seconds
     public int currentStage = 1;
+    public int killCount = 0;
 
+    public bool isTimerPaused = false;
+
+    [Header("Persistent Data")]
+    public GameObject selectedWeaponPrefab; // Weapon selected from the lobby
+
+    private static GameObject _keptWeapon;
+
+    [Header("Map Settings")]
+    //public Rect mapBounds = new Rect(-40f, -25f, 80f, 50f);
+    public Renderer mapRenderer;
+
+    [Header("UI References")]
+    public GameObject gameClearPanel;
+
+    [HideInInspector]
+    public bool isGameOver = false; // Flag to prevent multiple Game Over calls
+
+    public Rect mapBounds;
 
     void Awake()
     {
+        Instance = this;
 
-        if (Instance != null && Instance != this)
+        if (_keptWeapon != null)
         {
-            Destroy(this.gameObject); 
-        }
-        else
-        {
-            Instance = this; 
-            DontDestroyOnLoad(this.gameObject); 
-
-            CalculateSpawnBounds();
+            selectedWeaponPrefab = _keptWeapon;
         }
     }
 
     private void Start()
     {
-        if (UIManager.Instance != null)
+        if (mapRenderer != null)
         {
-            UIManager.Instance.UpdateStageUI(currentStage);
+            Bounds bounds = mapRenderer.bounds;
+
+            mapBounds = new Rect(bounds.min.x, bounds.min.y, bounds.size.x, bounds.size.y);
+
+            Debug.Log($"Map size set : {mapBounds}");
+        }
+        else
+        {
+            mapBounds = new Rect(-40f, -25f, 80f, 50f);
         }
     }
-
 
     void Update()
     {
-        gameTime += Time.deltaTime;
+        // Increment game time
+        if (!isTimerPaused)
+        {
+            gameTime += Time.deltaTime;
+        }
 
+        if (UIManager.Instance != null) UIManager.Instance.UpdateTimeUI(gameTime);
+    }
+
+    public void PauseGameTimer()
+    {
+        isTimerPaused = true;
+        Debug.Log("Game Timer Paused (Boss Encounter)");
+    }
+
+    public void ResumeGameTimer()
+    {
+        isTimerPaused = false;
+        Debug.Log("Game Timer Resumed");
+    }
+
+    public void AddKillCount()
+    {
+        killCount++;
+    }
+
+    public void GameOver()
+    {
+        if (isGameOver) return; // Stop if already game over
+        isGameOver = true;
+
+        Debug.Log("Game Over!");
+
+        // 1. Pause the game
+        Time.timeScale = 0f;
+
+        // 2. Call UIManager to show the result
         if (UIManager.Instance != null)
         {
-            UIManager.Instance.UpdateTimeUI(gameTime);
+            UIManager.Instance.ShowGameOver(gameTime, killCount);
         }
     }
 
-    private void CalculateSpawnBounds()
+    public void SelectWeapon(GameObject weapon)
     {
-        SpawnBounds = new Rect(
-            mapBounds.xMin - spawnOffset,
-            mapBounds.yMin - spawnOffset,
-            mapBounds.width + spawnOffset * 2,
-            mapBounds.height + spawnOffset * 2
-        );
+        selectedWeaponPrefab = weapon;
+        _keptWeapon = weapon;
     }
 
-    private void OnDrawGizmos()
+    public void ProcessGameClear()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(mapBounds.center, mapBounds.size);
+        isGameOver = true;
 
-        if (Application.isPlaying) 
+        Time.timeScale = 0f;
+
+        if (gameClearPanel != null)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(SpawnBounds.center, SpawnBounds.size);
+            gameClearPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("Game Clear Panel is not assigned in GameManager!");
         }
     }
-
-
 }

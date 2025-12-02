@@ -1,20 +1,18 @@
 using UnityEngine;
 
-public class Gun : Weapon2
+public class Gun : Weapon
 {
-    // A private variable to hold our *specific* data.
+    // A private variable to hold our specific data.
     private GunDataSO gunData;
 
     // Gun-specific runtime stats
     private bool currentProjectilePenetration = false;
+    private int currentPierceCount = 0;
 
-    // We use Awake() to get references and cast our data.
-    protected override void Awake()
+    public override void Initialize(Transform aimObj, StatsController owner, PlayerAnimator animator)
     {
-        base.Awake(); // Run the parent's Awake()
+        base.Initialize(aimObj, owner, animator);
 
-        // Cast the generic 'weaponData' (from base class)
-        // into our specific 'gunData'.
         if (weaponData is GunDataSO)
         {
             gunData = (GunDataSO)weaponData;
@@ -23,69 +21,117 @@ public class Gun : Weapon2
         {
             Debug.LogError(gameObject.name + " has the wrong WeaponDataSO assigned. Expected GunDataSO.");
         }
+
+        currentProjectilePenetration = false;
+
+        // Initialize penetration count from base stats
+        currentPierceCount = gunData.basePenetrationCount;
+
+        // Use base count from SO if available, otherwise default to 1
+        currentProjectileCount = gunData.baseProjectileCount > 0 ? gunData.baseProjectileCount : 1;
     }
 
-    // PerformAttack (Now references the specific 'gunData')
+    // PerformAttack
     protected override void PerformAttack(Vector2 aimDirection)
     {
-        // [Core] Get the prefab from 'gunData' (our specific SO)
-        // We use the prefab's name as the Tag for the PoolManager.
-        // (This requires the PoolManager Tag to match the prefab name)
-        GameObject bulletObject = PoolManager.Instance.GetFromPool(gunData.bulletPrefab.name);
+        // Get the prefab from 'gunData'
+        if (gunData.bulletPrefab == null) return;
 
-        if (bulletObject == null) return;
+        int count = GetFinalProjectileCount();
 
-        bulletObject.transform.position = aim.position;
-        bulletObject.transform.rotation = aim.rotation;
+        float baseAngle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
 
-        Bullet bullet = bulletObject.GetComponent<Bullet>();
-        if (bullet != null)
+        float startAngle = baseAngle;
+
+        if (count > 1)
         {
-            // Calculate final damage
-            float finalDamage = currentDamage * ownerStats.currentDamageMultiplier;
+            float totalSpread = (count - 1) * gunData.multiShotSpread;
+            startAngle = baseAngle - (totalSpread / 2f);
+        }
 
-            // Initialize the bullet
-            bullet.Initialize(
-                finalDamage,
-                weaponData.knockback, // 'knockback' is a common stat from base 'weaponData'
-                currentProjectilePenetration // 'penetration' is a Gun-specific runtime stat
-            );
+        for (int i = 0; i < count; i++)
+        {
+            GameObject bulletObject = PoolManager.Instance.GetFromPool(gunData.bulletPrefab.name);
+            if (bulletObject == null) continue;
+
+            bulletObject.transform.position = aim.position;
+
+            float currentAngle = startAngle + (i * gunData.multiShotSpread);
+            bulletObject.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+
+            Bullet bullet = bulletObject.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                float finalDamage = GetFinalDamage(out bool isCrit);
+                Vector3 finalScaleVector = Vector3.one * GetFinalAreaScale();
+
+                float finalDuration = GetFinalDuration(bullet.lifetime);
+
+                bullet.Initialize(
+                                finalDamage,
+                                weaponData.knockback,
+                                currentProjectilePenetration,
+                                currentPierceCount,
+                                ownerStats.transform,
+                                finalScaleVector,
+                                finalDuration,
+                                weaponData.hitSound,
+                                isCrit
+                                );
+            }
         }
     }
 
-    // [Core Logic] Implement the level-up logic
-    // This function READS data from 'gunData'
+    // Implement the level-up logic
     protected override void ApplyLevelUpStats()
     {
-        // 'currentLevel' was already incremented by the base Weapon class
         switch (currentLevel)
         {
             case 2:
-                // Read Lvl 2 data from our SO
-                currentDamage += gunData.level2_DamageBonus;
+                ApplyStats(gunData.level2_DamageBonus, gunData.level2_ProjectileCountBonus, gunData.level2_CooldownReduction, gunData.level2_PenetrationBonus);
                 break;
             case 3:
-                // Read Lvl 3 data from our SO
-                currentProjectileCount = gunData.level3_ProjectileCount;
+                ApplyStats(gunData.level3_DamageBonus, gunData.level3_ProjectileCountBonus, gunData.level3_CooldownReduction, gunData.level3_PenetrationBonus);
                 break;
             case 4:
-                // Read Lvl 4 data from our SO
-                currentAttackCooldown -= gunData.level4_CooldownReduction;
+                ApplyStats(gunData.level4_DamageBonus, gunData.level4_ProjectileCountBonus, gunData.level4_CooldownReduction, gunData.level4_PenetrationBonus);
                 break;
             case 5:
-                // Read Lvl 5 data from our SO
-                currentProjectilePenetration = gunData.level5_UnlocksPenetration;
+                ApplyStats(gunData.level5_DamageBonus, gunData.level5_ProjectileCountBonus, gunData.level5_CooldownReduction, gunData.level5_PenetrationBonus);
+                break;
+            case 6:
+                ApplyStats(gunData.level6_DamageBonus, gunData.level6_ProjectileCountBonus, gunData.level6_CooldownReduction, gunData.level6_PenetrationBonus);
+                break;
+            case 7:
+                ApplyStats(gunData.level7_DamageBonus, gunData.level7_ProjectileCountBonus, gunData.level7_CooldownReduction, gunData.level7_PenetrationBonus);
+                break;
+            case 8:
+                ApplyStats(gunData.level8_DamageBonus, gunData.level8_ProjectileCountBonus, gunData.level8_CooldownReduction, gunData.level8_PenetrationBonus);
+                break;
+            case 9:
+                ApplyStats(gunData.level9_DamageBonus, gunData.level9_ProjectileCountBonus, gunData.level9_CooldownReduction, gunData.level9_PenetrationBonus);
+
+                // Unlock Penetration
+                if (gunData.level9_UnlockPenetration)
+                {
+                    currentProjectilePenetration = true;
+                }
                 break;
         }
+
+        // Safety Cap
+        if (currentAttackCooldown < 0.05f) currentAttackCooldown = 0.05f;
     }
 
-    // [Core Logic] Initialize Gun-specific stats
-    protected override void InitializeStats()
+    // Helper to reduce code duplication and apply percentage cooldown reduction
+    private void ApplyStats(float dmgBonus, int countBonus, float cooldownPercent, int penBonus)
     {
-        base.InitializeStats(); // Runs base logic (resets damage, cooldown from base SO)
+        currentDamage += dmgBonus;
+        currentProjectileCount += countBonus;
+        currentPierceCount += penBonus;
 
-        // Reset Gun-specific stats for Level 1
-        currentProjectilePenetration = false;
-        // 'currentProjectileCount' is already managed by base Weapon.cs
+        // Calculate reduction amount based on percentage of current cooldown
+        float reductionAmount = currentAttackCooldown * (cooldownPercent / 100f);
+        currentAttackCooldown -= reductionAmount;
     }
 }

@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285d5f811faacfa4f87ea6a342f7f117, type: 3}
+  m_Name: Fireball_Data
+  m_EditorClassIdentifier: 
+  baseDamage: 50
+  baseAttackCooldown: 5
+  knockback: 0
+  skillName: Fireball
+  icon: {fileID: -6106694002393148830, guid: 9bf0b1678dae5eb4aa76c50448f12f6b, type: 3}
+  maxLevel: 9
+  skillDescription: Fires in a random direction
+  levelDescriptions:
+  - Damage+3
+  - Size+1
+  - Cooldown-0.5s
+  - Cast+1
+  - Damage+5
+  - Cast+1
+  - Cooldown-0.5s
+  - Cast+1, Size+2
+  castSound: {fileID: 8300000, guid: a652877b012108e41871f867ada9f176, type: 3}
+  hitSound: {fileID: 8300000, guid: eaae8fe8d600e1f459f34aa5757fa3b8, type: 3}
+  projectilePrefab: {fileID: 9187814388354200019, guid: 09f7740eb69a65644ba0a63401054df4, type: 3}
+  baseProjectileSpeed: 20
+  baseProjectileLifetime: 6
+  damageFalloffPercentage: 75
+  spreadAngle: 15
+  level2_DamageBonus: 3
+  level2_AreaBonus: 0
+  level2_CooldownReduction: 0
+  level2_ProjectileCountIncrease: 0
+  level3_DamageBonus: 0
+  level3_AreaBonus: 1
+  level3_CooldownReduction: 0
+  level3_ProjectileCountIncrease: 0
+  level4_DamageBonus: 0
+  level4_AreaBonus: 0
+  level4_CooldownReduction: 0.5
+  level4_ProjectileCountIncrease: 0
+  level5_DamageBonus: 0
+  level5_AreaBonus: 0
+  level5_CooldownReduction: 0
+  level5_ProjectileCountIncrease: 1
+  level6_DamageBonus: 5
+  level6_AreaBonus: 0
+  level6_CooldownReduction: 0
+  level6_ProjectileCountIncrease: 0
+  level7_DamageBonus: 0
+  level7_AreaBonus: 0
+  level7_CooldownReduction: 0
+  level7_ProjectileCountIncrease: 1
+  level8_DamageBonus: 0
+  level8_AreaBonus: 0
+  level8_CooldownReduction: 0.5
+  level8_ProjectileCountIncrease: 0
+  level9_DamageBonus: 0
+  level9_AreaBonus: 2
+  level9_CooldownReduction: 0
+  level9_ProjectileCountIncrease: 1
